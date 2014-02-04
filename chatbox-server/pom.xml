@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- TODO clean shutdown does not always work -->
+  
+  <parent>
+    <groupId>at.rueckgr.chatbox</groupId>
+    <artifactId>chatbox</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>chatbox-server</artifactId>
+  <name>chatbox-server</name>
+  <packaging>war</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+  	<!-- 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    -->
+	<dependency>
+	    <groupId>javax</groupId>
+	    <artifactId>javaee-api</artifactId>
+	    <version>7.0</version>
+	</dependency>
+   	<dependency>
+  		<groupId>at.rueckgr</groupId>
+  		<artifactId>chatbox-common</artifactId>
+  		<version>1.0-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>at.rueckgr.chatbox</groupId>
+  		<artifactId>chatbox-wrapper</artifactId>
+  		<version>1.0-SNAPSHOT</version>
+  	</dependency>
+	<dependency>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	    <version>1.1.3</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-api</artifactId>
+	    <version>2.0-beta9</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.logging.log4j</groupId>
+	    <artifactId>log4j-core</artifactId>
+	    <version>2.0-beta9</version>
+	</dependency>
+	<!-- TODO currently required for Eclipse -->
+  	<dependency>
+  		<groupId>org.apache.httpcomponents</groupId>
+  		<artifactId>httpclient</artifactId>
+  		<version>4.3.2</version>
+  	</dependency>
+	<!-- TODO currently required for Eclipse -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+	<!-- TODO currently required for Eclipse -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.2.1</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-war-plugin</artifactId>
+			<configuration>
+				<!-- TODO use placeholder for source folder here? -->
+				<webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+			</configuration>
+  		</plugin>
+		<plugin>
+		  <groupId>org.apache.openejb.maven</groupId>
+		  <artifactId>tomee-maven-plugin</artifactId>
+		  <version>1.6.0</version>
+		  <configuration>
+		    <tomeeVersion>1.6.0</tomeeVersion>
+		    <tomeeClassifier>plus</tomeeClassifier>
+		    <synchronization>
+		    	<extensions>
+		    		<extension>.class</extension>
+		    		<extension>.xml</extension>
+		    	</extensions>
+		    	<updateInterval>1</updateInterval>
+		    </synchronization>
+		    <reloadOnUpdate>true</reloadOnUpdate>
+		    <removeDefaultWebapps>false</removeDefaultWebapps>
+		  </configuration>
+		</plugin>
+  	</plugins>
+  </build>
+</project>

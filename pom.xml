@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- TODO use global settings for artifact versions -->
+  <!-- TODO resolve warnings about missing version numbers in pom.xmls -->
+  <!-- TODO move from eclipse to intellij? -->  
+  
+  <groupId>at.rueckgr.chatbox</groupId>
+  <artifactId>chatbox</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>chatbox</name>
+  
+  <modules>
+    <module>chatbox-common</module>
+    <module>chatbox-server</module>
+    <module>chatbox-wrapper</module>
+    <module>chatbox-android</module>
+    <module>chatbox-cli</module>
+  </modules>
+  
+  <build>
+  	<plugins>
+  		<plugin>
+  			<groupId>org.apache.maven.plugins</groupId>
+  			<artifactId>maven-compiler-plugin</artifactId>
+  			<version>3.1</version>
+  			<configuration>
+  				<source>1.7</source>
+  				<target>1.7</target>
+  			</configuration>
+  		</plugin>
+  	</plugins>
+  </build>
+</project>
