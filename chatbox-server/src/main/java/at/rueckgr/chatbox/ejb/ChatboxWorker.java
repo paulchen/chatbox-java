@@ -4,5 +4,5 @@ import java.util.concurrent.Future;
 
 
 public interface ChatboxWorker {
-	public Future<String> run();
+    Future<String> run();
 }

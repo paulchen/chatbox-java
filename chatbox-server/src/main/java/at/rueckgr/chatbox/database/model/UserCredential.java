@@ -1,72 +1,75 @@
 package at.rueckgr.chatbox.database.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.io.Serializable;
-import javax.persistence.*;
 
 
 /**
  * The persistent class for the user_credentials database table.
- * 
  */
 @Entity
-@Table(name="user_credentials")
-@NamedQuery(name="UserCredential.findAll", query="SELECT u FROM UserCredential u")
+@Table(name = "user_credentials")
+@NamedQuery(name = "UserCredential.findAll", query = "SELECT u FROM UserCredential u")
 public class UserCredential implements Serializable, ChatboxEntity {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name="access_token")
-	private String accessToken;
+    @Column(name = "access_token")
+    private String accessToken;
 
-	private String cookie;
+    private String cookie;
 
-	@Id
-	private Integer id;
+    @Id
+    private Integer id;
 
-	private String password;
+    private String password;
 
-	private String securitytoken;
+    private String securitytoken;
 
-	public UserCredential() {
-	}
+    public UserCredential() {
+    }
 
-	public String getAccessToken() {
-		return this.accessToken;
-	}
+    public String getAccessToken() {
+        return this.accessToken;
+    }
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	public String getCookie() {
-		return this.cookie;
-	}
+    public String getCookie() {
+        return this.cookie;
+    }
 
-	public void setCookie(String cookie) {
-		this.cookie = cookie;
-	}
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
 
-	public Integer getId() {
-		return this.id;
-	}
+    public Integer getId() {
+        return this.id;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public String getPassword() {
-		return this.password;
-	}
+    public String getPassword() {
+        return this.password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public String getSecuritytoken() {
-		return this.securitytoken;
-	}
+    public String getSecuritytoken() {
+        return this.securitytoken;
+    }
 
-	public void setSecuritytoken(String securitytoken) {
-		this.securitytoken = securitytoken;
-	}
+    public void setSecuritytoken(String securitytoken) {
+        this.securitytoken = securitytoken;
+    }
 
 }

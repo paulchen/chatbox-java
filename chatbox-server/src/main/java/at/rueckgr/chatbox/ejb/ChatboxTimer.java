@@ -3,8 +3,8 @@ package at.rueckgr.chatbox.ejb;
 
 public interface ChatboxTimer {
 
-	public abstract void startup();
+    void startup();
 
-	public abstract void ensureWorkerRunning();
+    void ensureWorkerRunning();
 
 }
