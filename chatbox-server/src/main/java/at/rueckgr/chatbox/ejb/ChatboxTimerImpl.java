@@ -16,12 +16,12 @@ import java.util.concurrent.Future;
 public class ChatboxTimerImpl implements Serializable, ChatboxTimer {
     private static final long serialVersionUID = -6970243772202015846L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(ChatboxTimerImpl.class);
 
     @Inject
     private ChatboxWorker worker;
 
-    private Future<String> state;
+    private transient Future<String> state;
 
     @Override
     @PostConstruct
@@ -36,7 +36,7 @@ public class ChatboxTimerImpl implements Serializable, ChatboxTimer {
     public void ensureWorkerRunning() {
         log.info("Routine check if worker is running");
 
-        if (this.state.isDone()) {
+        if (this.state != null && this.state.isDone()) {
             log.error("Worker seems to have crashed, restarting");
 
             this.state = worker.run();

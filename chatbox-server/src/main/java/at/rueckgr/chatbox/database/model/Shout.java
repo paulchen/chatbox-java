@@ -97,11 +97,11 @@ public class Shout implements Serializable, ChatboxEntity {
     }
 
     public Timestamp getDate() {
-        return this.date;
+        return new Timestamp(this.date.getTime());
     }
 
     public void setDate(Timestamp date) {
-        this.date = date;
+        this.date = new Timestamp(date.getTime());
     }
 
     public Integer getDay() {

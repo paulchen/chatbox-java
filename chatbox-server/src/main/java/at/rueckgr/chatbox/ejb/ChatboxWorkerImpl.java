@@ -23,7 +23,7 @@ import java.util.concurrent.Future;
 public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     private static final long serialVersionUID = -8912169820328368446L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(ChatboxWorkerImpl.class);
 
     @Inject
     private Chatbox chatbox;

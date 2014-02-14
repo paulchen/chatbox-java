@@ -2,9 +2,10 @@ package at.rueckgr.chatbox.wrapper;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface Chatbox {
+public interface Chatbox extends Serializable {
 
     void login() throws ChatboxWrapperException;
 

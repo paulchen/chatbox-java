@@ -21,7 +21,7 @@ import java.util.Set;
 public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Serializable {
     private static final long serialVersionUID = -3564796548736536517L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(WebsocketSessionManagerImpl.class);
 
     private List<WebsocketEndpoint> sessions = new ArrayList<WebsocketEndpoint>();
 

@@ -39,11 +39,11 @@ public class InvisibleUser implements Serializable, ChatboxEntity {
     }
 
     public Timestamp getTimestamp() {
-        return this.timestamp;
+        return new Timestamp(this.timestamp.getTime());
     }
 
     public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+        this.timestamp = new Timestamp(timestamp.getTime());
     }
 
     public Integer getUsers() {

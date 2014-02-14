@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 public class ChatboxImpl implements Serializable, Chatbox {
     private static final long serialVersionUID = 3629673172370130749L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(ChatboxImpl.class);
 
     private static final String CURRENT_URL = "http://www.informatik-forum.at/misc.php?show=ccbmessages";
     private static final String ARCHIVE_URL = "http://www.informatik-forum.at/misc.php?do=ccarc&page=%s";
@@ -49,7 +49,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
     private static final String TOKEN_PATTERN = "^.*var SECURITYTOKEN = \"([a-f0-9\\-]+)\";.*$";
 
     private ChatboxSession session;
-    private CloseableHttpClient client;
+    private transient CloseableHttpClient client;
 
     private Map<Integer, UserDTO> users = new HashMap<Integer, UserDTO>();
     private Map<String, UserCategoryDTO> userCategories = new HashMap<String, UserCategoryDTO>();
@@ -87,11 +87,11 @@ public class ChatboxImpl implements Serializable, Chatbox {
         String responseString;
         try {
             postRequest.setEntity(new UrlEncodedFormEntity(postData));
-            response = client.execute(postRequest);
+            response = getClient().execute(postRequest);
             response.close();
 
             HttpGet getRequest = new HttpGet(FAQ_URL);
-            response = client.execute(getRequest);
+            response = getClient().execute(getRequest);
             responseString = getStringFromInputStream(response.getEntity().getContent());
         }
         catch (IOException e) {
@@ -127,14 +127,14 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
         CloseableHttpResponse response = null;
         try {
-            response = client.execute(new HttpGet(url));
+            response = getClient().execute(new HttpGet(url));
             String responseString = getStringFromInputStream(response.getEntity().getContent());
 
             if (!checker.isOk(responseString)) {
                 response.close();
                 login();
 
-                response = client.execute(new HttpGet(url));
+                response = getClient().execute(new HttpGet(url));
                 responseString = getStringFromInputStream(response.getEntity().getContent());
 
                 if (!checker.isOk(responseString)) {
@@ -177,7 +177,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
             private static final long serialVersionUID = -4362478425988622360L;
 
             public boolean isOk(String responseString) {
-                return responseString.indexOf("DOCTYPE") == -1;
+                return !responseString.contains("DOCTYPE");
             }
         });
 
@@ -367,14 +367,14 @@ public class ChatboxImpl implements Serializable, Chatbox {
         postData.add(new BasicNameValuePair("vsacb_newmessage", StringEscapeUtils.ESCAPE_XML.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate(message)));
         postData.add(new BasicNameValuePair("securitytoken", this.session.getSecurityToken()));
         postRequest.setEntity(new UrlEncodedFormEntity(postData, Charset.forName("ISO-8859-1")));
-        CloseableHttpResponse response = client.execute(postRequest);
+        CloseableHttpResponse response = getClient().execute(postRequest);
 
         String result = getStringFromInputStream(response.getEntity().getContent());
         if (!result.isEmpty()) {
             response.close();
             login();
 
-            response = client.execute(postRequest);
+            response = getClient().execute(postRequest);
             result = getStringFromInputStream(response.getEntity().getContent());
         }
 
@@ -385,7 +385,12 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
     public void setSession(ChatboxSession session) {
         this.session = session;
+    }
 
-        this.client = HttpClients.custom().setDefaultCookieStore(session.getCookieStore()).build();
+    private CloseableHttpClient getClient() {
+        if(this.client == null) {
+            this.client = HttpClients.custom().setDefaultCookieStore(this.session.getCookieStore()).build();
+        }
+        return this.client;
     }
 }

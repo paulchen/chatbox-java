@@ -22,7 +22,7 @@ public class MessageDTO implements Serializable {
         this.id = id;
         this.epoch = epoch;
         this.message = message;
-        this.date = date;
+        this.date = new Date(date.getTime());
         this.deleted = deleted;
         this.user = user;
     }
@@ -40,7 +40,7 @@ public class MessageDTO implements Serializable {
     }
 
     public Date getDate() {
-        return date;
+        return new Date(date.getTime());
     }
 
     public boolean isDeleted() {

@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class ChatboxSession implements Serializable {
     private static final long serialVersionUID = -3801647039685048664L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(ChatboxSession.class);
 
     private final String username;
     private final String password;

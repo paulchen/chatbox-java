@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class GsonProcessorImpl implements GsonProcessor, Serializable {
     private static final long serialVersionUID = 8995984935640412730L;
 
-    private Gson gson;
+    private transient Gson gson;
 
     @Override
     public String encode(ChatboxMessage message) {

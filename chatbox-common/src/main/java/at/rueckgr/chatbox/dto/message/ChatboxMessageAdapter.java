@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 public class ChatboxMessageAdapter implements JsonSerializer<ChatboxMessage>, JsonDeserializer<ChatboxMessage>, Serializable {
     private static final long serialVersionUID = -8037050812981608616L;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    private static Log log = LogFactory.getLog(ChatboxMessageAdapter.class);
 
     private static final String CLASSNAME = "CLASSNAME";
     private static final String INSTANCE = "INSTANCE";

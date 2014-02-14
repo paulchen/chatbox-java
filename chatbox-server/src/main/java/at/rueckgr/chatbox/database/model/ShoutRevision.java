@@ -57,19 +57,19 @@ public class ShoutRevision implements Serializable, ChatboxEntity {
     }
 
     public Timestamp getDate() {
-        return this.date;
+        return new Timestamp(this.date.getTime());
     }
 
     public void setDate(Timestamp date) {
-        this.date = date;
+        this.date = new Timestamp(date.getTime());
     }
 
     public Timestamp getReplaced() {
-        return this.replaced;
+        return new Timestamp(this.replaced.getTime());
     }
 
     public void setReplaced(Timestamp replaced) {
-        this.replaced = replaced;
+        this.replaced = new Timestamp(replaced.getTime());
     }
 
     public String getText() {
