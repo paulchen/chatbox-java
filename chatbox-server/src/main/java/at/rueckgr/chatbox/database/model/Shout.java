@@ -6,6 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,7 +21,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "shouts")
-@NamedQuery(name = "Shout.findAll", query = "SELECT s FROM Shout s")
+@NamedQueries({
+    @NamedQuery(name = "Shout.findAll", query = "SELECT s FROM Shout s"),
+    @NamedQuery(name = "Shout.findLast", query = "SELECT s FROM Shout s ORDER BY s.id.epoch DESC, s.id.id DESC")
+})
 public class Shout implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -52,9 +56,10 @@ public class Shout implements Serializable, ChatboxEntity {
     @OneToMany(mappedBy = "shout")
     private List<ShoutRevision> shoutRevisions;
 
+    // TODO rename
     //bi-directional many-to-one association to User
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user_id")
     private User userBean;
 
     //bi-directional many-to-many association to Smily

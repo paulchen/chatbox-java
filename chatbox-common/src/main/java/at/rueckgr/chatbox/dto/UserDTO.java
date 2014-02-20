@@ -3,7 +3,7 @@ package at.rueckgr.chatbox.dto;
 import java.io.Serializable;
 
 
-public class UserDTO implements Serializable {
+public class UserDTO implements Serializable, ChatboxDTO {
     private static final long serialVersionUID = -2547473845270925254L;
 
     private final int id;

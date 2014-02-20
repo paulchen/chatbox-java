@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MessageDTO implements Serializable {
+public class MessageDTO implements Serializable, ChatboxDTO {
     private static final long serialVersionUID = -6941047808863237669L;
 
     private final int id;

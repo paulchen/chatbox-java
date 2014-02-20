@@ -1,8 +1,11 @@
 package at.rueckgr.chatbox.ejb;
 
+import at.rueckgr.chatbox.database.model.Shout;
+import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.dto.MessageCache;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
+import at.rueckgr.chatbox.util.Passwords;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
@@ -13,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -34,10 +38,23 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     @Inject
     private WebsocketSessionManager newMessageNotifier;
 
+    // TODO why must this be transient?
+    @Inject
+    private transient EntityManager entityManager;
+
+    @Inject
+    private ShoutTransformer messageTransformer;
+
     @PostConstruct
     public void init() {
         // TODO
-        chatbox.setSession(new ChatboxSession("signanz", "Aif9eeci"));
+        chatbox.setSession(new ChatboxSession(Passwords.FORUM_USERNAME, Passwords.FORUM_PASSWORD));
+
+        // TODO magic number
+        List<Shout> existingShouts = entityManager.createNamedQuery("Shout.findLast").setMaxResults(100).getResultList();
+        for(int a = existingShouts.size()-1; a>=0; a--) {
+            this.messageCache.add(messageTransformer.entityToDTO(existingShouts.get(a)));
+        }
     }
 
     @Asynchronous
@@ -57,6 +74,7 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
                 Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 for (MessageDTO message : messages) {
+                    // TODO do not call messageCache.contains() twice
                     if (!this.messageCache.contains(message)) {
                         this.messageCache.add(message);
 
