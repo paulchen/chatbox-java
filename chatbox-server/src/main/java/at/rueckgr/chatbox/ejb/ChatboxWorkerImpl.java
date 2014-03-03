@@ -1,11 +1,11 @@
 package at.rueckgr.chatbox.ejb;
 
+import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.dto.MessageCache;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
-import at.rueckgr.chatbox.util.Passwords;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
@@ -47,8 +47,10 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
     @PostConstruct
     public void init() {
-        // TODO
-        chatbox.setSession(new ChatboxSession(Passwords.FORUM_USERNAME, Passwords.FORUM_PASSWORD));
+        String username = entityManager.find(Settings.class, Settings.FORUM_USERNAME).getValue();
+        String password = entityManager.find(Settings.class, Settings.FORUM_PASSWORD).getValue();
+
+        chatbox.setSession(new ChatboxSession(username, password));
 
         // TODO magic number
         List<Shout> existingShouts = entityManager.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(100).getResultList();
