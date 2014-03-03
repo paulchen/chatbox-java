@@ -51,7 +51,7 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
         chatbox.setSession(new ChatboxSession(Passwords.FORUM_USERNAME, Passwords.FORUM_PASSWORD));
 
         // TODO magic number
-        List<Shout> existingShouts = entityManager.createNamedQuery("Shout.findLast").setMaxResults(100).getResultList();
+        List<Shout> existingShouts = entityManager.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(100).getResultList();
         for(int a = existingShouts.size()-1; a>=0; a--) {
             this.messageCache.add(messageTransformer.entityToDTO(existingShouts.get(a)));
         }

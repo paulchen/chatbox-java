@@ -3,8 +3,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- TODO resolve warnings about missing version numbers in pom.xmls -->
-
     <groupId>at.rueckgr.chatbox</groupId>
     <artifactId>chatbox</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -12,6 +10,8 @@
     <name>chatbox</name>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <findbugs.plugin.version>2.5.2</findbugs.plugin.version>
         <compiler.plugin.version>3.1</compiler.plugin.version>
         <checkstyle.plugin.version>2.11</checkstyle.plugin.version>
@@ -24,6 +24,7 @@
         <commons-lang3.version>3.2.1</commons-lang3.version>
         <commons-io.version>2.4</commons-io.version>
         <httpclient.version>4.3.2</httpclient.version>
+        <war.plugin.version>2.4</war.plugin.version>
     </properties>
 
     <modules>

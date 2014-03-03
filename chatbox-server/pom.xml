@@ -95,6 +95,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>${war.plugin.version}</version>
                 <configuration>
                     <!-- TODO use placeholder for source folder here? -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
