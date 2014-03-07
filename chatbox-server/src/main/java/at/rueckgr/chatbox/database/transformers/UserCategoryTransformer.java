@@ -3,6 +3,9 @@ package at.rueckgr.chatbox.database.transformers;
 import at.rueckgr.chatbox.database.model.UserCategory;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO> {
 
     @Override

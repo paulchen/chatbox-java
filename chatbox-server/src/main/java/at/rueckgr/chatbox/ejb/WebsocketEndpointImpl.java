@@ -1,7 +1,6 @@
 package at.rueckgr.chatbox.ejb;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
@@ -17,7 +16,8 @@ import java.io.Serializable;
 public class WebsocketEndpointImpl implements WebsocketEndpoint, Serializable {
     private static final long serialVersionUID = 3031583136358384436L;
 
-    private static Log log = LogFactory.getLog(WebsocketEndpointImpl.class);
+    @Inject
+    private Log log;
 
     @Inject
     private WebsocketSessionManager sessionManager;

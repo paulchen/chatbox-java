@@ -1,7 +1,6 @@
 package at.rueckgr.chatbox.ejb;
 
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;
@@ -16,7 +15,8 @@ import java.util.concurrent.Future;
 public class ChatboxTimerImpl implements Serializable, ChatboxTimer {
     private static final long serialVersionUID = -6970243772202015846L;
 
-    private static Log log = LogFactory.getLog(ChatboxTimerImpl.class);
+    @Inject
+    private Log log;
 
     @Inject
     private ChatboxWorker worker;

@@ -7,10 +7,6 @@ import com.google.gson.GsonBuilder;
 
 import java.io.Serializable;
 
-// import javax.ejb.Stateless;
-
-// TODO
-// @Stateless
 public class GsonProcessorImpl implements GsonProcessor, Serializable {
     private static final long serialVersionUID = 8995984935640412730L;
 

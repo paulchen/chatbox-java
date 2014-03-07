@@ -3,18 +3,16 @@ package at.rueckgr.chatbox.ejb;
 import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
-import at.rueckgr.chatbox.dto.MessageCache;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
-import javax.ejb.Stateful;
+import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -23,11 +21,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Future;
 
-@Stateful
+@Singleton
 public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     private static final long serialVersionUID = -8912169820328368446L;
 
-    private static Log log = LogFactory.getLog(ChatboxWorkerImpl.class);
+    @Inject
+    private Log log;
 
     @Inject
     private Chatbox chatbox;
@@ -38,9 +37,8 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     @Inject
     private WebsocketSessionManager newMessageNotifier;
 
-    // TODO why must this be transient?
     @Inject
-    private transient EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Inject
     private ShoutTransformer messageTransformer;

@@ -91,14 +91,14 @@ public class User implements Serializable, ChatboxEntity {
 
     public Shout addShout(Shout shout) {
         getShouts().add(shout);
-        shout.setUserBean(this);
+        shout.setUser(this);
 
         return shout;
     }
 
     public Shout removeShout(Shout shout) {
         getShouts().remove(shout);
-        shout.setUserBean(null);
+        shout.setUser(null);
 
         return shout;
     }

@@ -3,11 +3,15 @@ package at.rueckgr.chatbox.database.transformers;
 import at.rueckgr.chatbox.database.model.User;
 import at.rueckgr.chatbox.dto.UserDTO;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.Serializable;
 
+@ApplicationScoped
 public class UserTransformer implements Transformer<User, UserDTO>, Serializable {
 
-    private UserCategoryTransformer userCategoryTransformer = new UserCategoryTransformer();
+    @Inject
+    private UserCategoryTransformer userCategoryTransformer;
 
     @Override
     public UserDTO entityToDTO(User entity) {
@@ -25,6 +29,7 @@ public class UserTransformer implements Transformer<User, UserDTO>, Serializable
             return null;
         }
 
+        // TODO
         return null;
     }
 }

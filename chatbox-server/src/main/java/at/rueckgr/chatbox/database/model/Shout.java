@@ -56,11 +56,10 @@ public class Shout implements Serializable, ChatboxEntity {
     @OneToMany(mappedBy = "shout")
     private List<ShoutRevision> shoutRevisions;
 
-    // TODO rename
     //bi-directional many-to-one association to User
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userBean;
+    private User user;
 
     //bi-directional many-to-many association to Smily
     @ManyToMany
@@ -179,12 +178,12 @@ public class Shout implements Serializable, ChatboxEntity {
         return shoutRevision;
     }
 
-    public User getUserBean() {
-        return this.userBean;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUserBean(User userBean) {
-        this.userBean = userBean;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Smiley> getSmilies() {

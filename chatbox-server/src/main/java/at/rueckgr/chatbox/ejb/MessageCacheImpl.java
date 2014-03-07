@@ -1,11 +1,13 @@
-package at.rueckgr.chatbox.dto;
+package at.rueckgr.chatbox.ejb;
+
+import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.MessageSorter;
 
 import javax.ejb.Singleton;
 import java.io.Serializable;
 import java.util.Set;
 import java.util.TreeSet;
 
-// TODO this annotation is sub-optimal, but required as the application does not work properly otherwise
 @Singleton
 public class MessageCacheImpl implements MessageCache, Serializable {
     private static final long serialVersionUID = 1586352196528965715L;

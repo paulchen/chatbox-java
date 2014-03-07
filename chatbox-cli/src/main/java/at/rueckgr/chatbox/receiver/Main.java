@@ -9,6 +9,7 @@ import javax.websocket.ClientEndpointConfig;
 import javax.websocket.Session;
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Scanner;
 
 public class Main implements Serializable {
     private static final long serialVersionUID = 6695891896820029743L;
@@ -23,9 +24,14 @@ public class Main implements Serializable {
 
         session.getBasicRemote().sendText(gsonProcessor.encode(new FetchCurrentMessagesRequest()));
 
-        // TODO
-        while (true) {
-            Thread.sleep(1000);
+        Scanner scanner = new Scanner(System.in);
+        while(scanner.hasNextLine()) {
+            String input = scanner.nextLine();
+            if(input.equalsIgnoreCase("quit")) {
+                break;
+            }
         }
+
+        session.close();
     }
 }

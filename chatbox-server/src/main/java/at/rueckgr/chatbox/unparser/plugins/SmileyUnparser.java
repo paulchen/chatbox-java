@@ -1,5 +1,6 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
  * @author paulchen
  */
 @Unparser
+@ApplicationScoped
 public class SmileyUnparser extends AbstractUnparserPlugin implements Serializable {
     private static final long serialVersionUID = -1805868547159120543L;
 

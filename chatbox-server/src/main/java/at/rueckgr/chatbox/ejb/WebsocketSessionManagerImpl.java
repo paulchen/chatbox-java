@@ -1,27 +1,23 @@
 package at.rueckgr.chatbox.ejb;
 
-import at.rueckgr.chatbox.dto.MessageCache;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.message.ChatboxMessage;
 import at.rueckgr.chatbox.dto.message.FetchCurrentMessagesRequest;
 import at.rueckgr.chatbox.dto.message.NewMessagesNotification;
 import at.rueckgr.chatbox.util.GsonProcessor;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.ejb.Asynchronous;
-import javax.ejb.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Singleton
+@ApplicationScoped
 public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Serializable {
     private static final long serialVersionUID = -3564796548736536517L;
-
-    private static Log log = LogFactory.getLog(WebsocketSessionManagerImpl.class);
 
     private List<WebsocketEndpoint> sessions = new ArrayList<WebsocketEndpoint>();
 
@@ -30,6 +26,9 @@ public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Ser
 
     @Inject
     private GsonProcessor gsonProcessor;
+
+    @Inject
+    private Log log;
 
     @Override
     public void addSession(WebsocketEndpoint notifier) {

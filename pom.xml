@@ -28,7 +28,7 @@
     </properties>
 
     <modules>
-        <module>build-tools</module>
+        <module>chatbox-build-tools</module>
         <module>chatbox-common</module>
         <module>chatbox-server</module>
         <module>chatbox-wrapper</module>

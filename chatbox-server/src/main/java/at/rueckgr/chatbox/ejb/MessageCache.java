@@ -1,4 +1,6 @@
-package at.rueckgr.chatbox.dto;
+package at.rueckgr.chatbox.ejb;
+
+import at.rueckgr.chatbox.dto.MessageDTO;
 
 import java.io.Serializable;
 import java.util.Set;

@@ -5,6 +5,7 @@ import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
 import org.reflections.Reflections;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -17,6 +18,7 @@ import java.util.Set;
 /**
  * @author paulchen
  */
+@ApplicationScoped
 public class MessageUnparser implements Serializable {
     private static final long serialVersionUID = 8276059772935603595L;
 
@@ -49,7 +51,8 @@ public class MessageUnparser implements Serializable {
             message = unparserPlugin.unparse(message);
         }
 
-        // TODO remove any HTML remaining
+        // remove all remaining HTML
+        message = message.replaceAll("<[^>]+>", "");
 
         return message;
     }
