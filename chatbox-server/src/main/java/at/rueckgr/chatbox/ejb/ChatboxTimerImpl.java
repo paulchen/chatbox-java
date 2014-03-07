@@ -28,6 +28,8 @@ public class ChatboxTimerImpl implements Serializable, ChatboxTimer {
     public void startup() {
         log.info("Starting up");
 
+        worker.loadExistingShouts();
+
         this.state = worker.run();
     }
 

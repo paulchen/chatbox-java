@@ -9,22 +9,37 @@ import javax.enterprise.context.ApplicationScoped;
 public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO> {
 
     @Override
-    public UserCategoryDTO entityToDTO(UserCategory entity) {
-        if(entity == null) {
+    public UserCategoryDTO entityToDTO(UserCategory userCategoryEntity) {
+        if(userCategoryEntity == null) {
             return null;
         }
 
         // TODO use factory
-        return new UserCategoryDTO(entity.getName(), entity.getColor());
+        UserCategoryDTO userCategoryDTO = new UserCategoryDTO();
+        updateDTO(userCategoryDTO, userCategoryEntity);
+        return userCategoryDTO;
     }
 
     @Override
-    public UserCategory dtoToEntity(UserCategoryDTO dto) {
-        if(dto == null) {
+    public UserCategory dtoToEntity(UserCategoryDTO userCategoryDTO) {
+        if(userCategoryDTO == null) {
             return null;
         }
 
-        // TODO
-        return null;
+        UserCategory userCategoryEntity = new UserCategory();
+        updateEntity(userCategoryEntity, userCategoryDTO);
+        return userCategoryEntity;
+    }
+
+    @Override
+    public void updateDTO(UserCategoryDTO userCategoryDTO, UserCategory userCategoryEntity) {
+        userCategoryDTO.setColor(userCategoryEntity.getColor());
+        userCategoryDTO.setName(userCategoryEntity.getName());
+    }
+
+    @Override
+    public void updateEntity(UserCategory userCategoryEntity, UserCategoryDTO userCategoryDTO) {
+        userCategoryEntity.setColor(userCategoryDTO.getColor());
+        userCategoryEntity.setName(userCategoryDTO.getName());
     }
 }

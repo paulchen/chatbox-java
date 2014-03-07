@@ -7,4 +7,8 @@ public interface Transformer<ENTITY extends ChatboxEntity, DTO extends ChatboxDT
     DTO entityToDTO(ENTITY entity);
 
     ENTITY dtoToEntity(DTO dto);
+
+    void updateDTO(DTO dto, ENTITY entity);
+
+    void updateEntity(ENTITY entity, DTO dto);
 }

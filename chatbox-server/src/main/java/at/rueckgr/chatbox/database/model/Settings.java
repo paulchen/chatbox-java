@@ -29,6 +29,11 @@ public class Settings implements Serializable, ChatboxEntity {
     public Settings() {
     }
 
+    public Settings(String key, String value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public String getKey() {
         return this.key;
     }

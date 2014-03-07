@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.wrapper;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
 import org.apache.commons.io.IOUtils;
@@ -45,8 +46,12 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
     private static final String LOGIN_URL = "http://www.informatik-forum.at/login.php?do=login";
     private static final String FAQ_URL = "http://www.informatik-forum.at/faq.php";
+    private static final String SMILIES_URL = "http://www.informatik-forum.at/misc.php";
 
     private static final String TOKEN_PATTERN = "^.*var SECURITYTOKEN = \"([a-f0-9\\-]+)\";.*$";
+    private static final String SMILIES_PATTERN = "<div class=\"smilietext td\">([^<]+)</div>[^<]+"
+            + "<div class=\"smilieimage td\"><img src=\"[^\"]*\\/([^\\/\"]+)\"[^>]+></div>[^<]+"
+            + "<div class=\"smiliedesc td\">([^<]+)</div>";
 
     private ChatboxSession session;
     private transient CloseableHttpClient client;
@@ -385,6 +390,32 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
     public void setSession(ChatboxSession session) {
         this.session = session;
+    }
+
+    @Override
+    public List<SmileyDTO> fetchSmilies() throws ChatboxWrapperException {
+        final String data = fetchURL(SMILIES_URL, new ResultChecker() {
+            private static final long serialVersionUID = -6840776392819411021L;
+
+            public boolean isOk(String responseString) {
+                return !responseString.isEmpty();
+            }
+        });
+
+        List<SmileyDTO> result = new ArrayList<SmileyDTO>();
+
+        Pattern pattern = Pattern.compile(SMILIES_PATTERN);
+        Matcher matcher = pattern.matcher(data);
+        while(matcher.find()) {
+            String code = matcher.group(1);
+            String filename = matcher.group(2);
+            String meaning = matcher.group(3);
+
+            SmileyDTO smileyDTO = new SmileyDTO(filename, code, meaning);
+            result.add(smileyDTO);
+        }
+
+        return result;
     }
 
     private CloseableHttpClient getClient() {

@@ -18,27 +18,42 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
     private MessageUnparser messageUnparser;
 
     @Override
-    public MessageDTO entityToDTO(Shout entity) {
-        if(entity == null) {
+    public MessageDTO entityToDTO(Shout shoutEntity) {
+        if(shoutEntity == null) {
             return null;
         }
 
-        String rawMessage = entity.getMessage();
-        String message = messageUnparser.unparse(rawMessage);
-
         // TODO use factory
-        return new MessageDTO(entity.getId().getId(), entity.getId().getEpoch(),
-                message, entity.getDate(), entity.getDeleted(),
-                userTransformer.entityToDTO(entity.getUser()));
+        MessageDTO messageDTO = new MessageDTO();
+        updateDTO(messageDTO, shoutEntity);
+        return messageDTO;
     }
 
     @Override
-    public Shout dtoToEntity(MessageDTO dto) {
-        if(dto == null) {
+    public Shout dtoToEntity(MessageDTO messageDTO) {
+        if(messageDTO == null) {
             return null;
         }
 
         // TODO
         return null;
+    }
+
+    @Override
+    public void updateDTO(MessageDTO messageDTO, Shout shoutEntity) {
+        String rawMessage = shoutEntity.getMessage();
+        String message = messageUnparser.unparse(rawMessage);
+
+        messageDTO.setId(shoutEntity.getId().getId());
+        messageDTO.setEpoch(shoutEntity.getId().getEpoch());
+        messageDTO.setDate(shoutEntity.getDate());
+        messageDTO.setDeleted(shoutEntity.getDeleted());
+        messageDTO.setMessage(message);
+        messageDTO.setUser(userTransformer.entityToDTO(shoutEntity.getUser()));
+    }
+
+    @Override
+    public void updateEntity(Shout shoutEntity, MessageDTO messageDTO) {
+        // TODO
     }
 }

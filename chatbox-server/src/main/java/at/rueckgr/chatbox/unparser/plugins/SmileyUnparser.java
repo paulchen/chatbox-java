@@ -1,8 +1,15 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
+import at.rueckgr.chatbox.database.model.Smiley;
+import at.rueckgr.chatbox.ejb.ChatboxWorker;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +25,13 @@ public class SmileyUnparser extends AbstractUnparserPlugin implements Serializab
     private static final String SMILEY_PATTERN = "<img src=\"[^\"]*/([^\"/]+)\" border=\"0\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"inlineimg\" />";
 
     @Inject
-    private EntityManager entityManager;
+    private Log log;
+
+    @Inject
+    private EntityManager em;
+
+    @Inject
+    private ChatboxWorker chatboxWorker;
 
     @Override
     public String unparse(String input) {
@@ -42,6 +55,30 @@ public class SmileyUnparser extends AbstractUnparserPlugin implements Serializab
     }
 
     private String findSmiley(String filename) {
-        return "XXX";
+        return findSmiley(filename, true);
+    }
+
+    private String findSmiley(String filename, boolean recursive) {
+        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
+        query.setParameter("filename", filename);
+
+        try {
+            Smiley smiley = query.getSingleResult();
+            if(!StringUtils.isBlank(smiley.getCode())) {
+                return smiley.getCode();
+            }
+        }
+        catch (NoResultException e) {
+            log.debug("Smiley not found in database");
+        }
+
+        // TODO BUG: first smiley is not properly replaced if it has just been imported from the database
+        if(!recursive) {
+            return "";
+        }
+
+        chatboxWorker.importSmilies();
+
+        return findSmiley(filename, false);
     }
 }

@@ -2,9 +2,12 @@ package at.rueckgr.chatbox.ejb;
 
 import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.model.Shout;
+import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
+import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
+import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
@@ -12,16 +15,22 @@ import org.apache.commons.logging.Log;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Future;
 
 @Singleton
+@ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     private static final long serialVersionUID = -8912169820328368446L;
 
@@ -38,22 +47,29 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     private WebsocketSessionManager newMessageNotifier;
 
     @Inject
-    private EntityManager entityManager;
+    private EntityManager em;
 
     @Inject
-    private ShoutTransformer messageTransformer;
+    private ShoutTransformer shoutTransformer;
+
+    @Inject
+    private SmileyTransformer smileyTransformer;
 
     @PostConstruct
     public void init() {
-        String username = entityManager.find(Settings.class, Settings.FORUM_USERNAME).getValue();
-        String password = entityManager.find(Settings.class, Settings.FORUM_PASSWORD).getValue();
+        String username = em.find(Settings.class, Settings.FORUM_USERNAME).getValue();
+        String password = em.find(Settings.class, Settings.FORUM_PASSWORD).getValue();
 
         chatbox.setSession(new ChatboxSession(username, password));
 
+    }
+
+    @Override
+    public void loadExistingShouts() {
         // TODO magic number
-        List<Shout> existingShouts = entityManager.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(100).getResultList();
+        List<Shout> existingShouts = em.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(100).getResultList();
         for(int a = existingShouts.size()-1; a>=0; a--) {
-            this.messageCache.add(messageTransformer.entityToDTO(existingShouts.get(a)));
+            this.messageCache.add(shoutTransformer.entityToDTO(existingShouts.get(a)));
         }
     }
 
@@ -99,5 +115,56 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
         // TODO
         // return new AsyncResult<String>("omg");
+    }
+
+    @Override
+    public void importSmilies() {
+        Date now = new Date();
+        // TODO constant
+        Settings setting = em.find(Settings.class, "last_smiley_import");
+        if(setting != null) {
+            long lastImportTimestamp = Long.parseLong(setting.getValue());
+
+            // TODO magic number
+            if(now.getTime()-lastImportTimestamp < 3600000) {
+                return;
+            }
+        }
+        else {
+            setting = new Settings("last_smiley_import", String.valueOf(now.getTime()));
+        }
+
+        log.info("Fetching smiley list");
+
+        List<SmileyDTO> smilies;
+        try {
+            smilies = chatbox.fetchSmilies();
+        }
+        catch (ChatboxWrapperException e) {
+            log.error("Error while fetching smiley list", e);
+            return;
+        }
+
+        setting.setValue(String.valueOf(now.getTime()));
+        em.persist(setting);
+
+        // TODO place this query into a separate method
+        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
+
+        for (SmileyDTO smileyDTO : smilies) {
+            query.setParameter("filename", smileyDTO.getFilename());
+            try {
+                Smiley smiley = query.getSingleResult();
+                smileyTransformer.updateEntity(smiley, smileyDTO);
+                em.persist(smiley);
+            }
+            catch (NoResultException e) {
+                Smiley smiley = smileyTransformer.dtoToEntity(smileyDTO);
+                em.persist(smiley);
+                // TODO
+            }
+        }
+
+        // TODO
     }
 }

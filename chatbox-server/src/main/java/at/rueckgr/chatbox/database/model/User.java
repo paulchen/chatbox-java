@@ -32,7 +32,7 @@ public class User implements Serializable, ChatboxEntity {
     private List<OnlineUser> onlineUsers;
 
     //bi-directional many-to-one association to Shout
-    @OneToMany(mappedBy = "userBean")
+    @OneToMany(mappedBy = "user")
     private List<Shout> shouts;
 
     //bi-directional many-to-one association to UserCategory
