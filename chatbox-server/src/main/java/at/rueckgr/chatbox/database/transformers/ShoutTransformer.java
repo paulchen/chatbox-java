@@ -49,6 +49,8 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         String message = messageUnparser.unparse(rawMessage);
 
         messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
+        messageDTO.setDate(shoutEntity.getDate());
+        // TODO fix this ugly fuckup
         messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
         messageDTO.setDeleted(shoutEntity.getDeleted());
         messageDTO.setRawMessage(rawMessage);
