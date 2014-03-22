@@ -244,7 +244,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
             int messagepos2 = shout.indexOf("\t\t</td>", messagepos1) - 1;
             String message = shout.substring(messagepos1, messagepos2);
 
-            ret.add(createMessageDTO(id, date, memberId, memberNick, nickColor, message));
+            ret.add(createMessageDTO(id, date, memberId, memberNick, nickColor, message.trim()));
 
             lastPos = pos2;
         }
@@ -353,7 +353,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
             int messagepos2 = shout.indexOf("\t\t\t\t\t</div>", memberpos1) - 2;
             String message = shout.substring(messagepos1, messagepos2);
 
-            ret.add(createMessageDTO(id, date, memberId, memberNick, nickColor, message));
+            ret.add(createMessageDTO(id, date, memberId, memberNick, nickColor, message.trim()));
 
             lastPos = pos2;
         }

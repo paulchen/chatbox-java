@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
@@ -35,7 +36,7 @@ public class Shout implements Serializable, ChatboxEntity {
     private ShoutPK id;
 
     @NotNull
-    private Timestamp date;
+    private Date date;
 
     @NotNull
     private Integer day;

@@ -22,7 +22,7 @@ public class MessageCacheImpl implements MessageCache, Serializable {
         if(!this.messages.containsKey(message.getMessageId())) {
             return MessageStatus.NEW;
         }
-        if(this.messages.get(message.getMessageId()).equals(message)) {
+        if(this.messages.get(message.getMessageId()).equalsRaw(message)) {
             return MessageStatus.UNMODIFIED;
         }
 

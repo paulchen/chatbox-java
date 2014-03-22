@@ -7,6 +7,7 @@ import at.rueckgr.chatbox.unparser.MessageUnparser;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.Serializable;
+import java.util.Date;
 
 @ApplicationScoped
 public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Serializable {
@@ -48,7 +49,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         String message = messageUnparser.unparse(rawMessage);
 
         messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
-        messageDTO.setDate(shoutEntity.getDate());
+        messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
         messageDTO.setDeleted(shoutEntity.getDeleted());
         messageDTO.setRawMessage(rawMessage);
         messageDTO.setMessage(message);

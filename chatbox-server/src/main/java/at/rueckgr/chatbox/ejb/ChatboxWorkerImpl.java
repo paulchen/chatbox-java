@@ -116,11 +116,11 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
                 if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
                     if(newMessages.size() > 0) {
-                        log.info(String.format("%s new messages", newMessages.size()));
+                        log.info(String.format("%s new message(s)", newMessages.size()));
                     }
 
                     if(modifiedMessages.size() > 0) {
-                        log.info(String.format("%s modified messages", modifiedMessages.size()));
+                        log.info(String.format("%s modified message(s)", modifiedMessages.size()));
                     }
 
                     newMessageNotifier.newMessages(newMessages, modifiedMessages);
