@@ -22,11 +22,14 @@ import java.util.List;
 @Entity
 @Table(name = "shouts")
 @NamedQueries({
-    @NamedQuery(name = "Shout.findAll", query = "SELECT s FROM Shout s"),
-    @NamedQuery(name = "Shout.findLast", query = "SELECT s FROM Shout s ORDER BY s.id.epoch DESC, s.id.id DESC")
+    @NamedQuery(name = Shout.FIND_ALL, query = "SELECT s FROM Shout s"),
+    @NamedQuery(name = Shout.FIND_LAST, query = "SELECT s FROM Shout s ORDER BY s.id.epoch DESC, s.id.id DESC")
 })
 public class Shout implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
+
+    public static final String FIND_ALL = "Shout.findAll";
+    public static final String FIND_LAST = "Shout.findLast";
 
     @EmbeddedId
     private ShoutPK id;

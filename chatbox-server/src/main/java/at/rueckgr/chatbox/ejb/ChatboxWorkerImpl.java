@@ -8,6 +8,7 @@ import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
 import at.rueckgr.chatbox.dto.SmileyDTO;
+import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
@@ -55,6 +56,9 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     @Inject
     private SmileyTransformer smileyTransformer;
 
+    @Inject
+    private MessageUnparser messageUnparser;
+
     @PostConstruct
     public void init() {
         String username = em.find(Settings.class, Settings.FORUM_USERNAME).getValue();
@@ -66,7 +70,10 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
     @Override
     public void loadExistingShouts() {
-        List<Shout> existingShouts = em.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(MessageCache.CACHE_SIZE).getResultList();
+        TypedQuery<Shout> query = em.createNamedQuery(Shout.FIND_LAST, Shout.class);
+        query.setMaxResults(MessageCache.CACHE_SIZE);
+        List<Shout> existingShouts = query.getResultList();
+
         for(int a = existingShouts.size()-1; a>=0; a--) {
             this.messageCache.update(shoutTransformer.entityToDTO(existingShouts.get(a)));
         }
@@ -90,6 +97,8 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
                 Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 for (MessageDTO message : messages) {
+                    message.setMessage(messageUnparser.unparse(message.getMessage()));
+
                     switch(this.messageCache.update(message)) {
                         case NEW:
                             newMessages.add(message);
@@ -168,7 +177,7 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
             try {
                 Smiley smiley = query.getSingleResult();
                 smileyTransformer.updateEntity(smiley, smileyDTO);
-                em.persist(smiley);
+                em.merge(smiley);
             }
             catch (NoResultException e) {
                 Smiley smiley = smileyTransformer.dtoToEntity(smileyDTO);
