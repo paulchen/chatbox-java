@@ -60,7 +60,8 @@ public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Ser
         if (message instanceof FetchCurrentMessagesRequest) {
             log.debug("Processing FetchCurrentMessagesRequest");
 
-            NewMessagesNotification newMessagesNotification = new NewMessagesNotification(messageCache.getAllMessages(), new TreeSet<MessageDTO>());
+            NewMessagesNotification newMessagesNotification =
+                    new NewMessagesNotification(messageCache.getAllMessages(), new TreeSet<MessageDTO>());
             String jsonMessage = gsonProcessor.encode(newMessagesNotification);
             session.notify(jsonMessage);
         }

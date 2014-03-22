@@ -50,6 +50,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
         messageDTO.setDate(shoutEntity.getDate());
         messageDTO.setDeleted(shoutEntity.getDeleted());
+        messageDTO.setRawMessage(rawMessage);
         messageDTO.setMessage(message);
         messageDTO.setUser(userTransformer.entityToDTO(shoutEntity.getUser()));
     }

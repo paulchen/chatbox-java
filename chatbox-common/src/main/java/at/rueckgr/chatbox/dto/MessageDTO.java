@@ -11,6 +11,7 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
 
     private MessageId messageId;
     private String message;
+    private transient String rawMessage; // don't send raw message to clients
     private Date date;
     private boolean deleted;
     private UserDTO user;
@@ -19,9 +20,9 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
         super();
     }
 
-    public MessageDTO(MessageId messageId , String message, Date date, boolean deleted, UserDTO user) {
+    public MessageDTO(MessageId messageId, String rawMessage, Date date, boolean deleted, UserDTO user) {
         this.messageId = messageId;
-        this.message = message;
+        this.rawMessage = rawMessage;
         this.date = date;
         this.deleted = deleted;
         this.user = user;
@@ -65,6 +66,14 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
 
     public void setUser(UserDTO user) {
         this.user = user;
+    }
+
+    public String getRawMessage() {
+        return rawMessage;
+    }
+
+    public void setRawMessage(String rawMessage) {
+        this.rawMessage = rawMessage;
     }
 
     @Override

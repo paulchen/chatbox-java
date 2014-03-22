@@ -97,7 +97,7 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
                 Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 for (MessageDTO message : messages) {
-                    message.setMessage(messageUnparser.unparse(message.getMessage()));
+                    message.setMessage(messageUnparser.unparse(message.getRawMessage()));
 
                     switch(this.messageCache.update(message)) {
                         case NEW:
