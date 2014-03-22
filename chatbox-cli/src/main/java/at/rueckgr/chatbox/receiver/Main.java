@@ -15,6 +15,8 @@ public class Main implements Serializable {
     private static final long serialVersionUID = 6695891896820029743L;
 
     public static void main(String[] args) throws Exception {
+        System.out.println("Startup...");
+
         final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
         ClientManager client = ClientManager.createClient();
 
@@ -24,6 +26,8 @@ public class Main implements Serializable {
 
         session.getBasicRemote().sendText(gsonProcessor.encode(new FetchCurrentMessagesRequest()));
 
+        System.out.println("Startup complete. This client keeps running until you type 'quit'.");
+
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNextLine()) {
             String input = scanner.nextLine();
@@ -31,6 +35,8 @@ public class Main implements Serializable {
                 break;
             }
         }
+
+        System.out.println("Shutdown...");
 
         session.close();
     }
