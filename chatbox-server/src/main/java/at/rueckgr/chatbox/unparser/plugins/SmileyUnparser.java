@@ -35,7 +35,7 @@ public class SmileyUnparser extends AbstractUnparserPlugin implements Serializab
 
     @Override
     public String unparse(String input) {
-        System.out.println(input);
+        log.debug(String.format("Message before unparsing smileys: %s", input));
 
         // taken from: http://www.javamex.com/tutorials/regular_expressions/search_replace_loop.shtml
         Pattern pattern = Pattern.compile(SMILEY_PATTERN);
@@ -49,7 +49,7 @@ public class SmileyUnparser extends AbstractUnparserPlugin implements Serializab
         }
         matcher.appendTail(stringBuffer);
 
-        System.out.println(stringBuffer);
+        log.debug(String.format("Message after unparsing smileys: %s", input));
 
         return stringBuffer.toString();
     }
