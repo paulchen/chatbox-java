@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @ApplicationScoped
 public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Serializable {
@@ -42,10 +43,10 @@ public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Ser
 
     @Asynchronous
     @Override
-    public void newMessages(Set<MessageDTO> newMessages) {
-        log.debug("Notifying all clients about new messages");
+    public void newMessages(Set<MessageDTO> newMessages, Set<MessageDTO> modifiedMessages) {
+        log.debug("Notifying all clients about new and updated messages");
 
-        String jsonMessage = gsonProcessor.encode(new NewMessagesNotification(newMessages));
+        String jsonMessage = gsonProcessor.encode(new NewMessagesNotification(newMessages, modifiedMessages));
 
         for (WebsocketEndpoint notifier : sessions) {
             notifier.notify(jsonMessage);
@@ -59,7 +60,7 @@ public class WebsocketSessionManagerImpl implements WebsocketSessionManager, Ser
         if (message instanceof FetchCurrentMessagesRequest) {
             log.debug("Processing FetchCurrentMessagesRequest");
 
-            String jsonMessage = gsonProcessor.encode(new NewMessagesNotification(messageCache.getAllMessages()));
+            String jsonMessage = gsonProcessor.encode(new NewMessagesNotification(messageCache.getAllMessages(), new TreeSet<MessageDTO>()));
             session.notify(jsonMessage);
         }
         // else {

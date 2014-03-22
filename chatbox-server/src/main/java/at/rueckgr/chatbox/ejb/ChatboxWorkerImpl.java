@@ -66,10 +66,9 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
     @Override
     public void loadExistingShouts() {
-        // TODO magic number
-        List<Shout> existingShouts = em.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(100).getResultList();
+        List<Shout> existingShouts = em.createNamedQuery("Shout.findLast", Shout.class).setMaxResults(MessageCache.CACHE_SIZE).getResultList();
         for(int a = existingShouts.size()-1; a>=0; a--) {
-            this.messageCache.add(shoutTransformer.entityToDTO(existingShouts.get(a)));
+            this.messageCache.update(shoutTransformer.entityToDTO(existingShouts.get(a)));
         }
     }
 
@@ -89,20 +88,33 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
                 // TODO
 
                 Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
+                Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
                 for (MessageDTO message : messages) {
-                    // TODO do not call messageCache.contains() twice
-                    if (!this.messageCache.contains(message)) {
-                        this.messageCache.add(message);
+                    switch(this.messageCache.update(message)) {
+                        case NEW:
+                            newMessages.add(message);
+                            break;
 
-                        newMessages.add(message);
+                        case MODIFIED:
+                            modifiedMessages.add(message);
+                            break;
+
+                        case UNMODIFIED:
+                        default: // fall-through
+                            /* nothing to do */
                     }
                 }
 
-                if (newMessages.size() > 0) {
-                    log.info(String.format("%s new messages", newMessages.size()));
+                if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
+                    if(newMessages.size() > 0) {
+                        log.info(String.format("%s new messages", newMessages.size()));
+                    }
 
-                    // TODO notifications
-                    newMessageNotifier.newMessages(newMessages);
+                    if(modifiedMessages.size() > 0) {
+                        log.info(String.format("%s modified messages", modifiedMessages.size()));
+                    }
+
+                    newMessageNotifier.newMessages(newMessages, modifiedMessages);
                 }
                 else {
                     log.info("No new messages");

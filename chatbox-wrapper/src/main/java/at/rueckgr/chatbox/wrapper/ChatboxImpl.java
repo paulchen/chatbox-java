@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.wrapper;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.MessageId;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
@@ -271,7 +272,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
         }
 
         // TODO magic number
-        return new MessageDTO(id, 1, message, date, false, this.users.get(memberId));
+        return new MessageDTO(new MessageId(id, 1), message, date, false, this.users.get(memberId));
     }
 
     private UserDTO createUserDTO(int memberId, String memberNick,

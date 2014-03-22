@@ -12,6 +12,9 @@ import java.io.Serializable;
 public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Serializable {
 
     @Inject
+    private ShoutIdTransformer shoutIdTransformer;
+
+    @Inject
     private UserTransformer userTransformer;
 
     @Inject
@@ -44,8 +47,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         String rawMessage = shoutEntity.getMessage();
         String message = messageUnparser.unparse(rawMessage);
 
-        messageDTO.setId(shoutEntity.getId().getId());
-        messageDTO.setEpoch(shoutEntity.getId().getEpoch());
+        messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
         messageDTO.setDate(shoutEntity.getDate());
         messageDTO.setDeleted(shoutEntity.getDeleted());
         messageDTO.setMessage(message);

@@ -1,4 +1,4 @@
 package at.rueckgr.chatbox.dto;
 
-public interface ChatboxDTO {
+public interface ChatboxDTO extends DTOThing {
 }

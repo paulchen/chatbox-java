@@ -6,11 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class MessageDTO implements Serializable, ChatboxDTO {
+public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageDTO> {
     private static final long serialVersionUID = -6941047808863237669L;
 
-    private int id;
-    private int epoch;
+    private MessageId messageId;
     private String message;
     private Date date;
     private boolean deleted;
@@ -20,21 +19,16 @@ public class MessageDTO implements Serializable, ChatboxDTO {
         super();
     }
 
-    public MessageDTO(int id, int epoch, String message, Date date, boolean deleted, UserDTO user) {
-        this.id = id;
-        this.epoch = epoch;
+    public MessageDTO(MessageId messageId , String message, Date date, boolean deleted, UserDTO user) {
+        this.messageId = messageId;
         this.message = message;
         this.date = date;
         this.deleted = deleted;
         this.user = user;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getEpoch() {
-        return epoch;
+    public MessageId getMessageId() {
+        return messageId;
     }
 
     public String getMessage() {
@@ -53,12 +47,8 @@ public class MessageDTO implements Serializable, ChatboxDTO {
         return user;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setEpoch(int epoch) {
-        this.epoch = epoch;
+    public void setMessageId(MessageId messageId) {
+        this.messageId = messageId;
     }
 
     public void setMessage(String message) {
@@ -82,5 +72,50 @@ public class MessageDTO implements Serializable, ChatboxDTO {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         return String.format("[%s] <%s> %s", dateFormat.format(this.date), this.user.getName(), this.message);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        MessageDTO that = (MessageDTO) o;
+
+        if (deleted != that.deleted) {
+            return false;
+        }
+        if (date != null ? !date.equals(that.date) : that.date != null) {
+            return false;
+        }
+        if (message != null ? !message.equals(that.message) : that.message != null) {
+            return false;
+        }
+        if (messageId != null ? !messageId.equals(that.messageId) : that.messageId != null) {
+            return false;
+        }
+        if (user != null ? !user.equals(that.user) : that.user != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = messageId != null ? messageId.hashCode() : 0;
+        result = 31 * result + (message != null ? message.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (deleted ? 1 : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public int compareTo(MessageDTO that) {
+        return messageId.compareTo(that.getMessageId());
     }
 }

@@ -1,52 +1,55 @@
 package at.rueckgr.chatbox.ejb;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
-import at.rueckgr.chatbox.dto.MessageSorter;
+import at.rueckgr.chatbox.dto.MessageId;
+import at.rueckgr.chatbox.dto.MessageIdSorter;
 
 import javax.ejb.Singleton;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 @Singleton
 public class MessageCacheImpl implements MessageCache, Serializable {
     private static final long serialVersionUID = 1586352196528965715L;
 
-    private TreeSet<MessageDTO> messages = new TreeSet<MessageDTO>(new MessageSorter());
+    private Map<MessageId, MessageDTO> messages = Collections.synchronizedMap(new TreeMap<MessageId, MessageDTO>(new MessageIdSorter()));
 
-    @Override
-    public synchronized boolean contains(MessageDTO message) {
-        // TODO only compairs IDs; does not identify edits
-        for (MessageDTO existingMessage : this.messages) {
-            if (message.getId() == existingMessage.getId()) {
-                return true;
-            }
+    private MessageStatus contains(MessageDTO message) {
+        if(!this.messages.containsKey(message.getMessageId())) {
+            return MessageStatus.NEW;
+        }
+        if(this.messages.get(message.getMessageId()).equals(message)) {
+            return MessageStatus.UNMODIFIED;
         }
 
-        return false;
+        return MessageStatus.MODIFIED;
     }
 
     @Override
-    public synchronized void add(MessageDTO message) {
-        if (this.contains(message)) {
-            // TODO
-            return;
+    public MessageStatus update(MessageDTO message) {
+        MessageStatus messageStatus = this.contains(message);
+
+        if(messageStatus != MessageStatus.UNMODIFIED) {
+            this.messages.put(message.getMessageId(), message);
         }
 
-        messages.add(message);
-
         this.cleanup();
+
+        return messageStatus;
     }
 
     private void cleanup() {
-        // TODO constant
-        while (messages.size() > 100) {
-            messages.remove(messages.first());
+        while (messages.size() > CACHE_SIZE) {
+            messages.remove(messages.keySet().iterator().next());
         }
     }
 
     @Override
-    public Set<MessageDTO> getAllMessages() {
-        return new TreeSet<MessageDTO>(this.messages);
+    public Collection<MessageDTO> getAllMessages() {
+        return new TreeSet<MessageDTO>(this.messages.values());
     }
 }

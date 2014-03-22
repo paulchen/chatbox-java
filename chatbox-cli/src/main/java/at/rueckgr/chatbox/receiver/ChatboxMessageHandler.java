@@ -15,10 +15,16 @@ public class ChatboxMessageHandler implements Whole<String>, Serializable {
     private GsonProcessor gson;
 
     public void onMessage(String json) {
-        ChatboxMessage messages = getGson().decode(json);
-        if (messages instanceof NewMessagesNotification) {
-            for (MessageDTO message : ((NewMessagesNotification) messages).getMessages()) {
-                System.out.println("Message received: " + message.toString());
+        ChatboxMessage notification = getGson().decode(json);
+        if (notification instanceof NewMessagesNotification) {
+            NewMessagesNotification newMessagesNotification = (NewMessagesNotification) notification;
+
+            for (MessageDTO message : newMessagesNotification.getNewMessages()) {
+                System.out.println("New message received: " + message.toString());
+            }
+
+            for (MessageDTO message : newMessagesNotification.getModifiedMessages()) {
+                System.out.println("Modified message received: " + message.toString());
             }
         }
     }

@@ -3,13 +3,20 @@ package at.rueckgr.chatbox.ejb;
 import at.rueckgr.chatbox.dto.MessageDTO;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 
 
 public interface MessageCache extends Serializable {
-    boolean contains(MessageDTO message);
+    // TODO magic number
+    int CACHE_SIZE = 100;
 
-    void add(MessageDTO message);
+    enum MessageStatus {
+        UNMODIFIED,
+        MODIFIED,
+        NEW,
+    }
 
-    Set<MessageDTO> getAllMessages();
+    MessageStatus update(MessageDTO message);
+
+    Collection<MessageDTO> getAllMessages();
 }

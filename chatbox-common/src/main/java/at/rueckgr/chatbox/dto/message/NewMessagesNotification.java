@@ -3,19 +3,25 @@ package at.rueckgr.chatbox.dto.message;
 import at.rueckgr.chatbox.dto.MessageDTO;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.Collection;
 
 public class NewMessagesNotification implements ChatboxNotification, Serializable {
     private static final long serialVersionUID = -4990339131103447543L;
 
-    private final Set<MessageDTO> messages;
+    private final Collection<MessageDTO> newMessages;
+    private final Collection<MessageDTO> modifiedMessages;
 
-    public NewMessagesNotification(Set<MessageDTO> messages) {
+    public NewMessagesNotification(Collection<MessageDTO> newMessages, Collection<MessageDTO> modifiedMessages) {
         super();
-        this.messages = messages;
+        this.newMessages = newMessages;
+        this.modifiedMessages = modifiedMessages;
     }
 
-    public Set<MessageDTO> getMessages() {
-        return messages;
+    public Collection<MessageDTO> getNewMessages() {
+        return newMessages;
+    }
+
+    public Collection<MessageDTO> getModifiedMessages() {
+        return modifiedMessages;
     }
 }

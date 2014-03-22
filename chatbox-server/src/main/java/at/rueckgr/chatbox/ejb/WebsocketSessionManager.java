@@ -9,7 +9,7 @@ public interface WebsocketSessionManager {
 
     void removeSession(WebsocketEndpoint notifier);
 
-    void newMessages(Set<MessageDTO> newMessages);
+    void newMessages(Set<MessageDTO> newMessages, Set<MessageDTO> modifiedMessages);
 
     void handleMessage(String message, WebsocketEndpoint session);
 }

@@ -7,7 +7,7 @@ import java.io.Serializable;
  * The primary key class for the shouts database table.
  */
 @Embeddable
-public class ShoutPK implements Serializable {
+public class ShoutPK implements DatabaseThing, Serializable {
     //default serial version id, required for serializable classes.
     private static final long serialVersionUID = 1L;
 
