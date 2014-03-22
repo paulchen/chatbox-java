@@ -101,10 +101,12 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
                     switch(this.messageCache.update(message)) {
                         case NEW:
+                            persistMessage(message);
                             newMessages.add(message);
                             break;
 
                         case MODIFIED:
+                            updateMessage(message);
                             modifiedMessages.add(message);
                             break;
 
@@ -136,6 +138,18 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
         // TODO
         // return new AsyncResult<String>("omg");
+    }
+
+    private void updateMessage(MessageDTO messageDTO) {
+        Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
+        // TODO cascade changes
+        // em.merge(shoutEntity);
+    }
+
+    private void persistMessage(MessageDTO messageDTO) {
+        Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
+        // TODO cascade changes
+        // em.persist(shoutEntity);
     }
 
     @Override

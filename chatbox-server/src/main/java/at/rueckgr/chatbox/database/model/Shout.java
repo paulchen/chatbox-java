@@ -12,7 +12,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -104,12 +103,12 @@ public class Shout implements Serializable, ChatboxEntity {
         this.id = id;
     }
 
-    public Timestamp getDate() {
-        return new Timestamp(this.date.getTime());
+    public Date getDate() {
+        return new Date(this.date.getTime());
     }
 
-    public void setDate(Timestamp date) {
-        this.date = new Timestamp(date.getTime());
+    public void setDate(Date date) {
+        this.date = new Date(date.getTime());
     }
 
     public Integer getDay() {

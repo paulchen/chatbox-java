@@ -5,6 +5,7 @@ import at.rueckgr.chatbox.dto.UserDTO;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 @ApplicationScoped
@@ -12,6 +13,9 @@ public class UserTransformer implements Transformer<User, UserDTO>, Serializable
 
     @Inject
     private UserCategoryTransformer userCategoryTransformer;
+
+    @Inject
+    private EntityManager em;
 
     @Override
     public UserDTO entityToDTO(User userEntity) {
@@ -31,7 +35,10 @@ public class UserTransformer implements Transformer<User, UserDTO>, Serializable
             return null;
         }
 
-        User userEntity = new User();
+        User userEntity = em.find(User.class, userDTO.getId());
+        if(userEntity == null) {
+            userEntity = new User();
+        }
         updateEntity(userEntity, userDTO);
         return userEntity;
     }

@@ -2,6 +2,7 @@ package at.rueckgr.chatbox.database.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -15,9 +16,15 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user_categories")
-@NamedQuery(name = "UserCategory.findAll", query = "SELECT u FROM UserCategory u")
+@NamedQueries({
+        @NamedQuery(name = UserCategory.FIND_ALL, query = "SELECT u FROM UserCategory u"),
+        @NamedQuery(name = UserCategory.FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE name = :name"),
+})
 public class UserCategory implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
+
+    public static final String FIND_ALL = "UserCategory.findAll";
+    public static final String FIND_BY_NAME = "UserCategory.findByName";
 
     @Id
     private Integer id;

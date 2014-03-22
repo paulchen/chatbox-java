@@ -1,11 +1,13 @@
 package at.rueckgr.chatbox.database.transformers;
 
 import at.rueckgr.chatbox.database.model.Shout;
+import at.rueckgr.chatbox.database.model.ShoutPK;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,6 +22,9 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
 
     @Inject
     private MessageUnparser messageUnparser;
+
+    @Inject
+    private EntityManager em;
 
     @Override
     public MessageDTO entityToDTO(Shout shoutEntity) {
@@ -39,8 +44,15 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
             return null;
         }
 
-        // TODO
-        return null;
+        ShoutPK shoutPK = shoutIdTransformer.dtoToEntity(messageDTO.getMessageId());
+        Shout shoutEntity = em.find(Shout.class, shoutPK);
+        if(shoutEntity == null) {
+            shoutEntity = new Shout();
+        }
+
+        updateEntity(shoutEntity, messageDTO);
+
+        return shoutEntity;
     }
 
     @Override
@@ -49,7 +61,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         String message = messageUnparser.unparse(rawMessage);
 
         messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
-        messageDTO.setDate(shoutEntity.getDate());
+        // messageDTO.setDate(shoutEntity.getDate());
         // TODO fix this ugly fuckup
         messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
         messageDTO.setDeleted(shoutEntity.getDeleted());
@@ -60,6 +72,14 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
 
     @Override
     public void updateEntity(Shout shoutEntity, MessageDTO messageDTO) {
-        // TODO
+        // TODO create ShoutRevision if anything changes
+        // TODO create/update list of words/smilies
+        shoutEntity.setId(shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        // shoutEntity.setDate(messageDTO.getDate());
+        // TODO fix this ugly fuckup
+        shoutEntity.setDate(new Date(messageDTO.getDate().getTime()+3600000));
+        shoutEntity.setDeleted(messageDTO.isDeleted());
+        shoutEntity.setMessage(messageDTO.getRawMessage());
+        shoutEntity.setUser(userTransformer.dtoToEntity(messageDTO.getUser()));
     }
 }

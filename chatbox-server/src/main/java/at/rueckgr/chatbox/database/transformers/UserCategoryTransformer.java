@@ -4,9 +4,19 @@ import at.rueckgr.chatbox.database.model.UserCategory;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import java.io.Serializable;
 
 @ApplicationScoped
-public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO> {
+public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO>, Serializable {
+
+    private static final long serialVersionUID = 3428938452700631117L;
+
+    @Inject
+    private EntityManager em;
 
     @Override
     public UserCategoryDTO entityToDTO(UserCategory userCategoryEntity) {
@@ -26,7 +36,15 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
             return null;
         }
 
-        UserCategory userCategoryEntity = new UserCategory();
+        UserCategory userCategoryEntity;
+        TypedQuery<UserCategory> query = em.createNamedQuery(UserCategory.FIND_BY_NAME, UserCategory.class);
+
+        try {
+            userCategoryEntity = query.getSingleResult();
+        }
+        catch (NoResultException e) {
+            userCategoryEntity = new UserCategory();
+        }
         updateEntity(userCategoryEntity, userCategoryDTO);
         return userCategoryEntity;
     }
