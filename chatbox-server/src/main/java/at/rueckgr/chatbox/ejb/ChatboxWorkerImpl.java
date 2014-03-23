@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Asynchronous;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
-import javax.ejb.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Future;
 
-@Singleton
+@ApplicationScoped
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     private static final long serialVersionUID = -8912169820328368446L;
@@ -59,6 +59,33 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
     @Inject
     private MessageUnparser messageUnparser;
 
+    @Inject
+    private ChatboxDAO chatboxDAO;
+
+    private final class MessageFetchResult {
+        private final Set<MessageDTO> newMessages;
+        private final Set<MessageDTO> modifiedMessages;
+        private final int totalMessagesCount;
+
+        private MessageFetchResult(Set<MessageDTO> newMessages, Set<MessageDTO> modifiedMessages, int totalMessagesCount) {
+            this.newMessages = newMessages;
+            this.modifiedMessages = modifiedMessages;
+            this.totalMessagesCount = totalMessagesCount;
+        }
+
+        public Set<MessageDTO> getNewMessages() {
+            return newMessages;
+        }
+
+        public Set<MessageDTO> getModifiedMessages() {
+            return modifiedMessages;
+        }
+
+        public int getTotalMessagesCount() {
+            return totalMessagesCount;
+        }
+    }
+
     @PostConstruct
     public void init() {
         String username = em.find(Settings.class, Settings.FORUM_USERNAME).getValue();
@@ -70,6 +97,7 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
 
     @Override
     public void loadExistingShouts() {
+        // TODO move to ChatboxDAO
         TypedQuery<Shout> query = em.createNamedQuery(Shout.FIND_LAST, Shout.class);
         query.setMaxResults(MessageCache.CACHE_SIZE);
         List<Shout> existingShouts = query.getResultList();
@@ -87,48 +115,25 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
         while (true) {
             log.debug("Fetching chatbox contents...");
 
+            // TODO make try block smaller?
             try {
-                List<MessageDTO> messages = chatbox.fetchCurrent();
-
-                log.debug(String.format("Fetched %s messages from chatbox", messages.size()));
-
-                // TODO
-
-                Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
-                Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
-                for (MessageDTO message : messages) {
-                    message.setMessage(messageUnparser.unparse(message.getRawMessage()));
-
-                    switch(this.messageCache.update(message)) {
-                        case NEW:
-                            persistMessage(message);
-                            newMessages.add(message);
-                            break;
-
-                        case MODIFIED:
-                            updateMessage(message);
-                            modifiedMessages.add(message);
-                            break;
-
-                        case UNMODIFIED:
-                        default: // fall-through
-                            /* nothing to do */
-                    }
+                MessageFetchResult result = processMessages(chatbox.fetchCurrent());
+                if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
+                    newMessageNotifier.newMessages(result.getNewMessages(), result.getModifiedMessages());
                 }
 
-                if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
-                    if(newMessages.size() > 0) {
-                        log.info(String.format("%s new message(s)", newMessages.size()));
-                    }
+                if(result.getNewMessages().size() == result.getTotalMessagesCount()) {
+                    int archivePage = 2;
+                    while (true) {
+                        log.debug(String.format("Fetching chatbox archive page %s", archivePage));
 
-                    if(modifiedMessages.size() > 0) {
-                        log.info(String.format("%s modified message(s)", modifiedMessages.size()));
+                        result = processMessages(chatbox.fetchArchive(archivePage));
+                        // TODO notify clients?
+                        if(result.getNewMessages().isEmpty()) {
+                            break;
+                        }
+                        archivePage++;
                     }
-
-                    newMessageNotifier.newMessages(newMessages, modifiedMessages);
-                }
-                else {
-                    log.info("No new messages");
                 }
             }
             catch (ChatboxWrapperException e) {
@@ -140,16 +145,45 @@ public class ChatboxWorkerImpl implements ChatboxWorker, Serializable {
         // return new AsyncResult<String>("omg");
     }
 
-    private void updateMessage(MessageDTO messageDTO) {
-        Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
-        // TODO cascade changes
-        // em.merge(shoutEntity);
-    }
+    private MessageFetchResult processMessages(List<MessageDTO> messages) {
+        log.debug(String.format("Fetched %s messages from chatbox", messages.size()));
 
-    private void persistMessage(MessageDTO messageDTO) {
-        Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
-        // TODO cascade changes
-        // em.persist(shoutEntity);
+        Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
+        Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
+        for (MessageDTO message : messages) {
+            message.setMessage(messageUnparser.unparse(message.getRawMessage()));
+
+            switch(this.messageCache.update(message)) {
+                case NEW:
+                    chatboxDAO.persistMessage(message);
+                    newMessages.add(message);
+                    break;
+
+                case MODIFIED:
+                    chatboxDAO.updateMessage(message);
+                    modifiedMessages.add(message);
+                    break;
+
+                case UNMODIFIED:
+                default: // fall-through
+                            /* nothing to do */
+            }
+        }
+
+        if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
+            if(newMessages.size() > 0) {
+                log.info(String.format("%s new message(s)", newMessages.size()));
+            }
+
+            if(modifiedMessages.size() > 0) {
+                log.info(String.format("%s modified message(s)", modifiedMessages.size()));
+            }
+        }
+        else {
+            log.info("No new messages");
+        }
+
+        return new MessageFetchResult(newMessages, modifiedMessages, messages.size());
     }
 
     @Override

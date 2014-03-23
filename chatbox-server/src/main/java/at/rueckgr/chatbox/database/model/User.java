@@ -1,5 +1,6 @@
 package at.rueckgr.chatbox.database.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -36,7 +37,7 @@ public class User implements Serializable, ChatboxEntity {
     private List<Shout> shouts;
 
     //bi-directional many-to-one association to UserCategory
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "category")
     private UserCategory userCategory;
 

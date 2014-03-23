@@ -3,11 +3,13 @@ package at.rueckgr.chatbox.database.transformers;
 import at.rueckgr.chatbox.database.model.ShoutPK;
 import at.rueckgr.chatbox.dto.MessageId;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.io.Serializable;
 
 /**
  * @author paulchen
  */
+@ApplicationScoped
 public class ShoutIdTransformer implements Transformer<ShoutPK, MessageId>, Serializable {
 
     @Override

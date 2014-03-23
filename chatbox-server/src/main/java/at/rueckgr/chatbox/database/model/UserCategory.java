@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "user_categories")
 @NamedQueries({
         @NamedQuery(name = UserCategory.FIND_ALL, query = "SELECT u FROM UserCategory u"),
-        @NamedQuery(name = UserCategory.FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE name = :name"),
+        @NamedQuery(name = UserCategory.FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE u.name = :name"),
 })
 public class UserCategory implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;

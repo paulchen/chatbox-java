@@ -2,10 +2,13 @@ package at.rueckgr.chatbox.database.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
@@ -27,6 +30,8 @@ public class Smiley implements Serializable, ChatboxEntity {
     public static final String FIND_BY_FILENAME = "Smiley.findByCode";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smilies_id_seq1")
+    @SequenceGenerator(name = "smilies_id_seq1", sequenceName = "smilies_id_seq1")
     private Integer id;
 
     private String filename;
@@ -36,11 +41,14 @@ public class Smiley implements Serializable, ChatboxEntity {
 
     private String meaning;
 
-    //bi-directional many-to-many association to Shout
-    @ManyToMany(mappedBy = "smilies")
-    private List<Shout> shouts;
+    @OneToMany(mappedBy = "smiley")
+    private List<ShoutSmileys> shoutSmileys;
 
     public Smiley() {
+    }
+
+    public Smiley(String filename) {
+        this.filename = filename;
     }
 
     public Integer getId() {
@@ -59,12 +67,12 @@ public class Smiley implements Serializable, ChatboxEntity {
         this.filename = filename;
     }
 
-    public List<Shout> getShouts() {
-        return this.shouts;
+    public List<ShoutSmileys> getShoutSmileys() {
+        return shoutSmileys;
     }
 
-    public void setShouts(List<Shout> shouts) {
-        this.shouts = shouts;
+    public void setShoutSmileys(List<ShoutSmileys> shoutSmileys) {
+        this.shoutSmileys = shoutSmileys;
     }
 
     public String getCode() {

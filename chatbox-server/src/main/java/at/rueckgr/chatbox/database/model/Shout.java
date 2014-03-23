@@ -1,10 +1,9 @@
 package at.rueckgr.chatbox.database.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -60,37 +59,15 @@ public class Shout implements Serializable, ChatboxEntity {
     private List<ShoutRevision> shoutRevisions;
 
     //bi-directional many-to-one association to User
-    @ManyToOne
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinColumn(name = "user_id")
     private User user;
 
-    //bi-directional many-to-many association to Smily
-    @ManyToMany
-    @JoinTable(
-            name = "shout_smilies"
-            , joinColumns = {
-            @JoinColumn(name = "shout_epoch", referencedColumnName = "epoch"),
-            @JoinColumn(name = "shout_id", referencedColumnName = "id")
-    }
-            , inverseJoinColumns = {
-            @JoinColumn(name = "smiley")
-    }
-    )
-    private List<Smiley> smilies;
+    @OneToMany(mappedBy = "shout")
+    private List<ShoutSmileys> smilies;
 
-    //bi-directional many-to-many association to Word
-    @ManyToMany
-    @JoinTable(
-            name = "shout_words"
-            , joinColumns = {
-            @JoinColumn(name = "shout_epoch", referencedColumnName = "epoch"),
-            @JoinColumn(name = "shout_id", referencedColumnName = "id")
-    }
-            , inverseJoinColumns = {
-            @JoinColumn(name = "word", referencedColumnName = "word")
-    }
-    )
-    private List<Word> words;
+    @OneToMany(mappedBy = "shout")
+    private List<ShoutWords> words;
 
     public Shout() {
     }
@@ -189,20 +166,19 @@ public class Shout implements Serializable, ChatboxEntity {
         this.user = user;
     }
 
-    public List<Smiley> getSmilies() {
-        return this.smilies;
+    public List<ShoutSmileys> getSmilies() {
+        return smilies;
     }
 
-    public void setSmilies(List<Smiley> smilies) {
+    public void setSmilies(List<ShoutSmileys> smilies) {
         this.smilies = smilies;
     }
 
-    public List<Word> getWords() {
-        return this.words;
+    public List<ShoutWords> getWords() {
+        return words;
     }
 
-    public void setWords(List<Word> words) {
+    public void setWords(List<ShoutWords> words) {
         this.words = words;
     }
-
 }

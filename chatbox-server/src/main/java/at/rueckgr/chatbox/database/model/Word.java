@@ -1,9 +1,13 @@
 package at.rueckgr.chatbox.database.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -15,21 +19,32 @@ import java.util.List;
  */
 @Entity
 @Table(name = "words")
-@NamedQuery(name = "Word.findAll", query = "SELECT w FROM Word w")
+@NamedQueries({
+    @NamedQuery(name = Word.FIND_ALL, query = "SELECT w FROM Word w"),
+    @NamedQuery(name = Word.FIND_BY_WORD, query = "SELECT w FROM Word w WHERE w.word = :word"),
+})
 public class Word implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
+    public static final String FIND_ALL = "Word.findAll";
+    public static final String FIND_BY_WORD = "Word.findByWord";
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq1")
+    @SequenceGenerator(name = "words_id_seq1", sequenceName = "words_id_seq1")
     private Integer id;
 
     @NotNull
     private String word;
 
-    //bi-directional many-to-many association to Shout
-    @ManyToMany(mappedBy = "words")
-    private List<Shout> shouts;
+    @OneToMany(mappedBy = "word")
+    private List<ShoutWords> shoutWords;
 
     public Word() {
+    }
+
+    public Word(String word) {
+        this.word = word;
     }
 
     public Integer getId() {
@@ -40,19 +55,19 @@ public class Word implements Serializable, ChatboxEntity {
         this.id = id;
     }
 
-    public List<Shout> getShouts() {
-        return this.shouts;
-    }
-
-    public void setShouts(List<Shout> shouts) {
-        this.shouts = shouts;
-    }
-
     public String getWord() {
         return word;
     }
 
     public void setWord(String word) {
         this.word = word;
+    }
+
+    public List<ShoutWords> getShoutWords() {
+        return shoutWords;
+    }
+
+    public void setShoutWords(List<ShoutWords> shoutWords) {
+        this.shoutWords = shoutWords;
     }
 }

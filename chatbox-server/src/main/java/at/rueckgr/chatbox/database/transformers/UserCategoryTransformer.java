@@ -38,8 +38,10 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
 
         UserCategory userCategoryEntity;
         TypedQuery<UserCategory> query = em.createNamedQuery(UserCategory.FIND_BY_NAME, UserCategory.class);
+        query.setParameter("name", userCategoryDTO.getName());
 
         try {
+            // query.getResultList();
             userCategoryEntity = query.getSingleResult();
         }
         catch (NoResultException e) {
