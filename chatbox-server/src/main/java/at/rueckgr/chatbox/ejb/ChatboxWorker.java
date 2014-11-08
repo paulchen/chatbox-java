@@ -62,7 +62,7 @@ public class ChatboxWorker {
     }
 
     private void init() {
-        if(chatbox.hasSession()) {
+        if(!chatbox.hasSession()) {
             String username = em.find(Settings.class, Settings.FORUM_USERNAME).getValue();
             String password = em.find(Settings.class, Settings.FORUM_PASSWORD).getValue();
 

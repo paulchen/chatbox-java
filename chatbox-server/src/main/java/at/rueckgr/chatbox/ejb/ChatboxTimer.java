@@ -12,12 +12,16 @@ import javax.ejb.Startup;
 import javax.ejb.Timeout;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 @Startup
 @Singleton
 @Lock(LockType.READ)
+// @TransactionAttribute is necessary; otherwise, Deltaspike doesn't start its own transaction and the transaction never gets committed
+@TransactionAttribute(TransactionAttributeType.NEVER)
 public class ChatboxTimer {
     private @Inject Log log;
     private @Inject ChatboxTimerDelegate delegate;

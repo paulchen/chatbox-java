@@ -292,7 +292,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
             private static final long serialVersionUID = -6840776392819411021L;
 
             public boolean isOk(String responseString) {
-                return responseString.isEmpty();
+                return !responseString.isEmpty();
             }
         });
 
