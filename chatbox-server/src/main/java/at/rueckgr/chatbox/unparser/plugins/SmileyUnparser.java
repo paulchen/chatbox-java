@@ -43,9 +43,10 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
         }
         matcher.appendTail(stringBuffer);
 
-        log.debug(String.format("Message after unparsing smileys: %s", input));
+        String output = stringBuffer.toString();
+        log.debug(String.format("Message after unparsing smileys: %s", output));
 
-        return stringBuffer.toString();
+        return output;
     }
 
     private String findSmiley(String filename) {
