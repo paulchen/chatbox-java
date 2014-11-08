@@ -64,4 +64,15 @@ public class ChatboxDAO {
         }
     }
 
+    public MessageCache.MessageStatus getDatabaseStatus(MessageDTO message) {
+        Shout shoutEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(message.getMessageId()));
+        if(shoutEntity == null) {
+            return MessageCache.MessageStatus.NEW;
+        }
+        MessageDTO databaseMessageDTO = shoutTransformer.entityToDTO(shoutEntity);
+        if(databaseMessageDTO.equals(message)) {
+            return MessageCache.MessageStatus.UNMODIFIED;
+        }
+        return MessageCache.MessageStatus.MODIFIED;
+    }
 }

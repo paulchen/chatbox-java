@@ -94,7 +94,7 @@ public class ChatboxWorker {
 
             // TODO make try block smaller?
             try {
-                MessageFetchResult result = processMessages(chatbox.fetchCurrent());
+                MessageFetchResult result = processMessages(chatbox.fetchCurrent(), false);
                 if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
                     newMessageNotifier.newMessages(result.getNewMessages(), result.getModifiedMessages());
                 }
@@ -104,7 +104,7 @@ public class ChatboxWorker {
                     while (true) {
                         log.debug(String.format("Fetching chatbox archive page %s", archivePage));
 
-                        result = processMessages(chatbox.fetchArchive(archivePage));
+                        result = processMessages(chatbox.fetchArchive(archivePage), true);
                         // TODO notify clients?
                         if(result.getNewMessages().isEmpty()) {
                             break;
@@ -119,7 +119,7 @@ public class ChatboxWorker {
         }
     }
 
-    private MessageFetchResult processMessages(List<MessageDTO> messages) {
+    private MessageFetchResult processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
         log.debug(String.format("Fetched %s messages from chatbox", messages.size()));
 
         Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
@@ -127,7 +127,11 @@ public class ChatboxWorker {
         for (MessageDTO message : messages) {
             message.setMessage(messageUnparser.unparse(message.getRawMessage()));
 
-            switch(this.messageCache.update(message)) {
+            MessageCache.MessageStatus status = this.messageCache.update(message);
+            if(checkInDatabase && status == MessageCache.MessageStatus.NEW) {
+                status = chatboxDAO.getDatabaseStatus(message);
+            }
+            switch(status) {
                 case NEW:
                     chatboxDAO.persistMessage(message);
                     newMessages.add(message);

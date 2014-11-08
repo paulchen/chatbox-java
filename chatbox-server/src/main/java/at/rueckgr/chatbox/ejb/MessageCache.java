@@ -16,6 +16,7 @@ public class MessageCache {
     // TODO magic number
     public static final int CACHE_SIZE = 100;
 
+    // TODO move this enum to somewhere else
     public enum MessageStatus {
         UNMODIFIED,
         MODIFIED,
