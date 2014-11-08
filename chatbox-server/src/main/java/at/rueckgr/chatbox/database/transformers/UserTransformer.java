@@ -2,20 +2,17 @@ package at.rueckgr.chatbox.database.transformers;
 
 import at.rueckgr.chatbox.database.model.User;
 import at.rueckgr.chatbox.dto.UserDTO;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.io.Serializable;
 
 @ApplicationScoped
-public class UserTransformer implements Transformer<User, UserDTO>, Serializable {
-
-    @Inject
-    private UserCategoryTransformer userCategoryTransformer;
-
-    @Inject
-    private EntityManager em;
+@Transactional
+public class UserTransformer implements Transformer<User, UserDTO> {
+    private @Inject UserCategoryTransformer userCategoryTransformer;
+    private @Inject EntityManager em;
 
     @Override
     public UserDTO entityToDTO(User userEntity) {

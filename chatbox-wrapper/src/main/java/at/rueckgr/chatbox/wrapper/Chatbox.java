@@ -18,5 +18,7 @@ public interface Chatbox extends Serializable {
 
     void setSession(ChatboxSession chatboxSession);
 
+    boolean hasSession();
+
     List<SmileyDTO> fetchSmilies() throws ChatboxWrapperException;
 }

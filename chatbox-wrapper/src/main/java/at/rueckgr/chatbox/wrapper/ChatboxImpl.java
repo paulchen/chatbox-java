@@ -389,8 +389,14 @@ public class ChatboxImpl implements Serializable, Chatbox {
         return result.isEmpty();
     }
 
+    @Override
     public void setSession(ChatboxSession session) {
         this.session = session;
+    }
+
+    @Override
+    public boolean hasSession() {
+        return this.session != null;
     }
 
     @Override

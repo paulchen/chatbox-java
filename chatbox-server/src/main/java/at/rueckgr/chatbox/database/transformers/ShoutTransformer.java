@@ -9,13 +9,13 @@ import at.rueckgr.chatbox.database.model.Word;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,19 +27,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ApplicationScoped
-public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Serializable {
-
-    @Inject
-    private ShoutIdTransformer shoutIdTransformer;
-
-    @Inject
-    private UserTransformer userTransformer;
-
-    @Inject
-    private MessageUnparser messageUnparser;
-
-    @Inject
-    private EntityManager em;
+@Transactional
+public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
+    private @Inject ShoutIdTransformer shoutIdTransformer;
+    private @Inject UserTransformer userTransformer;
+    private @Inject MessageUnparser messageUnparser;
+    private @Inject EntityManager em;
 
     @Override
     public MessageDTO entityToDTO(Shout shoutEntity) {
@@ -79,7 +72,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         // messageDTO.setDate(shoutEntity.getDate());
         // TODO fix this ugly fuckup
         messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
-        messageDTO.setDeleted(shoutEntity.getDeleted());
+        messageDTO.setDeleted(shoutEntity.getDeleted() == 1);
         messageDTO.setRawMessage(rawMessage);
         messageDTO.setMessage(message);
         messageDTO.setUser(userTransformer.entityToDTO(shoutEntity.getUser()));
@@ -89,10 +82,11 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
     public void updateEntity(Shout shoutEntity, MessageDTO messageDTO) {
         // TODO create ShoutRevision if anything changes
         shoutEntity.setId(shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        shoutEntity.setPrimaryId(messageDTO.getMessageId().getId());
         // shoutEntity.setDate(messageDTO.getDate());
         // TODO fix this ugly fuckup
         shoutEntity.setDate(new Date(messageDTO.getDate().getTime()-3600000));
-        shoutEntity.setDeleted(messageDTO.isDeleted());
+        shoutEntity.setDeleted(messageDTO.isDeleted() ? 1 : 0);
         shoutEntity.setMessage(messageDTO.getRawMessage());
         shoutEntity.setUser(userTransformer.dtoToEntity(messageDTO.getUser()));
 
@@ -139,7 +133,6 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
             catch (NoResultException e) {
                 smiley = new Smiley(smileyEntry.getKey());
                 em.persist(smiley);
-                em.flush();
             }
 
             ret.add(new ShoutSmileys(shoutEntity, smiley, smileyEntry.getValue()));
@@ -156,8 +149,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
     private List<ShoutWords> extractWords(Shout shoutEntity) {
         String message = StringUtils.replaceEach(shoutEntity.getMessage(),
                 new String[]{",", ".", "!", "?"}, new String[]{"", "", "", ""});
-        // TODO doesn't work
-        String[] words = message.split("[\\s]+]");
+        String[] words = message.split("[\\s]+");
 
         Map<String, Integer> wordList = new HashMap<String, Integer>();
         for(String foundWord : words) {
@@ -168,15 +160,18 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO>, Seriali
         List<ShoutWords> ret = new ArrayList<ShoutWords>(wordList.size());
         for(Map.Entry<String, Integer> wordEntry : wordList.entrySet()) {
             Word word;
+            String key = wordEntry.getKey();
+            if(key.length() > 100) { // TODO magic number
+                key = key.substring(0, 100);
+            }
             try {
                 TypedQuery<Word> query = em.createNamedQuery(Word.FIND_BY_WORD, Word.class);
-                query.setParameter("word", wordEntry.getKey());
+                query.setParameter("word", key);
                 word = query.getSingleResult();
             }
             catch (NoResultException e) {
-                word = new Word(wordEntry.getKey());
+                word = new Word(key);
                 em.persist(word);
-                em.flush();
             }
 
             ret.add(new ShoutWords(shoutEntity, word, wordEntry.getValue()));

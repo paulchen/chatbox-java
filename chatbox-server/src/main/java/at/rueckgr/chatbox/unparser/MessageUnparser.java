@@ -10,6 +10,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Set;
  * @author paulchen
  */
 @ApplicationScoped
+@Transactional
 public class MessageUnparser implements Serializable {
     private static final long serialVersionUID = 8276059772935603595L;
 

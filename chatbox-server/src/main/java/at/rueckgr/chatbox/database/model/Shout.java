@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.database.model;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -34,13 +35,18 @@ public class Shout implements Serializable, ChatboxEntity {
     private ShoutPK id;
 
     @NotNull
+    @Column(name = "primary_id")
+    private Integer primaryId;
+
+    @NotNull
     private Date date;
 
     @NotNull
     private Integer day;
 
     @NotNull
-    private Boolean deleted;
+    // TODO this is a actually a Boolean
+    private Integer deleted;
 
     @NotNull
     private Integer hour;
@@ -96,11 +102,11 @@ public class Shout implements Serializable, ChatboxEntity {
         this.day = day;
     }
 
-    public Boolean getDeleted() {
+    public Integer getDeleted() {
         return this.deleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
 
@@ -180,5 +186,13 @@ public class Shout implements Serializable, ChatboxEntity {
 
     public void setWords(List<ShoutWords> words) {
         this.words = words;
+    }
+
+    public Integer getPrimaryId() {
+        return primaryId;
+    }
+
+    public void setPrimaryId(Integer primaryId) {
+        this.primaryId = primaryId;
     }
 }

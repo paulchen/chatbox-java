@@ -2,21 +2,18 @@ package at.rueckgr.chatbox.database.transformers;
 
 import at.rueckgr.chatbox.database.model.UserCategory;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import java.io.Serializable;
 
 @ApplicationScoped
-public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO>, Serializable {
-
-    private static final long serialVersionUID = 3428938452700631117L;
-
-    @Inject
-    private EntityManager em;
+@Transactional
+public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO> {
+    private @Inject EntityManager em;
 
     @Override
     public UserCategoryDTO entityToDTO(UserCategory userCategoryEntity) {

@@ -6,38 +6,25 @@ import at.rueckgr.chatbox.database.model.ShoutWords;
 import at.rueckgr.chatbox.database.transformers.ShoutIdTransformer;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import javax.transaction.UserTransaction;
 
 /**
  * @author paulchen
  */
-// TODO interface?
-// TODO check uses of @Transactional
 @Transactional
 @ApplicationScoped
 public class ChatboxDAO {
-    @Inject
-    private EntityManager em;
+    private @Inject EntityManager em;
+    private @Inject ShoutIdTransformer shoutIdTransformer;
+    private @Inject ShoutTransformer shoutTransformer;
 
-    @Inject
-    private ShoutIdTransformer shoutIdTransformer;
-
-    @Inject
-    private ShoutTransformer shoutTransformer;
-
-    @Inject
-    private UserTransaction userTransaction;
-
-    @Transactional
     public void updateMessage(MessageDTO messageDTO) {
         Shout oldEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
         Shout newEntity = shoutTransformer.dtoToEntity(messageDTO);
-        em.merge(newEntity);
 
         // remove old smileys and words
         for(ShoutSmileys shoutSmiley : oldEntity.getSmilies()) {
@@ -58,13 +45,12 @@ public class ChatboxDAO {
             }
         }
         for(ShoutWords shoutWord : newEntity.getWords()) {
-            if(!oldEntity.getSmilies().contains(shoutWord)) {
+            if(!oldEntity.getWords().contains(shoutWord)) {
                 em.persist(shoutWord);
             }
         }
     }
 
-    @Transactional
     public void persistMessage(MessageDTO messageDTO) {
         Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
         em.persist(shoutEntity);
