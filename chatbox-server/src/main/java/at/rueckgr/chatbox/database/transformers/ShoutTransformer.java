@@ -82,6 +82,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
     public void updateEntity(Shout shoutEntity, MessageDTO messageDTO) {
         // TODO create ShoutRevision if anything changes
         shoutEntity.setId(shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        // TODO fix this
         shoutEntity.setPrimaryId(messageDTO.getMessageId().getId());
         // shoutEntity.setDate(messageDTO.getDate());
         // TODO fix this ugly fuckup
