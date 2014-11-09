@@ -2,6 +2,8 @@ package at.rueckgr.chatbox.ejb;
 
 import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.model.Shout;
+import at.rueckgr.chatbox.database.model.ShoutRevision;
+import at.rueckgr.chatbox.database.model.ShoutRevisionPK;
 import at.rueckgr.chatbox.database.model.ShoutSmileys;
 import at.rueckgr.chatbox.database.model.ShoutWords;
 import at.rueckgr.chatbox.database.model.Smiley;
@@ -18,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,9 +36,43 @@ public class DatabaseService {
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyTransformer smileyTransformer;
 
+    private ShoutRevision findLatestShoutRevision(Shout shout) {
+        TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
+        query.setParameter("id", shout.getId().getId());
+        query.setParameter("epoch", shout.getId().getEpoch());
+
+        try {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    private void createShoutRevision(Shout shout) {
+        int newRevisionId = 1;
+        ShoutRevision shoutRevision = findLatestShoutRevision(shout);
+        if(shoutRevision != null) {
+            newRevisionId = shoutRevision.getId().getRevision()+1;
+        }
+
+        ShoutRevision newRevision = new ShoutRevision();
+        newRevision.setId(new ShoutRevisionPK(shout.getId().getId(), shout.getId().getEpoch(), newRevisionId));
+        newRevision.setDate(shout.getDate());
+        newRevision.setReplaced(new Date(new Date().getTime()-3600000)); // TODO
+        newRevision.setText(shout.getMessage());
+        newRevision.setUser(shout.getUser().getId());
+        // TODO
+        newRevision.setPrimaryId(shout.getId().getId());
+        newRevision.setShout(shout);
+
+        em.persist(newRevision);
+    }
+
     public void updateMessage(MessageDTO messageDTO) {
         // TODO this method is a piece of crap
         Shout oldEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        createShoutRevision(oldEntity);
 
         Shout newEntity = new Shout();
         shoutTransformer.updateEntity(newEntity, messageDTO);

@@ -23,6 +23,12 @@ public class ShoutRevisionPK implements Serializable {
     public ShoutRevisionPK() {
     }
 
+    public ShoutRevisionPK(Integer id, Integer epoch, Integer revision) {
+        this.id = id;
+        this.epoch = epoch;
+        this.revision = revision;
+    }
+
     public Integer getId() {
         return this.id;
     }

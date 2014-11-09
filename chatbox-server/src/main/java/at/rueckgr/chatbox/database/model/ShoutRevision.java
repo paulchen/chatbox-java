@@ -1,15 +1,17 @@
 package at.rueckgr.chatbox.database.model;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -17,25 +19,38 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "shout_revisions")
-@NamedQuery(name = "ShoutRevision.findAll", query = "SELECT s FROM ShoutRevision s")
+@NamedQueries({
+        @NamedQuery(name = ShoutRevision.QRY_FIND_ALL, query = "SELECT s FROM ShoutRevision s"),
+        @NamedQuery(name = ShoutRevision.QRY_FIND_LATEST, query = "SELECT s FROM ShoutRevision s " +
+                "WHERE s.id.id = :id AND s.id.epoch = :epoch ORDER BY s.id.revision DESC"),
+
+})
 public class ShoutRevision implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
+
+    public static final String QRY_FIND_ALL = "ShoutRevision.findAll";
+    public static final String QRY_FIND_LATEST = "ShoutRevision.findLatest";
 
     @EmbeddedId
     private ShoutRevisionPK id;
 
     @NotNull
-    private Timestamp date;
+    private Date date;
 
     @NotNull
-    private Timestamp replaced;
+    private Date replaced;
 
     @NotNull
     private String text;
 
     // TODO foreign key
     @NotNull
+    @Column(name = "user_id")
     private Integer user;
+
+    @NotNull
+    @Column(name = "primary_id")
+    private Integer primaryId;
 
     //bi-directional many-to-one association to Shout
     @ManyToOne
@@ -56,20 +71,20 @@ public class ShoutRevision implements Serializable, ChatboxEntity {
         this.id = id;
     }
 
-    public Timestamp getDate() {
-        return new Timestamp(this.date.getTime());
+    public Date getDate() {
+        return new Date(this.date.getTime());
     }
 
-    public void setDate(Timestamp date) {
-        this.date = new Timestamp(date.getTime());
+    public void setDate(Date date) {
+        this.date = new Date(date.getTime());
     }
 
-    public Timestamp getReplaced() {
-        return new Timestamp(this.replaced.getTime());
+    public Date getReplaced() {
+        return new Date(this.replaced.getTime());
     }
 
-    public void setReplaced(Timestamp replaced) {
-        this.replaced = new Timestamp(replaced.getTime());
+    public void setReplaced(Date replaced) {
+        this.replaced = new Date(replaced.getTime());
     }
 
     public String getText() {
@@ -96,4 +111,11 @@ public class ShoutRevision implements Serializable, ChatboxEntity {
         this.shout = shout;
     }
 
+    public Integer getPrimaryId() {
+        return primaryId;
+    }
+
+    public void setPrimaryId(Integer primaryId) {
+        this.primaryId = primaryId;
+    }
 }

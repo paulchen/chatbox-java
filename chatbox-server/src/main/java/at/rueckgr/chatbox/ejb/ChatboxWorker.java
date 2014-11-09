@@ -85,6 +85,7 @@ public class ChatboxWorker {
             try {
                 MessageFetchResult result = processMessages(chatbox.fetchCurrent(), false);
                 if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
+                    // TODO use CDI events?
                     newMessageNotifier.newMessages(result.getNewMessages(), result.getModifiedMessages());
                 }
 
@@ -142,6 +143,7 @@ public class ChatboxWorker {
 
         if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
             if(newMessages.size() > 0) {
+                // TODO replace String.format() by MessageFormat.format()
                 log.info(String.format("%s new message(s)", newMessages.size()));
             }
 
@@ -150,7 +152,7 @@ public class ChatboxWorker {
             }
         }
         else {
-            log.info("No new messages");
+            log.info("No new or modified messages");
         }
 
         return new MessageFetchResult(newMessages, modifiedMessages, messages.size());

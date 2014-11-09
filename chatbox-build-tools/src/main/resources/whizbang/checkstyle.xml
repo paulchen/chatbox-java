@@ -148,7 +148,7 @@
             <property name="tokens" value="DOT"/>
             <property name="allowLineBreaks" value="true"/>
         </module>
-        <module name="OperatorWrap"/>
+        <!-- <module name="OperatorWrap"/> -->
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter"/>
