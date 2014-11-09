@@ -16,7 +16,7 @@ public class EntityManagerProducer {
     @Produces
     @RequestScoped
     public EntityManager getEntityManager() {
-        return new CustomEntityManager(entityManagerFactory.createEntityManager());
+        return entityManagerFactory.createEntityManager();
     }
 
     public void close(@Disposes EntityManager em) {
