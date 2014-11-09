@@ -1,17 +1,14 @@
-package at.rueckgr.chatbox.ejb;
+package at.rueckgr.chatbox.service.database;
 
-import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.model.ShoutRevision;
 import at.rueckgr.chatbox.database.model.ShoutRevisionPK;
 import at.rueckgr.chatbox.database.model.ShoutSmileys;
 import at.rueckgr.chatbox.database.model.ShoutWords;
-import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.database.transformers.ShoutIdTransformer;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
-import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
-import at.rueckgr.chatbox.dto.SmileyDTO;
+import at.rueckgr.chatbox.service.MessageCache;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -28,13 +25,11 @@ import java.util.List;
  */
 @Transactional
 @ApplicationScoped
-// TODO split this service to MessageService, SettingsService etc.
 // TODO use EntityManager only here; remove @Transactional from all other classes
-public class DatabaseService {
+public class MessageService {
     private @Inject EntityManager em;
     private @Inject ShoutIdTransformer shoutIdTransformer;
     private @Inject ShoutTransformer shoutTransformer;
-    private @Inject SmileyTransformer smileyTransformer;
 
     private ShoutRevision findLatestShoutRevision(Shout shout) {
         TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
@@ -154,11 +149,6 @@ public class DatabaseService {
         return MessageCache.MessageStatus.MODIFIED;
     }
 
-    public String getSetting(String key) {
-        Settings settings = em.find(Settings.class, key);
-        return (settings == null) ? null : settings.getValue();
-    }
-
     public List<MessageDTO> getLastShouts(int maxCount) {
         TypedQuery<Shout> query = em.createNamedQuery(Shout.FIND_LAST, Shout.class);
         query.setMaxResults(maxCount);
@@ -169,28 +159,4 @@ public class DatabaseService {
         return result;
     }
 
-    public void saveSetting(String key, String value) {
-        Settings settings = em.find(Settings.class, key);
-        if(settings != null) {
-            settings.setValue(value);
-        }
-        else {
-            settings = new Settings(key, value);
-            em.persist(settings);
-        }
-    }
-
-    public void saveSmiley(SmileyDTO smileyDTO) {
-        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
-        query.setParameter("filename", smileyDTO.getFilename());
-
-        try {
-            Smiley smiley = query.getSingleResult();
-            smileyTransformer.updateEntity(smiley, smileyDTO);
-        }
-        catch (NoResultException e) {
-            Smiley smiley = smileyTransformer.dtoToEntity(smileyDTO);
-            em.persist(smiley);
-        }
-    }
 }

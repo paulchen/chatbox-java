@@ -1,4 +1,4 @@
-package at.rueckgr.chatbox.ejb;
+package at.rueckgr.chatbox.service;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.message.ChatboxMessage;

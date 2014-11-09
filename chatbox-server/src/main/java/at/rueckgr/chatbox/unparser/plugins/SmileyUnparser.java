@@ -1,7 +1,7 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
 import at.rueckgr.chatbox.database.model.Smiley;
-import at.rueckgr.chatbox.ejb.ChatboxWorker;
+import at.rueckgr.chatbox.service.ChatboxWorker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;

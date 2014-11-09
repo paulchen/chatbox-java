@@ -1,4 +1,4 @@
-package at.rueckgr.chatbox.ejb;
+package at.rueckgr.chatbox.service;
 
 import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
@@ -6,6 +6,9 @@ import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.MessageSorter;
 import at.rueckgr.chatbox.dto.SmileyDTO;
+import at.rueckgr.chatbox.service.database.MessageService;
+import at.rueckgr.chatbox.service.database.SettingsService;
+import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
@@ -28,7 +31,9 @@ public class ChatboxWorker {
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyTransformer smileyTransformer;
     private @Inject MessageUnparser messageUnparser;
-    private @Inject DatabaseService databaseService;
+    private @Inject MessageService messageService;
+    private @Inject SettingsService settingsService;
+    private @Inject SmileyService smileyService;
 
     private final class MessageFetchResult {
         private final Set<MessageDTO> newMessages;
@@ -56,8 +61,8 @@ public class ChatboxWorker {
 
     private void init() {
         if(!chatbox.hasSession()) {
-            String username = databaseService.getSetting(Settings.FORUM_USERNAME);
-            String password = databaseService.getSetting(Settings.FORUM_PASSWORD);
+            String username = settingsService.getSetting(Settings.FORUM_USERNAME);
+            String password = settingsService.getSetting(Settings.FORUM_PASSWORD);
 
             chatbox.setSession(new ChatboxSession(username, password));
         }
@@ -66,7 +71,7 @@ public class ChatboxWorker {
     public void loadExistingShouts() {
         init();
 
-        List<MessageDTO> existingShouts = databaseService.getLastShouts(MessageCache.CACHE_SIZE);
+        List<MessageDTO> existingShouts = messageService.getLastShouts(MessageCache.CACHE_SIZE);
         // TODO umgekehrte Reihenfolge notwendig?
         for(int a = existingShouts.size()-1; a>=0; a--) {
             this.messageCache.update(existingShouts.get(a));
@@ -104,7 +109,7 @@ public class ChatboxWorker {
                 }
 
                 // TODO magic value
-                databaseService.saveSetting("last_update", String.valueOf(new Date().getTime()/1000));
+                settingsService.saveSetting("last_update", String.valueOf(new Date().getTime()/1000));
             }
             catch (ChatboxWrapperException e) {
                 log.error("Exception while obtaining messages", e);
@@ -122,16 +127,16 @@ public class ChatboxWorker {
 
             MessageCache.MessageStatus status = this.messageCache.update(message);
             if(checkInDatabase && status == MessageCache.MessageStatus.NEW) {
-                status = databaseService.getDatabaseStatus(message);
+                status = messageService.getDatabaseStatus(message);
             }
             switch(status) {
                 case NEW:
-                    databaseService.persistMessage(message);
+                    messageService.persistMessage(message);
                     newMessages.add(message);
                     break;
 
                 case MODIFIED:
-                    databaseService.updateMessage(message);
+                    messageService.updateMessage(message);
                     modifiedMessages.add(message);
                     break;
 
@@ -163,7 +168,7 @@ public class ChatboxWorker {
 
         Date now = new Date();
         // TODO constant
-        String setting = databaseService.getSetting("last_smiley_import");
+        String setting = settingsService.getSetting("last_smiley_import");
         if(setting != null) {
             long lastImportTimestamp = Long.parseLong(setting);
 
@@ -184,10 +189,10 @@ public class ChatboxWorker {
             return;
         }
 
-        databaseService.saveSetting("last_smiley_import", String.valueOf(now.getTime()));
+        settingsService.saveSetting("last_smiley_import", String.valueOf(now.getTime()));
 
         for (SmileyDTO smileyDTO : smilies) {
-            databaseService.saveSmiley(smileyDTO);
+            smileyService.saveSmiley(smileyDTO);
         }
     }
 }

@@ -1,4 +1,4 @@
-package at.rueckgr.chatbox.ejb;
+package at.rueckgr.chatbox.service;
 
 import org.apache.commons.logging.Log;
 

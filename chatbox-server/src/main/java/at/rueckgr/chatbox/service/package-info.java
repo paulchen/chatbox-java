@@ -5,4 +5,4 @@
  * @author paulchen
  *
  */
-package at.rueckgr.chatbox.ejb;
+package at.rueckgr.chatbox.service;
