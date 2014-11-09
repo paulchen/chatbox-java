@@ -33,10 +33,15 @@ public class UserTransformer implements Transformer<User, UserDTO> {
         }
 
         User userEntity = em.find(User.class, userDTO.getId());
+        boolean newEntity = false;
         if(userEntity == null) {
             userEntity = new User();
+            newEntity = true;
         }
         updateEntity(userEntity, userDTO);
+        if(newEntity) {
+            em.persist(userEntity);
+        }
         return userEntity;
     }
 
