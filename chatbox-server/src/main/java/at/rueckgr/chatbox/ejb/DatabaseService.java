@@ -25,6 +25,8 @@ import java.util.List;
  */
 @Transactional
 @ApplicationScoped
+// TODO split this service to MessageService, SettingsService etc.
+// TODO use EntityManager only here; remove @Transactional from all other classes
 public class DatabaseService {
     private @Inject EntityManager em;
     private @Inject ShoutIdTransformer shoutIdTransformer;
