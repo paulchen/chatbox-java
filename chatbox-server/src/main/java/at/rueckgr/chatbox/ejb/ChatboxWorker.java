@@ -101,6 +101,9 @@ public class ChatboxWorker {
                         archivePage++;
                     }
                 }
+
+                // TODO magic value
+                databaseService.saveSetting("last_update", String.valueOf(new Date().getTime()/1000));
             }
             catch (ChatboxWrapperException e) {
                 log.error("Exception while obtaining messages", e);
