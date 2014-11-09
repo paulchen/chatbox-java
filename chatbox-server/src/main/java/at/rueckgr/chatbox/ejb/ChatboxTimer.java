@@ -15,7 +15,6 @@ import javax.ejb.TimerService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 @Startup
 @Singleton
@@ -24,28 +23,48 @@ import javax.persistence.EntityManager;
 @TransactionAttribute(TransactionAttributeType.NEVER)
 public class ChatboxTimer {
     private @Inject Log log;
-    private @Inject ChatboxTimerDelegate delegate;
-
-    private @Inject EntityManager em;
+    private @Inject ChatboxWorker worker;
 
     private @Resource TimerService timerService;
+
+    private boolean running;
 
     @PostConstruct
     public void startup() {
         log.info("Starting up");
 
-        delegate.setRunning(true);
+        running = true;
 
         timerService.createSingleActionTimer(1000, new TimerConfig());
     }
 
     @Timeout
     public void init() {
-        delegate.init();
+        log.info("Initializing message cache");
+
+        worker.loadExistingShouts();
+        invokeWorker();
     }
 
     @Schedule(hour = "*", minute = "*")
     public void ensureWorkerRunning() {
-        delegate.ensureWorkerRunning();
+        log.info("Routine check if worker is running");
+
+        if (running) {
+            return;
+        }
+
+        invokeWorker();
+    }
+
+    private void invokeWorker() {
+        log.info("Worker not running, (re)starting");
+
+        try {
+            worker.run();
+        }
+        finally {
+            running = false;
+        }
     }
 }
