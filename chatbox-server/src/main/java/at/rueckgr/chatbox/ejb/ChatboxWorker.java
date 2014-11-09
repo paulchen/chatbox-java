@@ -1,8 +1,6 @@
 package at.rueckgr.chatbox.ejb;
 
 import at.rueckgr.chatbox.database.model.Settings;
-import at.rueckgr.chatbox.database.model.Shout;
-import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
@@ -13,13 +11,9 @@ import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
 import org.apache.commons.logging.Log;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -31,11 +25,10 @@ public class ChatboxWorker {
     private @Inject Chatbox chatbox;
     private @Inject MessageCache messageCache;
     private @Inject WebsocketSessionManager newMessageNotifier;
-    private @Inject EntityManager em;
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyTransformer smileyTransformer;
     private @Inject MessageUnparser messageUnparser;
-    private @Inject ChatboxDAO chatboxDAO;
+    private @Inject DatabaseService databaseService;
 
     private final class MessageFetchResult {
         private final Set<MessageDTO> newMessages;
@@ -63,24 +56,20 @@ public class ChatboxWorker {
 
     private void init() {
         if(!chatbox.hasSession()) {
-            String username = em.find(Settings.class, Settings.FORUM_USERNAME).getValue();
-            String password = em.find(Settings.class, Settings.FORUM_PASSWORD).getValue();
+            String username = databaseService.getSetting(Settings.FORUM_USERNAME);
+            String password = databaseService.getSetting(Settings.FORUM_PASSWORD);
 
             chatbox.setSession(new ChatboxSession(username, password));
         }
     }
 
-    @Transactional
     public void loadExistingShouts() {
         init();
 
-        // TODO move to ChatboxDAO
-        TypedQuery<Shout> query = em.createNamedQuery(Shout.FIND_LAST, Shout.class);
-        query.setMaxResults(MessageCache.CACHE_SIZE);
-        List<Shout> existingShouts = query.getResultList();
-
+        List<MessageDTO> existingShouts = databaseService.getLastShouts(MessageCache.CACHE_SIZE);
+        // TODO umgekehrte Reihenfolge notwendig?
         for(int a = existingShouts.size()-1; a>=0; a--) {
-            this.messageCache.update(shoutTransformer.entityToDTO(existingShouts.get(a)));
+            this.messageCache.update(existingShouts.get(a));
         }
     }
 
@@ -129,16 +118,16 @@ public class ChatboxWorker {
 
             MessageCache.MessageStatus status = this.messageCache.update(message);
             if(checkInDatabase && status == MessageCache.MessageStatus.NEW) {
-                status = chatboxDAO.getDatabaseStatus(message);
+                status = databaseService.getDatabaseStatus(message);
             }
             switch(status) {
                 case NEW:
-                    chatboxDAO.persistMessage(message);
+                    databaseService.persistMessage(message);
                     newMessages.add(message);
                     break;
 
                 case MODIFIED:
-                    chatboxDAO.updateMessage(message);
+                    databaseService.updateMessage(message);
                     modifiedMessages.add(message);
                     break;
 
@@ -164,23 +153,19 @@ public class ChatboxWorker {
         return new MessageFetchResult(newMessages, modifiedMessages, messages.size());
     }
 
-    @Transactional
     public void importSmilies() {
         init();
 
         Date now = new Date();
         // TODO constant
-        Settings setting = em.find(Settings.class, "last_smiley_import");
+        String setting = databaseService.getSetting("last_smiley_import");
         if(setting != null) {
-            long lastImportTimestamp = Long.parseLong(setting.getValue());
+            long lastImportTimestamp = Long.parseLong(setting);
 
             // TODO magic number
             if(now.getTime()-lastImportTimestamp < 3600000) {
                 return;
             }
-        }
-        else {
-            setting = new Settings("last_smiley_import", String.valueOf(now.getTime()));
         }
 
         log.info("Fetching smiley list");
@@ -194,26 +179,10 @@ public class ChatboxWorker {
             return;
         }
 
-        setting.setValue(String.valueOf(now.getTime()));
-        em.persist(setting);
-
-        // TODO place this query into a separate method
-        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
+        databaseService.saveSetting("last_smiley_import", String.valueOf(now.getTime()));
 
         for (SmileyDTO smileyDTO : smilies) {
-            query.setParameter("filename", smileyDTO.getFilename());
-            try {
-                Smiley smiley = query.getSingleResult();
-                smileyTransformer.updateEntity(smiley, smileyDTO);
-                em.merge(smiley);
-            }
-            catch (NoResultException e) {
-                Smiley smiley = smileyTransformer.dtoToEntity(smileyDTO);
-                em.persist(smiley);
-                // TODO
-            }
+            databaseService.saveSmiley(smileyDTO);
         }
-
-        // TODO
     }
 }
