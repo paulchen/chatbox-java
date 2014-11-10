@@ -20,17 +20,13 @@ public class ShoutWordsPK implements DatabaseThing, Serializable {
     @Column(name = "word", nullable = false)
     private int wordId;
 
-    @Column(nullable = false)
-    private int count;
-
     public ShoutWordsPK() {
     }
 
-    public ShoutWordsPK(int shoutId, int shoutEpoch, int wordId, int count) {
+    public ShoutWordsPK(int shoutId, int shoutEpoch, int wordId) {
         this.shoutId = shoutId;
         this.shoutEpoch = shoutEpoch;
         this.wordId = wordId;
-        this.count = count;
     }
 
     public int getShoutId() {
@@ -57,14 +53,6 @@ public class ShoutWordsPK implements DatabaseThing, Serializable {
         this.wordId = wordId;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -76,9 +64,6 @@ public class ShoutWordsPK implements DatabaseThing, Serializable {
 
         ShoutWordsPK that = (ShoutWordsPK) o;
 
-        if (count != that.count) {
-            return false;
-        }
         if (shoutEpoch != that.shoutEpoch) {
             return false;
         }
@@ -97,7 +82,6 @@ public class ShoutWordsPK implements DatabaseThing, Serializable {
         int result = shoutId;
         result = 31 * result + shoutEpoch;
         result = 31 * result + wordId;
-        result = 31 * result + count;
         return result;
     }
 }

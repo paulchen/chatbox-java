@@ -7,11 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.List;
 
 
 /**
@@ -41,9 +39,6 @@ public class Smiley implements Serializable, ChatboxEntity {
 
     private String meaning;
 
-    @OneToMany(mappedBy = "smiley")
-    private List<ShoutSmileys> shoutSmileys;
-
     public Smiley() {
     }
 
@@ -65,14 +60,6 @@ public class Smiley implements Serializable, ChatboxEntity {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    public List<ShoutSmileys> getShoutSmileys() {
-        return shoutSmileys;
-    }
-
-    public void setShoutSmileys(List<ShoutSmileys> shoutSmileys) {
-        this.shoutSmileys = shoutSmileys;
     }
 
     public String getCode() {

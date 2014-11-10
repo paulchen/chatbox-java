@@ -20,17 +20,13 @@ public class ShoutSmileysPK implements DatabaseThing, Serializable {
     @Column(name = "smiley", nullable = false)
     private int smileyId;
 
-    @Column(nullable = false)
-    private int count;
-
     public ShoutSmileysPK() {
     }
 
-    public ShoutSmileysPK(int shoutId, int shoutEpoch, int smileyId, int count) {
+    public ShoutSmileysPK(int shoutId, int shoutEpoch, int smileyId) {
         this.shoutId = shoutId;
         this.shoutEpoch = shoutEpoch;
         this.smileyId = smileyId;
-        this.count = count;
     }
 
     public int getShoutId() {
@@ -57,14 +53,6 @@ public class ShoutSmileysPK implements DatabaseThing, Serializable {
         this.smileyId = smileyId;
     }
 
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -76,9 +64,6 @@ public class ShoutSmileysPK implements DatabaseThing, Serializable {
 
         ShoutSmileysPK that = (ShoutSmileysPK) o;
 
-        if (count != that.count) {
-            return false;
-        }
         if (shoutEpoch != that.shoutEpoch) {
             return false;
         }
@@ -97,7 +82,6 @@ public class ShoutSmileysPK implements DatabaseThing, Serializable {
         int result = shoutId;
         result = 31 * result + shoutEpoch;
         result = 31 * result + smileyId;
-        result = 31 * result + count;
         return result;
     }
 }

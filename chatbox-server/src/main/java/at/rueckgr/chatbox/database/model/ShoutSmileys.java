@@ -1,10 +1,13 @@
 package at.rueckgr.chatbox.database.model;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -13,7 +16,12 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "shout_smilies")
+@NamedQueries(
+        @NamedQuery(name = ShoutSmileys.FIND_BY_SHOUT, query = "SELECT sm FROM ShoutSmileys sm WHERE sm.shout = :shout")
+)
 public class ShoutSmileys implements Serializable, ChatboxEntity {
+
+    public static final String FIND_BY_SHOUT = "ShoutSmileys.findByShout";
 
     @EmbeddedId
     private ShoutSmileysPK id;
@@ -31,14 +39,18 @@ public class ShoutSmileys implements Serializable, ChatboxEntity {
     })
     private Smiley smiley;
 
+    @Column(nullable = false)
+    private int count;
+
     public ShoutSmileys() {
     }
 
     public ShoutSmileys(Shout shout, Smiley smiley, int count) {
         this.shout = shout;
         this.smiley = smiley;
+        this.count = count;
 
-        this.id = new ShoutSmileysPK(shout.getId().getId(), shout.getId().getEpoch(), smiley.getId(), count);
+        this.id = new ShoutSmileysPK(shout.getId().getId(), shout.getId().getEpoch(), smiley.getId());
     }
 
     public ShoutSmileysPK getId() {
@@ -63,6 +75,14 @@ public class ShoutSmileys implements Serializable, ChatboxEntity {
 
     public void setSmiley(Smiley smiley) {
         this.smiley = smiley;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override

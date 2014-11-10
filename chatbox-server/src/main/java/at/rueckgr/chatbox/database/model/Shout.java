@@ -1,6 +1,5 @@
 package at.rueckgr.chatbox.database.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -8,12 +7,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -60,20 +57,10 @@ public class Shout implements Serializable, ChatboxEntity {
     @NotNull
     private Integer year;
 
-    //bi-directional many-to-one association to ShoutRevision
-    @OneToMany(mappedBy = "shout")
-    private List<ShoutRevision> shoutRevisions;
-
     //bi-directional many-to-one association to User
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "shout")
-    private List<ShoutSmileys> smilies;
-
-    @OneToMany(mappedBy = "shout")
-    private List<ShoutWords> words;
 
     public Shout() {
     }
@@ -142,50 +129,12 @@ public class Shout implements Serializable, ChatboxEntity {
         this.year = year;
     }
 
-    public List<ShoutRevision> getShoutRevisions() {
-        return this.shoutRevisions;
-    }
-
-    public void setShoutRevisions(List<ShoutRevision> shoutRevisions) {
-        this.shoutRevisions = shoutRevisions;
-    }
-
-    public ShoutRevision addShoutRevision(ShoutRevision shoutRevision) {
-        getShoutRevisions().add(shoutRevision);
-        shoutRevision.setShout(this);
-
-        return shoutRevision;
-    }
-
-    public ShoutRevision removeShoutRevision(ShoutRevision shoutRevision) {
-        getShoutRevisions().remove(shoutRevision);
-        shoutRevision.setShout(null);
-
-        return shoutRevision;
-    }
-
     public User getUser() {
         return this.user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public List<ShoutSmileys> getSmilies() {
-        return smilies;
-    }
-
-    public void setSmilies(List<ShoutSmileys> smilies) {
-        this.smilies = smilies;
-    }
-
-    public List<ShoutWords> getWords() {
-        return words;
-    }
-
-    public void setWords(List<ShoutWords> words) {
-        this.words = words;
     }
 
     public Integer getPrimaryId() {

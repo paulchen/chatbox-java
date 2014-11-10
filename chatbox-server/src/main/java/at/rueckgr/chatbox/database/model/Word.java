@@ -6,12 +6,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 
 /**
@@ -37,9 +35,6 @@ public class Word implements Serializable, ChatboxEntity {
     @NotNull
     private String word;
 
-    @OneToMany(mappedBy = "word")
-    private List<ShoutWords> shoutWords;
-
     public Word() {
     }
 
@@ -61,13 +56,5 @@ public class Word implements Serializable, ChatboxEntity {
 
     public void setWord(String word) {
         this.word = word;
-    }
-
-    public List<ShoutWords> getShoutWords() {
-        return shoutWords;
-    }
-
-    public void setShoutWords(List<ShoutWords> shoutWords) {
-        this.shoutWords = shoutWords;
     }
 }

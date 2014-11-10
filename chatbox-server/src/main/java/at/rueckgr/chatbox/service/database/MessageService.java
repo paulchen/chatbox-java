@@ -3,8 +3,6 @@ package at.rueckgr.chatbox.service.database;
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.model.ShoutRevision;
 import at.rueckgr.chatbox.database.model.ShoutRevisionPK;
-import at.rueckgr.chatbox.database.model.ShoutSmileys;
-import at.rueckgr.chatbox.database.model.ShoutWords;
 import at.rueckgr.chatbox.database.transformers.ShoutIdTransformer;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
@@ -30,6 +28,8 @@ public class MessageService {
     private @Inject EntityManager em;
     private @Inject ShoutIdTransformer shoutIdTransformer;
     private @Inject ShoutTransformer shoutTransformer;
+    private @Inject SmileyService smileyService;
+    private @Inject WordService wordService;
 
     private ShoutRevision findLatestShoutRevision(Shout shout) {
         TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
@@ -81,60 +81,16 @@ public class MessageService {
         oldEntity.setUser(newEntity.getUser());
         oldEntity.setYear(newEntity.getYear());
 
-        // remove old smileys and words
-        List<ShoutSmileys> smileysToRemove = new ArrayList<ShoutSmileys>();
-        List<ShoutWords> wordsToRemove = new ArrayList<ShoutWords>();
-        for(ShoutSmileys shoutSmiley : oldEntity.getSmilies()) {
-            if(!newEntity.getSmilies().contains(shoutSmiley)) {
-                smileysToRemove.add(shoutSmiley);
-            }
-        }
-        for(ShoutWords shoutWord : oldEntity.getWords()) {
-            if(!newEntity.getWords().contains(shoutWord)) {
-                wordsToRemove.add(shoutWord);
-            }
-        }
-
-        for (ShoutSmileys shoutSmiley : smileysToRemove) {
-            em.remove(shoutSmiley);
-            oldEntity.getSmilies().remove(shoutSmiley);
-        }
-        for (ShoutWords shoutWord : wordsToRemove) {
-            em.remove(shoutWord);
-            oldEntity.getWords().remove(shoutWord);
-        }
-
-        // to avoid unique constraint violations when adding an entity that has the same primary key as an entity that has just been removed
-        em.flush();
-
-        // persist new smileys and words
-        for(ShoutSmileys shoutSmiley : newEntity.getSmilies()) {
-            if(!oldEntity.getSmilies().contains(shoutSmiley)) {
-                shoutSmiley.setShout(oldEntity);
-                em.persist(shoutSmiley);
-                oldEntity.getSmilies().add(shoutSmiley);
-            }
-        }
-        for(ShoutWords shoutWord : newEntity.getWords()) {
-            if(!oldEntity.getWords().contains(shoutWord)) {
-                shoutWord.setShout(oldEntity);
-                em.persist(shoutWord);
-                oldEntity.getWords().add(shoutWord);
-            }
-        }
+        smileyService.updateSmilies(oldEntity);
+        wordService.updateWords(oldEntity);
     }
 
     public void persistMessage(MessageDTO messageDTO) {
         Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
         em.persist(shoutEntity);
 
-        // persist smileys and words
-        for(ShoutSmileys shoutSmiley : shoutEntity.getSmilies()) {
-            em.persist(shoutSmiley);
-        }
-        for(ShoutWords shoutWord : shoutEntity.getWords()) {
-            em.persist(shoutWord);
-        }
+        smileyService.updateSmilies(shoutEntity);
+        wordService.updateWords(shoutEntity);
     }
 
     public MessageCache.MessageStatus getDatabaseStatus(MessageDTO message) {
