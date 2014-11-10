@@ -23,15 +23,19 @@ import java.util.List;
  */
 @Transactional
 @ApplicationScoped
-// TODO use EntityManager only here; remove @Transactional from all other classes
 public class MessageService {
     private @Inject EntityManager em;
     private @Inject ShoutIdTransformer shoutIdTransformer;
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyService smileyService;
     private @Inject WordService wordService;
+    private @Inject UserService userService;
 
     private ShoutRevision findLatestShoutRevision(Shout shout) {
+        if(shout.getId() == null) {
+            return null;
+        }
+
         TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
         query.setParameter("id", shout.getId().getId());
         query.setParameter("epoch", shout.getId().getEpoch());
@@ -65,28 +69,19 @@ public class MessageService {
     }
 
     public void updateMessage(MessageDTO messageDTO) {
-        // TODO this method is a piece of crap
-        Shout oldEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
-        createShoutRevision(oldEntity);
+        Shout shoutEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        createShoutRevision(shoutEntity);
 
-        Shout newEntity = new Shout();
-        shoutTransformer.updateEntity(newEntity, messageDTO);
+        shoutTransformer.updateEntity(shoutEntity, messageDTO);
+        shoutEntity.setUser(userService.findUser(messageDTO.getUser()));
 
-        oldEntity.setDate(newEntity.getDate());
-        oldEntity.setDay(newEntity.getDay());
-        oldEntity.setDeleted(newEntity.getDeleted());
-        oldEntity.setHour(newEntity.getHour());
-        oldEntity.setMessage(newEntity.getMessage());
-        oldEntity.setMonth(newEntity.getMonth());
-        oldEntity.setUser(newEntity.getUser());
-        oldEntity.setYear(newEntity.getYear());
-
-        smileyService.updateSmilies(oldEntity);
-        wordService.updateWords(oldEntity);
+        smileyService.updateSmilies(shoutEntity);
+        wordService.updateWords(shoutEntity);
     }
 
     public void persistMessage(MessageDTO messageDTO) {
         Shout shoutEntity = shoutTransformer.dtoToEntity(messageDTO);
+        shoutEntity.setUser(userService.findUser(messageDTO.getUser()));
         em.persist(shoutEntity);
 
         smileyService.updateSmilies(shoutEntity);

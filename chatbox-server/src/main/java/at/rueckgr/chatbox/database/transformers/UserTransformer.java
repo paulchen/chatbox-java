@@ -6,13 +6,11 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 @ApplicationScoped
 @Transactional
 public class UserTransformer implements Transformer<User, UserDTO> {
     private @Inject UserCategoryTransformer userCategoryTransformer;
-    private @Inject EntityManager em;
 
     @Override
     public UserDTO entityToDTO(User userEntity) {
@@ -20,10 +18,7 @@ public class UserTransformer implements Transformer<User, UserDTO> {
             return null;
         }
 
-        // TODO use factory
-        UserDTO userDTO = new UserDTO();
-        updateDTO(userDTO, userEntity);
-        return userDTO;
+        return updateDTO(new UserDTO(), userEntity);
     }
 
     @Override
@@ -32,30 +27,23 @@ public class UserTransformer implements Transformer<User, UserDTO> {
             return null;
         }
 
-        User userEntity = em.find(User.class, userDTO.getId());
-        boolean newEntity = false;
-        if(userEntity == null) {
-            userEntity = new User();
-            newEntity = true;
-        }
-        updateEntity(userEntity, userDTO);
-        if(newEntity) {
-            em.persist(userEntity);
-        }
-        return userEntity;
+        return updateEntity(new User(), userDTO);
     }
 
     @Override
-    public void updateDTO(UserDTO userDTO, User userEntity) {
+    public UserDTO updateDTO(UserDTO userDTO, User userEntity) {
         userDTO.setName(userEntity.getName());
         userDTO.setId(userEntity.getId());
         userDTO.setUserCategory(userCategoryTransformer.entityToDTO(userEntity.getUserCategory()));
+
+        return userDTO;
     }
 
     @Override
-    public void updateEntity(User userEntity, UserDTO userDTO) {
+    public User updateEntity(User userEntity, UserDTO userDTO) {
         userEntity.setName(userDTO.getName());
         userEntity.setId(userDTO.getId());
-        userEntity.setUserCategory(userCategoryTransformer.dtoToEntity(userDTO.getUserCategory()));
+
+        return userEntity;
     }
 }

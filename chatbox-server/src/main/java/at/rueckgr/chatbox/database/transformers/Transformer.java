@@ -8,7 +8,7 @@ public interface Transformer<ENTITY extends DatabaseThing, DTO extends DTOThing>
 
     ENTITY dtoToEntity(DTO dto);
 
-    void updateDTO(DTO dto, ENTITY entity);
+    DTO updateDTO(DTO dto, ENTITY entity);
 
-    void updateEntity(ENTITY entity, DTO dto);
+    ENTITY updateEntity(ENTITY entity, DTO dto);
 }

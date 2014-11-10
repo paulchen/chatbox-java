@@ -5,8 +5,10 @@ import at.rueckgr.chatbox.database.model.Settings;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 @ApplicationScoped
+@Transactional
 public class SettingsService {
     private @Inject EntityManager em;
 

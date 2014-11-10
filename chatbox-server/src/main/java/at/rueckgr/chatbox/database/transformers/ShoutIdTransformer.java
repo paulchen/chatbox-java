@@ -26,14 +26,18 @@ public class ShoutIdTransformer implements Transformer<ShoutPK, MessageId> {
     }
 
     @Override
-    public void updateDTO(MessageId dto, ShoutPK entity) {
+    public MessageId updateDTO(MessageId dto, ShoutPK entity) {
         dto.setId(entity.getId());
         dto.setEpoch(entity.getEpoch());
+
+        return dto;
     }
 
     @Override
-    public void updateEntity(ShoutPK entity, MessageId dto) {
+    public ShoutPK updateEntity(ShoutPK entity, MessageId dto) {
         entity.setId(dto.getId());
         entity.setEpoch(dto.getEpoch());
+
+        return entity;
     }
 }

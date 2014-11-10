@@ -5,15 +5,10 @@ import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 
 @ApplicationScoped
 @Transactional
 public class UserCategoryTransformer implements Transformer<UserCategory, UserCategoryDTO> {
-    private @Inject EntityManager em;
 
     @Override
     public UserCategoryDTO entityToDTO(UserCategory userCategoryEntity) {
@@ -21,10 +16,7 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
             return null;
         }
 
-        // TODO use factory
-        UserCategoryDTO userCategoryDTO = new UserCategoryDTO();
-        updateDTO(userCategoryDTO, userCategoryEntity);
-        return userCategoryDTO;
+        return updateDTO(new UserCategoryDTO(), userCategoryEntity);
     }
 
     @Override
@@ -33,35 +25,22 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
             return null;
         }
 
-        UserCategory userCategoryEntity;
-        TypedQuery<UserCategory> query = em.createNamedQuery(UserCategory.FIND_BY_NAME, UserCategory.class);
-        query.setParameter("name", userCategoryDTO.getName());
-
-        boolean newEntity = false;
-        try {
-            // query.getResultList();
-            userCategoryEntity = query.getSingleResult();
-        }
-        catch (NoResultException e) {
-            userCategoryEntity = new UserCategory();
-            newEntity = true;
-        }
-        updateEntity(userCategoryEntity, userCategoryDTO);
-        if(newEntity) {
-            em.persist(userCategoryEntity);
-        }
-        return userCategoryEntity;
+        return updateEntity(new UserCategory(), userCategoryDTO);
     }
 
     @Override
-    public void updateDTO(UserCategoryDTO userCategoryDTO, UserCategory userCategoryEntity) {
+    public UserCategoryDTO updateDTO(UserCategoryDTO userCategoryDTO, UserCategory userCategoryEntity) {
         userCategoryDTO.setColor(userCategoryEntity.getColor());
         userCategoryDTO.setName(userCategoryEntity.getName());
+
+        return userCategoryDTO;
     }
 
     @Override
-    public void updateEntity(UserCategory userCategoryEntity, UserCategoryDTO userCategoryDTO) {
+    public UserCategory updateEntity(UserCategory userCategoryEntity, UserCategoryDTO userCategoryDTO) {
         userCategoryEntity.setColor(userCategoryDTO.getColor());
         userCategoryEntity.setName(userCategoryDTO.getName());
+
+        return userCategoryEntity;
     }
 }

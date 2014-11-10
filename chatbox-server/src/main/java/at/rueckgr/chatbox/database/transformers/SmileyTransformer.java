@@ -3,9 +3,12 @@ package at.rueckgr.chatbox.database.transformers;
 import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 
+import javax.enterprise.context.ApplicationScoped;
+
 /**
  * @author paulchen
  */
+@ApplicationScoped
 public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
     @Override
     public SmileyDTO entityToDTO(Smiley smileyEntity) {
@@ -13,9 +16,7 @@ public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
             return null;
         }
 
-        SmileyDTO smileyDTO = new SmileyDTO();
-        updateDTO(smileyDTO, smileyEntity);
-        return smileyDTO;
+        return updateDTO(new SmileyDTO(), smileyEntity);
     }
 
     @Override
@@ -24,22 +25,24 @@ public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
             return null;
         }
 
-        Smiley smileyEntity = new Smiley();
-        updateEntity(smileyEntity, smileyDTO);
-        return smileyEntity;
+        return updateEntity(new Smiley(), smileyDTO);
     }
 
     @Override
-    public void updateDTO(SmileyDTO smileyDTO, Smiley smileyEntity) {
+    public SmileyDTO updateDTO(SmileyDTO smileyDTO, Smiley smileyEntity) {
         smileyDTO.setCode(smileyEntity.getCode());
         smileyDTO.setFilename(smileyEntity.getFilename());
         smileyDTO.setMeaning(smileyEntity.getMeaning());
+
+        return smileyDTO;
     }
 
     @Override
-    public void updateEntity(Smiley smileyEntity, SmileyDTO smileyDTO) {
+    public Smiley updateEntity(Smiley smileyEntity, SmileyDTO smileyDTO) {
         smileyEntity.setCode(smileyDTO.getCode());
         smileyEntity.setFilename(smileyDTO.getFilename());
         smileyEntity.setMeaning(smileyDTO.getMeaning());
+
+        return smileyEntity;
     }
 }
