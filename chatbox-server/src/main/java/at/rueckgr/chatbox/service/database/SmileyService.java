@@ -99,16 +99,24 @@ public class SmileyService {
         return smileyList;
     }
 
-    private Smiley findByFilename(String smileyFilename) {
+    private Smiley findByFilenameAndCreate(String smileyFilename) {
+        Smiley smiley = findByFilename(smileyFilename);
+        if(smiley != null) {
+            return smiley;
+        }
+        smiley = new Smiley(smileyFilename);
+        em.persist(smiley);
+        return smiley;
+    }
+
+    public Smiley findByFilename(String smileyFilename) {
         try {
             TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
             query.setParameter("filename", smileyFilename);
             return query.getSingleResult();
         }
         catch (NoResultException e) {
-            Smiley smiley = new Smiley(smileyFilename);
-            em.persist(smiley);
-            return smiley;
+            return null;
         }
     }
 }

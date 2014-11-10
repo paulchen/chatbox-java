@@ -2,15 +2,13 @@ package at.rueckgr.chatbox.unparser.plugins;
 
 import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.service.ChatboxWorker;
+import at.rueckgr.chatbox.service.database.SmileyService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +22,8 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
     private static final String SMILEY_PATTERN = "<img src=\"[^\"]*/([^\"/]+)\" border=\"0\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"inlineimg\" />";
 
     private @Inject Log log;
-    private @Inject EntityManager em;
     private @Inject ChatboxWorker chatboxWorker;
+    private @Inject SmileyService smileyService;
 
     @Override
     public String unparse(String input) {
@@ -54,16 +52,13 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
     }
 
     private String findSmiley(String filename, boolean recursive) {
-        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
-        query.setParameter("filename", filename);
-
-        try {
-            Smiley smiley = query.getSingleResult();
-            if(!StringUtils.isBlank(smiley.getCode())) {
+        Smiley smiley = smileyService.findByFilename(filename);
+        if(smiley != null) {
+            if (!StringUtils.isBlank(smiley.getCode())) {
                 return smiley.getCode();
             }
         }
-        catch (NoResultException e) {
+        else {
             log.debug("Smiley not found in database");
         }
 
