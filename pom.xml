@@ -89,6 +89,9 @@
                     <failsOnError>true</failsOnError>
                     <configLocation>whizbang/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
+                    <excludes>
+                        **/receiver/**
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

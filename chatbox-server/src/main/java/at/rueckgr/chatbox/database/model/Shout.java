@@ -66,5 +66,4 @@ public class Shout implements Serializable, ChatboxEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 }

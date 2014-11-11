@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.service;
 
 import org.apache.commons.logging.Log;
+import org.apache.deltaspike.core.util.ExceptionUtils;
 
 import javax.inject.Inject;
 import javax.websocket.CloseReason;
@@ -60,7 +61,7 @@ public class WebsocketEndpoint implements Serializable {
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                throw ExceptionUtils.throwAsRuntimeException(e);
             }
         }
     }

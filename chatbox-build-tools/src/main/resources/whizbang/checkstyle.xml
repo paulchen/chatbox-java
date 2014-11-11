@@ -48,7 +48,9 @@
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
-    <!--module name="NewlineAtEndOfFile"/-->
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf"/>
+    </module>
     <!-- Checks that property files contain the same keys.         -->
     <!-- See http://checkstyle.sf.net/config_misc.html#Translation -->
     <module name="Translation"/>
@@ -213,6 +215,23 @@
         </module>
         <module name="NestedTryDepth"/>
         <module name="ExplicitInitialization"/>
+
+        <module name="Regexp">
+            <!-- . matches any character, so we need to escape it and use \. to match dots. -->
+            <property name="format" value="System\.(out|err)\.println"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+        <module name="Regexp">
+            <!-- . matches any character, so we need to escape it and use \. to match dots. -->
+            <property name="format" value="printStackTrace"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+        <module name="RegexpSinglelineJava">
+            <property name="format" value="[^\x00-\x7F]" />
+            <property name="message" value="Line contains non-ASCII char." />
+        </module>
     </module>
 
 </module>
