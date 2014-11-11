@@ -1,11 +1,14 @@
 package at.rueckgr.chatbox.dto;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * @author paulchen
  */
 // TODO make this class immutable?
+@Data
 public class MessageId implements DTOThing, Serializable, Comparable<MessageId> {
     private static final long serialVersionUID = 1139675659860664788L;
 
@@ -20,50 +23,7 @@ public class MessageId implements DTOThing, Serializable, Comparable<MessageId> 
     public MessageId() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getEpoch() {
-        return epoch;
-    }
-
-    public void setEpoch(int epoch) {
-        this.epoch = epoch;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        MessageId messageId = (MessageId) o;
-
-        if (epoch != messageId.epoch) {
-            return false;
-        }
-        if (id != messageId.id) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + epoch;
-        return result;
-    }
-
+    // TODO duplicates functionality in MessageIdSorter
     @Override
     public int compareTo(MessageId that) {
         // TODO that may be null

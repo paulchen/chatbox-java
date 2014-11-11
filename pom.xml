@@ -26,6 +26,7 @@
         <httpclient.version>4.3.2</httpclient.version>
         <war.plugin.version>2.4</war.plugin.version>
         <deltaspike.version>1.0.3</deltaspike.version>
+        <lombok.version>1.14.8</lombok.version>
     </properties>
 
     <modules>
@@ -93,7 +94,22 @@
         </plugins>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-api</artifactId>
