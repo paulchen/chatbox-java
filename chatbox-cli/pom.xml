@@ -10,28 +10,23 @@
     </parent>
 
     <artifactId>chatbox-cli</artifactId>
-
     <name>chatbox-cli</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-server</artifactId>
-            <version>${tyrus.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-client</artifactId>
-            <version>${tyrus.version}</version>
         </dependency>
+
         <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
             <artifactId>chatbox-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

@@ -11,18 +11,13 @@
     </parent>
 
     <artifactId>chatbox-android</artifactId>
-
     <name>chatbox-android</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <dependencies>
         <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
             <artifactId>chatbox-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
