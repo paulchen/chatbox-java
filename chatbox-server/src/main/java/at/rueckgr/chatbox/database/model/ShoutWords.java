@@ -1,5 +1,9 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -19,6 +23,9 @@ import java.io.Serializable;
 @NamedQueries(
         @NamedQuery(name = ShoutWords.FIND_BY_SHOUT, query = "SELECT sw FROM ShoutWords sw WHERE sw.shout = :shout")
 )
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = { "shout", "word", "count" })
 public class ShoutWords implements Serializable, ChatboxEntity {
 
     public static final String FIND_BY_SHOUT = "ShoutWords.findByShout";
@@ -51,60 +58,5 @@ public class ShoutWords implements Serializable, ChatboxEntity {
         this.count = count;
 
         this.id = new ShoutWordsPK(shout.getId().getId(), shout.getId().getEpoch(), word.getId());
-    }
-
-    public ShoutWordsPK getId() {
-        return id;
-    }
-
-    public void setId(ShoutWordsPK id) {
-        this.id = id;
-    }
-
-    public Shout getShout() {
-        return shout;
-    }
-
-    public void setShout(Shout shout) {
-        this.shout = shout;
-    }
-
-    public Word getWord() {
-        return word;
-    }
-
-    public void setWord(Word word) {
-        this.word = word;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ShoutWords that = (ShoutWords) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
     }
 }

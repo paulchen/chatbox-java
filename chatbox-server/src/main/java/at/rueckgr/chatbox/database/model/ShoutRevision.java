@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -25,6 +28,8 @@ import java.util.Date;
                 "WHERE s.id.id = :id AND s.id.epoch = :epoch ORDER BY s.id.revision DESC"),
 
 })
+@Getter
+@Setter
 public class ShoutRevision implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -59,63 +64,4 @@ public class ShoutRevision implements Serializable, ChatboxEntity {
             @JoinColumn(name = "id", referencedColumnName = "id")
     })
     private Shout shout;
-
-    public ShoutRevision() {
-    }
-
-    public ShoutRevisionPK getId() {
-        return this.id;
-    }
-
-    public void setId(ShoutRevisionPK id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return new Date(this.date.getTime());
-    }
-
-    public void setDate(Date date) {
-        this.date = new Date(date.getTime());
-    }
-
-    public Date getReplaced() {
-        return new Date(this.replaced.getTime());
-    }
-
-    public void setReplaced(Date replaced) {
-        this.replaced = new Date(replaced.getTime());
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Integer getUser() {
-        return this.user;
-    }
-
-    public void setUser(Integer user) {
-        this.user = user;
-    }
-
-    public Shout getShout() {
-        return this.shout;
-    }
-
-    public void setShout(Shout shout) {
-        this.shout = shout;
-    }
-
-    public Integer getPrimaryId() {
-        return primaryId;
-    }
-
-    public void setPrimaryId(Integer primaryId) {
-        this.primaryId = primaryId;
-    }
 }

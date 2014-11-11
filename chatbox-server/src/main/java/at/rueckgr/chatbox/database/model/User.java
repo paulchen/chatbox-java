@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -16,6 +19,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "users")
 @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+@Getter
+@Setter
 public class User implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -29,32 +34,4 @@ public class User implements Serializable, ChatboxEntity {
     @ManyToOne
     @JoinColumn(name = "category")
     private UserCategory userCategory;
-
-    public User() {
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public UserCategory getUserCategory() {
-        return this.userCategory;
-    }
-
-    public void setUserCategory(UserCategory userCategory) {
-        this.userCategory = userCategory;
-    }
-
 }

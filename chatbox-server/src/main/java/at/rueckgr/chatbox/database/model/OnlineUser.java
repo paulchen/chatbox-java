@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,6 +20,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "online_users")
 @NamedQuery(name = "OnlineUser.findAll", query = "SELECT o FROM OnlineUser o")
+@Getter
+@Setter
 public class OnlineUser implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -30,32 +35,4 @@ public class OnlineUser implements Serializable, ChatboxEntity {
     @ManyToOne
     @JoinColumn(name = "user")
     private User userBean;
-
-    public OnlineUser() {
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Timestamp getTimestamp() {
-        return new Timestamp(this.timestamp.getTime());
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = new Timestamp(timestamp.getTime());
-    }
-
-    public User getUserBean() {
-        return this.userBean;
-    }
-
-    public void setUserBean(User userBean) {
-        this.userBean = userBean;
-    }
-
 }

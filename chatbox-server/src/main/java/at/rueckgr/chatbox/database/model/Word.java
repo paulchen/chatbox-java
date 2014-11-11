@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +24,8 @@ import java.io.Serializable;
     @NamedQuery(name = Word.FIND_ALL, query = "SELECT w FROM Word w"),
     @NamedQuery(name = Word.FIND_BY_WORD, query = "SELECT w FROM Word w WHERE w.word = :word"),
 })
+@Getter
+@Setter
 public class Word implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -39,22 +44,6 @@ public class Word implements Serializable, ChatboxEntity {
     }
 
     public Word(String word) {
-        this.word = word;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
         this.word = word;
     }
 }

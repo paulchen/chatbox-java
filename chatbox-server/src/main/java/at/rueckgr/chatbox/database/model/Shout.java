@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -22,6 +25,8 @@ import java.util.Date;
     @NamedQuery(name = Shout.FIND_ALL, query = "SELECT s FROM Shout s"),
     @NamedQuery(name = Shout.FIND_LAST, query = "SELECT s FROM Shout s ORDER BY s.id.epoch DESC, s.id.id DESC")
 })
+@Getter
+@Setter
 public class Shout implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -62,86 +67,4 @@ public class Shout implements Serializable, ChatboxEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Shout() {
-    }
-
-    public ShoutPK getId() {
-        return this.id;
-    }
-
-    public void setId(ShoutPK id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return new Date(this.date.getTime());
-    }
-
-    public void setDate(Date date) {
-        this.date = new Date(date.getTime());
-    }
-
-    public Integer getDay() {
-        return this.day;
-    }
-
-    public void setDay(Integer day) {
-        this.day = day;
-    }
-
-    public Integer getDeleted() {
-        return this.deleted;
-    }
-
-    public void setDeleted(Integer deleted) {
-        this.deleted = deleted;
-    }
-
-    public Integer getHour() {
-        return this.hour;
-    }
-
-    public void setHour(Integer hour) {
-        this.hour = hour;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Integer getMonth() {
-        return this.month;
-    }
-
-    public void setMonth(Integer month) {
-        this.month = month;
-    }
-
-    public Integer getYear() {
-        return this.year;
-    }
-
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Integer getPrimaryId() {
-        return primaryId;
-    }
-
-    public void setPrimaryId(Integer primaryId) {
-        this.primaryId = primaryId;
-    }
 }

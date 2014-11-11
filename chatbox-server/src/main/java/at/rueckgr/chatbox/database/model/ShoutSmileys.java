@@ -1,5 +1,9 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -19,6 +23,9 @@ import java.io.Serializable;
 @NamedQueries(
         @NamedQuery(name = ShoutSmileys.FIND_BY_SHOUT, query = "SELECT sm FROM ShoutSmileys sm WHERE sm.shout = :shout")
 )
+@Getter
+@Setter
+@EqualsAndHashCode(exclude = { "shout", "smiley", "count" })
 public class ShoutSmileys implements Serializable, ChatboxEntity {
 
     public static final String FIND_BY_SHOUT = "ShoutSmileys.findByShout";
@@ -51,60 +58,5 @@ public class ShoutSmileys implements Serializable, ChatboxEntity {
         this.count = count;
 
         this.id = new ShoutSmileysPK(shout.getId().getId(), shout.getId().getEpoch(), smiley.getId());
-    }
-
-    public ShoutSmileysPK getId() {
-        return id;
-    }
-
-    public void setId(ShoutSmileysPK id) {
-        this.id = id;
-    }
-
-    public Shout getShout() {
-        return shout;
-    }
-
-    public void setShout(Shout shout) {
-        this.shout = shout;
-    }
-
-    public Smiley getSmiley() {
-        return smiley;
-    }
-
-    public void setSmiley(Smiley smiley) {
-        this.smiley = smiley;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ShoutSmileys that = (ShoutSmileys) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
     }
 }

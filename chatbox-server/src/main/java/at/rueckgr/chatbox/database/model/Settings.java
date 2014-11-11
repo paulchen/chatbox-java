@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
@@ -14,6 +17,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "settings")
 @NamedQuery(name = "Settings.findAll", query = "SELECT s FROM Settings s")
+@Getter
+@Setter
 public class Settings implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -33,21 +38,4 @@ public class Settings implements Serializable, ChatboxEntity {
         this.key = key;
         this.value = value;
     }
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return this.value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
 }

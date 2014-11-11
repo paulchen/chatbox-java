@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +24,8 @@ import java.io.Serializable;
         @NamedQuery(name = Smiley.FIND_ALL, query = "SELECT s FROM Smiley s"),
         @NamedQuery(name = Smiley.FIND_BY_FILENAME, query = "SELECT s FROM Smiley s WHERE s.filename = :filename"),
 })
+@Getter
+@Setter
 public class Smiley implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -44,37 +49,5 @@ public class Smiley implements Serializable, ChatboxEntity {
 
     public Smiley(String filename) {
         this.filename = filename;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFilename() {
-        return this.filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMeaning() {
-        return meaning;
-    }
-
-    public void setMeaning(String meaning) {
-        this.meaning = meaning;
     }
 }

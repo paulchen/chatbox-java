@@ -1,5 +1,9 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
@@ -8,6 +12,9 @@ import java.io.Serializable;
  * @author paulchen
  */
 @Embeddable
+@Getter
+@Setter
+@EqualsAndHashCode
 public class ShoutWordsPK implements DatabaseThing, Serializable {
     private static final long serialVersionUID = 6860462509421869628L;
 
@@ -27,61 +34,5 @@ public class ShoutWordsPK implements DatabaseThing, Serializable {
         this.shoutId = shoutId;
         this.shoutEpoch = shoutEpoch;
         this.wordId = wordId;
-    }
-
-    public int getShoutId() {
-        return shoutId;
-    }
-
-    public void setShoutId(int shoutId) {
-        this.shoutId = shoutId;
-    }
-
-    public int getShoutEpoch() {
-        return shoutEpoch;
-    }
-
-    public void setShoutEpoch(int shoutEpoch) {
-        this.shoutEpoch = shoutEpoch;
-    }
-
-    public int getWordId() {
-        return wordId;
-    }
-
-    public void setWordId(int wordId) {
-        this.wordId = wordId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        ShoutWordsPK that = (ShoutWordsPK) o;
-
-        if (shoutEpoch != that.shoutEpoch) {
-            return false;
-        }
-        if (shoutId != that.shoutId) {
-            return false;
-        }
-        if (wordId != that.wordId) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = shoutId;
-        result = 31 * result + shoutEpoch;
-        result = 31 * result + wordId;
-        return result;
     }
 }

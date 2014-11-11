@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
@@ -15,6 +18,8 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "invisible_users")
 @NamedQuery(name = "InvisibleUser.findAll", query = "SELECT i FROM InvisibleUser i")
+@Getter
+@Setter
 public class InvisibleUser implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -26,32 +31,4 @@ public class InvisibleUser implements Serializable, ChatboxEntity {
 
     @NotNull
     private Integer users;
-
-    public InvisibleUser() {
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Timestamp getTimestamp() {
-        return new Timestamp(this.timestamp.getTime());
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = new Timestamp(timestamp.getTime());
-    }
-
-    public Integer getUsers() {
-        return this.users;
-    }
-
-    public void setUsers(Integer users) {
-        this.users = users;
-    }
-
 }

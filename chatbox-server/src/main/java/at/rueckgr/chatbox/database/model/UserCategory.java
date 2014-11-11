@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
@@ -18,6 +21,8 @@ import java.io.Serializable;
         @NamedQuery(name = UserCategory.FIND_ALL, query = "SELECT u FROM UserCategory u"),
         @NamedQuery(name = UserCategory.FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE u.name = :name"),
 })
+@Getter
+@Setter
 public class UserCategory implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -32,31 +37,4 @@ public class UserCategory implements Serializable, ChatboxEntity {
 
     @NotNull
     private String name;
-
-    public UserCategory() {
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getColor() {
-        return this.color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

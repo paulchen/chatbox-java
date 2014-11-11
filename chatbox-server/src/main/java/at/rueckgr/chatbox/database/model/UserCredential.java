@@ -1,5 +1,8 @@
 package at.rueckgr.chatbox.database.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +17,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_credentials")
 @NamedQuery(name = "UserCredential.findAll", query = "SELECT u FROM UserCredential u")
+@Getter
+@Setter
 public class UserCredential implements Serializable, ChatboxEntity {
     private static final long serialVersionUID = 1L;
 
@@ -28,48 +33,4 @@ public class UserCredential implements Serializable, ChatboxEntity {
     private String password;
 
     private String securitytoken;
-
-    public UserCredential() {
-    }
-
-    public String getAccessToken() {
-        return this.accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getCookie() {
-        return this.cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSecuritytoken() {
-        return this.securitytoken;
-    }
-
-    public void setSecuritytoken(String securitytoken) {
-        this.securitytoken = securitytoken;
-    }
-
 }
