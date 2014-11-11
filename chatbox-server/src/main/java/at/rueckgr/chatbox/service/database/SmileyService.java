@@ -92,8 +92,8 @@ public class SmileyService {
         Map<Smiley, Integer> smileyList = new HashMap<Smiley, Integer>();
         while (matcher.find()) {
             String smileyFilename = matcher.group(0);
-            smileyFilename = smileyFilename.substring(smileyFilename.indexOf('/') + 1);
-            Smiley smiley = findByFilename(smileyFilename); // TODO caching
+            smileyFilename = smileyFilename.substring(smileyFilename.lastIndexOf('/') + 1);
+            Smiley smiley = findByFilenameAndCreate(smileyFilename); // TODO caching
             int count = smileyList.containsKey(smiley) ? smileyList.get(smiley) + 1 : 1;
             smileyList.put(smiley, count);
         }
