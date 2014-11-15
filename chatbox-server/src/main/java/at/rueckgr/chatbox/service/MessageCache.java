@@ -1,8 +1,6 @@
 package at.rueckgr.chatbox.service;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
-import at.rueckgr.chatbox.dto.MessageId;
-import at.rueckgr.chatbox.dto.MessageIdSorter;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
@@ -23,13 +21,13 @@ public class MessageCache {
         NEW,
     }
 
-    private Map<MessageId, MessageDTO> messages = Collections.synchronizedMap(new TreeMap<MessageId, MessageDTO>(new MessageIdSorter()));
+    private Map<Integer, MessageDTO> messages = Collections.synchronizedMap(new TreeMap<Integer, MessageDTO>());
 
     private MessageStatus contains(MessageDTO message) {
-        if(!this.messages.containsKey(message.getMessageId())) {
+        if(!this.messages.containsKey(message.getPrimaryId())) {
             return MessageStatus.NEW;
         }
-        if(this.messages.get(message.getMessageId()).equalsRaw(message)) {
+        if(this.messages.get(message.getPrimaryId()).equalsRaw(message)) {
             return MessageStatus.UNMODIFIED;
         }
 
@@ -40,7 +38,7 @@ public class MessageCache {
         MessageStatus messageStatus = this.contains(message);
 
         if(messageStatus != MessageStatus.UNMODIFIED) {
-            this.messages.put(message.getMessageId(), message);
+            this.messages.put(message.getPrimaryId(), message);
         }
 
         this.cleanup();

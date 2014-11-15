@@ -12,7 +12,6 @@ import java.util.GregorianCalendar;
 
 @ApplicationScoped
 public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
-    private @Inject ShoutIdTransformer shoutIdTransformer;
     private @Inject UserTransformer userTransformer;
     private @Inject MessageUnparser messageUnparser;
 
@@ -39,7 +38,9 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
         String rawMessage = shoutEntity.getMessage();
         String message = messageUnparser.unparse(rawMessage);
 
-        messageDTO.setMessageId(shoutIdTransformer.entityToDTO(shoutEntity.getId()));
+        messageDTO.setPrimaryId(shoutEntity.getPrimaryId());
+        messageDTO.setId(shoutEntity.getId());
+        messageDTO.setEpoch(shoutEntity.getEpoch());
         // messageDTO.setDate(shoutEntity.getDate());
         // TODO fix this ugly fuckup
         messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
@@ -53,9 +54,9 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
 
     @Override
     public Shout updateEntity(Shout shoutEntity, MessageDTO messageDTO) {
-        shoutEntity.setId(shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
-        // TODO fix this
-        shoutEntity.setPrimaryId(messageDTO.getMessageId().getId());
+        shoutEntity.setPrimaryId(messageDTO.getPrimaryId());
+        shoutEntity.setId(messageDTO.getId());
+        shoutEntity.setEpoch(messageDTO.getEpoch());
         // shoutEntity.setDate(messageDTO.getDate());
         // TODO fix this ugly fuckup
         shoutEntity.setDate(new Date(messageDTO.getDate().getTime()-3600000));

@@ -17,7 +17,9 @@ import java.util.Date;
 public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageDTO> {
     private static final long serialVersionUID = -6941047808863237669L;
 
-    private MessageId messageId;
+    private Integer primaryId;
+    private Integer id;
+    private Integer epoch;
     private String message;
     private transient String rawMessage; // don't send raw message to clients
     private Date date;
@@ -28,9 +30,11 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
         super();
     }
 
-    public MessageDTO(MessageId messageId, String rawMessage, Date date, boolean deleted, UserDTO user) {
-        this.messageId = messageId;
-        this.rawMessage = rawMessage;
+    public MessageDTO(Integer primaryId, Integer id, Integer epoch, String message, Date date, boolean deleted, UserDTO user) {
+        this.primaryId = id;
+        this.id = id;
+        this.epoch = epoch;
+        this.message = message;
         this.date = date;
         this.deleted = deleted;
         this.user = user;
@@ -47,7 +51,7 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
 
     @Override
     public int compareTo(MessageDTO that) {
-        return messageId.compareTo(that.getMessageId());
+        return primaryId.compareTo(that.getPrimaryId());
     }
 
     public boolean equalsRaw(MessageDTO that) {

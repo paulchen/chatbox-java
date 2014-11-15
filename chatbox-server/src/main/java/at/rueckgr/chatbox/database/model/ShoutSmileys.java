@@ -5,21 +5,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 
 /**
  * @author paulchen
  */
 @Entity
-@Table(name = "shout_smilies")
+@Table(name = "shout_smilies",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "shout", "smiley" })
+        }
+)
 @NamedQueries(
         @NamedQuery(name = ShoutSmileys.FIND_BY_SHOUT, query = "SELECT sm FROM ShoutSmileys sm WHERE sm.shout = :shout")
 )
@@ -30,13 +35,12 @@ public class ShoutSmileys implements Serializable, ChatboxEntity {
 
     public static final String FIND_BY_SHOUT = "ShoutSmileys.findByShout";
 
-    @EmbeddedId
-    private ShoutSmileysPK id;
+    @Id
+    private Integer id;
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "shout_epoch", referencedColumnName = "epoch"),
-            @JoinColumn(name = "shout_id", referencedColumnName = "id")
+            @JoinColumn(name = "shout", referencedColumnName = "primary_id")
     })
     private Shout shout;
 
@@ -56,7 +60,5 @@ public class ShoutSmileys implements Serializable, ChatboxEntity {
         this.shout = shout;
         this.smiley = smiley;
         this.count = count;
-
-        this.id = new ShoutSmileysPK(shout.getId().getId(), shout.getId().getEpoch(), smiley.getId());
     }
 }

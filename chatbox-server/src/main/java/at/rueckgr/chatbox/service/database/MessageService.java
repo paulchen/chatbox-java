@@ -2,8 +2,6 @@ package at.rueckgr.chatbox.service.database;
 
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.model.ShoutRevision;
-import at.rueckgr.chatbox.database.model.ShoutRevisionPK;
-import at.rueckgr.chatbox.database.transformers.ShoutIdTransformer;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.service.MessageCache;
@@ -25,7 +23,6 @@ import java.util.List;
 @ApplicationScoped
 public class MessageService {
     private @Inject EntityManager em;
-    private @Inject ShoutIdTransformer shoutIdTransformer;
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyService smileyService;
     private @Inject WordService wordService;
@@ -37,8 +34,7 @@ public class MessageService {
         }
 
         TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
-        query.setParameter("id", shout.getId().getId());
-        query.setParameter("epoch", shout.getId().getEpoch());
+        query.setParameter("id", shout.getPrimaryId());
 
         try {
             return query.getSingleResult();
@@ -52,24 +48,23 @@ public class MessageService {
         int newRevisionId = 1;
         ShoutRevision shoutRevision = findLatestShoutRevision(shout);
         if(shoutRevision != null) {
-            newRevisionId = shoutRevision.getId().getRevision()+1;
+            newRevisionId = shoutRevision.getRevision()+1;
         }
 
         ShoutRevision newRevision = new ShoutRevision();
-        newRevision.setId(new ShoutRevisionPK(shout.getId().getId(), shout.getId().getEpoch(), newRevisionId));
+        newRevision.setRevision(newRevisionId);
+        newRevision.setShout(shout);
         newRevision.setDate(shout.getDate());
         newRevision.setReplaced(new Date(new Date().getTime()-3600000)); // TODO
         newRevision.setText(shout.getMessage());
         newRevision.setUser(shout.getUser().getId());
-        // TODO
-        newRevision.setPrimaryId(shout.getId().getId());
         newRevision.setShout(shout);
 
         em.persist(newRevision);
     }
 
     public void updateMessage(MessageDTO messageDTO) {
-        Shout shoutEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(messageDTO.getMessageId()));
+        Shout shoutEntity = em.find(Shout.class, messageDTO.getPrimaryId());
         createShoutRevision(shoutEntity);
 
         shoutTransformer.updateEntity(shoutEntity, messageDTO);
@@ -89,7 +84,7 @@ public class MessageService {
     }
 
     public MessageCache.MessageStatus getDatabaseStatus(MessageDTO message) {
-        Shout shoutEntity = em.find(Shout.class, shoutIdTransformer.dtoToEntity(message.getMessageId()));
+        Shout shoutEntity = em.find(Shout.class, message.getPrimaryId());
         if(shoutEntity == null) {
             return MessageCache.MessageStatus.NEW;
         }

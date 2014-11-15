@@ -4,13 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
@@ -20,10 +21,14 @@ import java.util.Date;
  * The persistent class for the shouts database table.
  */
 @Entity
-@Table(name = "shouts")
+@Table(name = "shouts",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = { "id", "epoch" })
+        }
+)
 @NamedQueries({
     @NamedQuery(name = Shout.FIND_ALL, query = "SELECT s FROM Shout s"),
-    @NamedQuery(name = Shout.FIND_LAST, query = "SELECT s FROM Shout s ORDER BY s.id.epoch DESC, s.id.id DESC")
+    @NamedQuery(name = Shout.FIND_LAST, query = "SELECT s FROM Shout s ORDER BY s.epoch DESC, s.id DESC")
 })
 @Getter
 @Setter
@@ -33,12 +38,16 @@ public class Shout implements Serializable, ChatboxEntity {
     public static final String FIND_ALL = "Shout.findAll";
     public static final String FIND_LAST = "Shout.findLast";
 
-    @EmbeddedId
-    private ShoutPK id;
-
     @NotNull
     @Column(name = "primary_id")
+    @Id
     private Integer primaryId;
+
+    @NotNull
+    private Integer id;
+
+    @NotNull
+    private Integer epoch;
 
     @NotNull
     private Date date;
