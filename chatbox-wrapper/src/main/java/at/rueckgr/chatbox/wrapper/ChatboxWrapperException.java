@@ -1,5 +1,6 @@
 package at.rueckgr.chatbox.wrapper;
 
+// TODO create subclasses for each problem that can occur in ChatboxImpl
 public class ChatboxWrapperException extends Exception {
     private static final long serialVersionUID = 8933248215946665278L;
 
