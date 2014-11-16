@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +13,7 @@ import java.util.Date;
 @EqualsAndHashCode(exclude = { "rawMessage" })
 @Getter
 @Setter
-public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageDTO> {
+public class MessageDTO implements ChatboxDTO, Comparable<MessageDTO> {
     private static final long serialVersionUID = -6941047808863237669L;
 
     private Integer primaryId;

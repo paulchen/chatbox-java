@@ -2,13 +2,11 @@ package at.rueckgr.chatbox.dto;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * @author paulchen
  */
 @Data
-public class SmileyDTO implements ChatboxDTO, Serializable {
+public class SmileyDTO implements ChatboxDTO {
     private static final long serialVersionUID = 5133055274653686966L;
 
     private String filename;

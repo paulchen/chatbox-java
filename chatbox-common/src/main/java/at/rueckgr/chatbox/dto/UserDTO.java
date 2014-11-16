@@ -2,10 +2,8 @@ package at.rueckgr.chatbox.dto;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
-public class UserDTO implements Serializable, ChatboxDTO {
+public class UserDTO implements ChatboxDTO {
     private static final long serialVersionUID = -2547473845270925254L;
 
     private int id;
