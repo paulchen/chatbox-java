@@ -11,6 +11,7 @@ import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
+import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
 import org.apache.commons.logging.Log;
@@ -26,7 +27,6 @@ import java.util.TreeSet;
 @ApplicationScoped
 public class ChatboxWorker {
     private @Inject Log log;
-    private @Inject Chatbox chatbox;
     private @Inject MessageCache messageCache;
     private @Inject WebsocketSessionManager newMessageNotifier;
     private @Inject ShoutTransformer shoutTransformer;
@@ -35,6 +35,8 @@ public class ChatboxWorker {
     private @Inject MessageService messageService;
     private @Inject SettingsService settingsService;
     private @Inject SmileyService smileyService;
+
+    private final Chatbox chatbox;
 
     private final class MessageFetchResult {
         private final Set<MessageDTO> newMessages;
@@ -58,6 +60,10 @@ public class ChatboxWorker {
         public int getTotalMessagesCount() {
             return totalMessagesCount;
         }
+    }
+
+    public ChatboxWorker() {
+        chatbox = new ChatboxImpl();
     }
 
     private void init() {
