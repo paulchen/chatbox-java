@@ -217,14 +217,17 @@
         <module name="ExplicitInitialization"/>
 
         <module name="Regexp">
-            <!-- . matches any character, so we need to escape it and use \. to match dots. -->
             <property name="format" value="System\.(out|err)\.println"/>
             <property name="illegalPattern" value="true"/>
             <property name="ignoreComments" value="true"/>
         </module>
         <module name="Regexp">
-            <!-- . matches any character, so we need to escape it and use \. to match dots. -->
             <property name="format" value="printStackTrace"/>
+            <property name="illegalPattern" value="true"/>
+            <property name="ignoreComments" value="true"/>
+        </module>
+        <module name="Regexp">
+            <property name="format" value="String\.format"/>
             <property name="illegalPattern" value="true"/>
             <property name="ignoreComments" value="true"/>
         </module>

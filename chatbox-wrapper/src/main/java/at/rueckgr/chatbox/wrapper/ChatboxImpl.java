@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
     private static Log log = LogFactory.getLog(ChatboxImpl.class);
 
     private static final String CURRENT_URL = "http://www.informatik-forum.at/misc.php?show=ccbmessages";
-    private static final String ARCHIVE_URL = "http://www.informatik-forum.at/misc.php?do=ccarc&page=%s";
+    private static final String ARCHIVE_URL = "http://www.informatik-forum.at/misc.php?do=ccarc&page={0}";
     private static final String POST_URL = "http://www.informatik-forum.at/misc.php";
 
     private static final String LOGIN_URL = "http://www.informatik-forum.at/login.php?do=login";
@@ -256,7 +257,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
     private void checkMessageCount(int expected, int actual) throws ChatboxWrapperException {
         if (expected != actual) {
-            String message = String.format("Wrong number of messages fetched from chatbox (expected %s, actual %s)", expected, actual);
+            String message = MessageFormat.format("Wrong number of messages fetched from chatbox (expected {0}, actual {1})", expected, actual);
 
             log.error(message);
 
@@ -287,7 +288,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
         log.debug("Fetching chatbox archive, page " + page);
         this.session.logUserdata();
 
-        final String data = fetchURL(String.format(ARCHIVE_URL, page), new ResultChecker() {
+        final String data = fetchURL(MessageFormat.format(ARCHIVE_URL, page), new ResultChecker() {
             private static final long serialVersionUID = -6840776392819411021L;
 
             public boolean isOk(String responseString) {

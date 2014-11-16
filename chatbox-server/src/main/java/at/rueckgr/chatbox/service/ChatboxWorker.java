@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -71,10 +72,8 @@ public class ChatboxWorker {
     public void loadExistingShouts() {
         init();
 
-        List<MessageDTO> existingShouts = messageService.getLastShouts(MessageCache.CACHE_SIZE);
-        // TODO umgekehrte Reihenfolge notwendig?
-        for(int a = existingShouts.size()-1; a>=0; a--) {
-            this.messageCache.update(existingShouts.get(a));
+        for (MessageDTO existingShout : messageService.getLastShouts(MessageCache.CACHE_SIZE)) {
+            this.messageCache.update(existingShout);
         }
     }
 
@@ -97,7 +96,7 @@ public class ChatboxWorker {
                 if(result.getNewMessages().size() == result.getTotalMessagesCount()) {
                     int archivePage = 2;
                     while (true) {
-                        log.debug(String.format("Fetching chatbox archive page %s", archivePage));
+                        log.debug(MessageFormat.format("Fetching chatbox archive page {0}", archivePage));
 
                         result = processMessages(chatbox.fetchArchive(archivePage), true);
                         // TODO notify clients?
@@ -118,7 +117,7 @@ public class ChatboxWorker {
     }
 
     private MessageFetchResult processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
-        log.debug(String.format("Fetched %s messages from chatbox", messages.size()));
+        log.debug(MessageFormat.format("Fetched {0} messages from chatbox", messages.size()));
 
         Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
         Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
@@ -148,12 +147,11 @@ public class ChatboxWorker {
 
         if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
             if(newMessages.size() > 0) {
-                // TODO replace String.format() by MessageFormat.format()
-                log.info(String.format("%s new message(s)", newMessages.size()));
+                log.info(MessageFormat.format("{0} new message(s)", newMessages.size()));
             }
 
             if(modifiedMessages.size() > 0) {
-                log.info(String.format("%s modified message(s)", modifiedMessages.size()));
+                log.info(MessageFormat.format("{0} modified message(s)", modifiedMessages.size()));
             }
         }
         else {

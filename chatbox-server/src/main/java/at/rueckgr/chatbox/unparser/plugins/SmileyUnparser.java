@@ -9,6 +9,7 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
 
     @Override
     public String unparse(String input) {
-        log.debug(String.format("Message before unparsing smileys: %s", input));
+        log.debug(MessageFormat.format("Message before unparsing smileys: {0}", input));
 
         // taken from: http://www.javamex.com/tutorials/regular_expressions/search_replace_loop.shtml
         Pattern pattern = Pattern.compile(SMILEY_PATTERN);
@@ -42,7 +43,7 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
         matcher.appendTail(stringBuffer);
 
         String output = stringBuffer.toString();
-        log.debug(String.format("Message after unparsing smileys: %s", output));
+        log.debug(MessageFormat.format("Message after unparsing smileys: {0}", output));
 
         return output;
     }

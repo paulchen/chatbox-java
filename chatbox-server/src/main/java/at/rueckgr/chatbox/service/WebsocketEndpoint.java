@@ -12,6 +12,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 @ServerEndpoint("/websocket")
 public class WebsocketEndpoint implements Serializable {
@@ -54,7 +55,7 @@ public class WebsocketEndpoint implements Serializable {
 
     public void notify(String text) {
         if(this.session != null) {
-            log.debug(String.format("Notifying client %s with text %s", this.session.getId(), text));
+            log.debug(MessageFormat.format("Notifying client {0} with text {1}", this.session.getId(), text));
 
             try {
                 this.session.getBasicRemote().sendText(text);
