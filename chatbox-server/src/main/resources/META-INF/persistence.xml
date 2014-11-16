@@ -10,13 +10,9 @@
         <class>at.rueckgr.chatbox.database.model.OnlineUser</class>
         <class>at.rueckgr.chatbox.database.model.Settings</class>
         <class>at.rueckgr.chatbox.database.model.ShoutRevision</class>
-        <class>at.rueckgr.chatbox.database.model.ShoutRevisionPK</class>
         <class>at.rueckgr.chatbox.database.model.ShoutSmileys</class>
-        <class>at.rueckgr.chatbox.database.model.ShoutSmileysPK</class>
         <class>at.rueckgr.chatbox.database.model.ShoutWords</class>
-        <class>at.rueckgr.chatbox.database.model.ShoutWordsPK</class>
         <class>at.rueckgr.chatbox.database.model.Shout</class>
-        <class>at.rueckgr.chatbox.database.model.ShoutPK</class>
         <class>at.rueckgr.chatbox.database.model.Smiley</class>
         <class>at.rueckgr.chatbox.database.model.UserCategory</class>
         <class>at.rueckgr.chatbox.database.model.UserCredential</class>

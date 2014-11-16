@@ -30,11 +30,11 @@ public class MessageDTO implements Serializable, ChatboxDTO, Comparable<MessageD
         super();
     }
 
-    public MessageDTO(Integer primaryId, Integer id, Integer epoch, String message, Date date, boolean deleted, UserDTO user) {
-        this.primaryId = id;
+    public MessageDTO(Integer primaryId, Integer id, Integer epoch, String rawMessage, Date date, boolean deleted, UserDTO user) {
+        this.primaryId = primaryId;
         this.id = id;
         this.epoch = epoch;
-        this.message = message;
+        this.rawMessage = rawMessage;
         this.date = date;
         this.deleted = deleted;
         this.user = user;
