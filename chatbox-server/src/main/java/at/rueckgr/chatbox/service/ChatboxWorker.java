@@ -149,6 +149,8 @@ public class ChatboxWorker {
                 default: // fall-through
                             /* nothing to do */
             }
+
+            log.debug("Message successfully processed");
         }
 
         if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
