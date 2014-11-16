@@ -9,10 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 
 /**
@@ -26,15 +24,14 @@ import java.io.Serializable;
 })
 @Getter
 @Setter
-public class Word implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class Word implements ChatboxEntity {
+    private static final long serialVersionUID = 3849862311807407921L;
 
     public static final String FIND_ALL = "Word.findAll";
     public static final String FIND_BY_WORD = "Word.findByWord";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq1")
-    @SequenceGenerator(name = "words_id_seq1", sequenceName = "words_id_seq1")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull

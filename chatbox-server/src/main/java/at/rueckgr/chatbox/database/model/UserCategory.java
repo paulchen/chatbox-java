@@ -9,7 +9,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 
 /**
@@ -18,16 +17,16 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_categories")
 @NamedQueries({
-        @NamedQuery(name = UserCategory.FIND_ALL, query = "SELECT u FROM UserCategory u"),
-        @NamedQuery(name = UserCategory.FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE u.name = :name"),
+        @NamedQuery(name = UserCategory.QRY_FIND_ALL, query = "SELECT u FROM UserCategory u"),
+        @NamedQuery(name = UserCategory.QRY_FIND_BY_NAME, query = "SELECT u FROM UserCategory u WHERE u.name = :name"),
 })
 @Getter
 @Setter
-public class UserCategory implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class UserCategory implements ChatboxEntity {
+    private static final long serialVersionUID = -9187365628927287424L;
 
-    public static final String FIND_ALL = "UserCategory.findAll";
-    public static final String FIND_BY_NAME = "UserCategory.findByName";
+    public static final String QRY_FIND_ALL = "UserCategory.findAll";
+    public static final String QRY_FIND_BY_NAME = "UserCategory.findByName";
 
     @Id
     private Integer id;

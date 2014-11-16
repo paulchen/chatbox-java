@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -16,7 +17,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 
 
@@ -26,7 +26,10 @@ import java.util.Date;
 @Entity
 @Table(name = "shout_revisions",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = { "id", "revision" })
+                @UniqueConstraint(columnNames = { "shout", "revision" })
+        },
+        indexes = {
+                @Index(name = "shout_revisions_shout_idx", columnList = "shout")
         }
 )
 @NamedQueries({
@@ -37,8 +40,8 @@ import java.util.Date;
 })
 @Getter
 @Setter
-public class ShoutRevision implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class ShoutRevision implements ChatboxEntity {
+    private static final long serialVersionUID = 3249407758311648218L;
 
     public static final String QRY_FIND_ALL = "ShoutRevision.findAll";
     public static final String QRY_FIND_LATEST = "ShoutRevision.findLatest";
@@ -59,7 +62,6 @@ public class ShoutRevision implements Serializable, ChatboxEntity {
     @NotNull
     private String text;
 
-    // TODO foreign key
     @NotNull
     @Column(name = "user_id")
     private Integer user;

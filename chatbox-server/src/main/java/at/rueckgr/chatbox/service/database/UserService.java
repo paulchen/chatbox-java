@@ -51,7 +51,7 @@ public class UserService {
     }
 
     private UserCategory findCategoryByName(String name) {
-        TypedQuery<UserCategory> query = em.createNamedQuery(UserCategory.FIND_BY_NAME, UserCategory.class);
+        TypedQuery<UserCategory> query = em.createNamedQuery(UserCategory.QRY_FIND_BY_NAME, UserCategory.class);
         query.setParameter("name", name);
         try {
             return query.getSingleResult();

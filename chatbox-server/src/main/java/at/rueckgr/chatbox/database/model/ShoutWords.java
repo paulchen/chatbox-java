@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -16,7 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import java.io.Serializable;
 
 /**
  * @author paulchen
@@ -25,17 +25,22 @@ import java.io.Serializable;
 @Table(name = "shout_words",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = { "shout", "word" })
+        },
+        indexes = {
+                @Index(name = "shout_words_shout_idx", columnList = "shout"),
+                @Index(name = "shout_words_word_idx", columnList = "word"),
         }
 )
 @NamedQueries(
-        @NamedQuery(name = ShoutWords.FIND_BY_SHOUT, query = "SELECT sw FROM ShoutWords sw WHERE sw.shout = :shout")
+        @NamedQuery(name = ShoutWords.QRY_FIND_BY_SHOUT, query = "SELECT sw FROM ShoutWords sw WHERE sw.shout = :shout")
 )
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = { "shout", "word", "count" })
-public class ShoutWords implements Serializable, ChatboxEntity {
+public class ShoutWords implements ChatboxEntity {
+    private static final long serialVersionUID = -3509542709012436972L;
 
-    public static final String FIND_BY_SHOUT = "ShoutWords.findByShout";
+    public static final String QRY_FIND_BY_SHOUT = "ShoutWords.findByShout";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

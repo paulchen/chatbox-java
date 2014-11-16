@@ -10,9 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 
 /**
@@ -21,20 +19,19 @@ import java.io.Serializable;
 @Entity
 @Table(name = "smilies")
 @NamedQueries({
-        @NamedQuery(name = Smiley.FIND_ALL, query = "SELECT s FROM Smiley s"),
-        @NamedQuery(name = Smiley.FIND_BY_FILENAME, query = "SELECT s FROM Smiley s WHERE s.filename = :filename"),
+        @NamedQuery(name = Smiley.QRY_FIND_ALL, query = "SELECT s FROM Smiley s"),
+        @NamedQuery(name = Smiley.QRY_FIND_BY_FILENAME, query = "SELECT s FROM Smiley s WHERE s.filename = :filename"),
 })
 @Getter
 @Setter
-public class Smiley implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class Smiley implements ChatboxEntity {
+    private static final long serialVersionUID = 3953856754027689156L;
 
-    public static final String FIND_ALL = "Smiley.findAll";
-    public static final String FIND_BY_FILENAME = "Smiley.findByCode";
+    public static final String QRY_FIND_ALL = "Smiley.findAll";
+    public static final String QRY_FIND_BY_FILENAME = "Smiley.findByFilename";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smilies_id_seq1")
-    @SequenceGenerator(name = "smilies_id_seq1", sequenceName = "smilies_id_seq1")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String filename;

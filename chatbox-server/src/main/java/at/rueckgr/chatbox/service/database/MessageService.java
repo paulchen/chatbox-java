@@ -96,7 +96,7 @@ public class MessageService {
     }
 
     public List<MessageDTO> getLastShouts(int maxCount) {
-        TypedQuery<Shout> query = em.createNamedQuery(Shout.FIND_LAST, Shout.class);
+        TypedQuery<Shout> query = em.createNamedQuery(Shout.QRY_FIND_LAST, Shout.class);
         query.setMaxResults(maxCount);
         List<MessageDTO> result = new ArrayList<MessageDTO>();
         for(Shout shout : query.getResultList()) {

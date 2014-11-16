@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 
 /**
@@ -16,14 +15,16 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "settings")
-@NamedQuery(name = "Settings.findAll", query = "SELECT s FROM Settings s")
+@NamedQuery(name = Settings.QRY_FIND_ALL, query = "SELECT s FROM Settings s")
 @Getter
 @Setter
-public class Settings implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class Settings implements ChatboxEntity {
+    private static final long serialVersionUID = 8091561855611916113L;
 
     public static final String FORUM_USERNAME = "forum_username";
     public static final String FORUM_PASSWORD = "forum_password";
+
+    public static final String QRY_FIND_ALL = "Settings.findAll";
 
     @Id
     private String key;

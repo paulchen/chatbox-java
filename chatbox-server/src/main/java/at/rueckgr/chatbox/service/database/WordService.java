@@ -22,7 +22,7 @@ public class WordService {
 
     public void updateWords(Shout shoutEntity) {
         Map<Word, Integer> shoutWords = extractWords(shoutEntity);
-        TypedQuery<ShoutWords> query = em.createNamedQuery(ShoutWords.FIND_BY_SHOUT, ShoutWords.class);
+        TypedQuery<ShoutWords> query = em.createNamedQuery(ShoutWords.QRY_FIND_BY_SHOUT, ShoutWords.class);
         query.setParameter("shout", shoutEntity);
         List<ShoutWords> currentWords = query.getResultList();
 

@@ -5,24 +5,30 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
 
 /**
  * The persistent class for the users database table.
  */
 @Entity
-@Table(name = "users")
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+@Table(name = "users",
+        indexes = {
+                @Index(name = "users_category_idx", columnList = "category")
+        }
+)
+@NamedQuery(name = User.QRY_FIND_ALL, query = "SELECT u FROM User u")
 @Getter
 @Setter
-public class User implements Serializable, ChatboxEntity {
-    private static final long serialVersionUID = 1L;
+public class User implements ChatboxEntity {
+    private static final long serialVersionUID = 5822232484553184990L;
+
+    public static final String QRY_FIND_ALL = "User.findAll";
 
     @Id
     private Integer id;

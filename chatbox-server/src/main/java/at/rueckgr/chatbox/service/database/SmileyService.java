@@ -25,7 +25,7 @@ public class SmileyService {
     private @Inject SmileyTransformer smileyTransformer;
 
     public void saveSmiley(SmileyDTO smileyDTO) {
-        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
+        TypedQuery<Smiley> query = em.createNamedQuery(Smiley.QRY_FIND_BY_FILENAME, Smiley.class);
         query.setParameter("filename", smileyDTO.getFilename());
 
         try {
@@ -40,7 +40,7 @@ public class SmileyService {
 
     public void updateSmilies(Shout shoutEntity) {
         Map<Smiley, Integer> shoutSmilies = extractSmileys(shoutEntity);
-        TypedQuery<ShoutSmileys> query = em.createNamedQuery(ShoutSmileys.FIND_BY_SHOUT, ShoutSmileys.class);
+        TypedQuery<ShoutSmileys> query = em.createNamedQuery(ShoutSmileys.QRY_FIND_BY_SHOUT, ShoutSmileys.class);
         query.setParameter("shout", shoutEntity);
         List<ShoutSmileys> currentSmilies = query.getResultList();
 
@@ -113,7 +113,7 @@ public class SmileyService {
 
     public Smiley findByFilename(String smileyFilename) {
         try {
-            TypedQuery<Smiley> query = em.createNamedQuery(Smiley.FIND_BY_FILENAME, Smiley.class);
+            TypedQuery<Smiley> query = em.createNamedQuery(Smiley.QRY_FIND_BY_FILENAME, Smiley.class);
             query.setParameter("filename", smileyFilename);
             return query.getSingleResult();
         }
