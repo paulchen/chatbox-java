@@ -15,6 +15,10 @@
     <name>chatbox-server</name>
     <packaging>war</packaging>
 
+    <properties>
+        <jpa.datasource>chatbox_dev</jpa.datasource>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -43,24 +47,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
         </dependency>
-        <!-- TODO currently required for Eclipse -->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.httpcomponents</groupId>-->
-            <!--<artifactId>httpclient</artifactId>-->
-            <!--<version>4.3.2</version>-->
-        <!--</dependency>-->
-        <!-- TODO currently required for Eclipse -->
-        <!--<dependency>-->
-            <!--<groupId>commons-io</groupId>-->
-            <!--<artifactId>commons-io</artifactId>-->
-            <!--<version>2.4</version>-->
-        <!--</dependency>-->
-        <!-- TODO currently required for Eclipse -->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.commons</groupId>-->
-            <!--<artifactId>commons-lang3</artifactId>-->
-            <!--<version>3.2.1</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -71,6 +57,15 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <jpa.datasource>chatbox</jpa.datasource>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -78,17 +73,15 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war.plugin.version}</version>
                 <configuration>
-                    <!-- TODO use placeholder for source folder here? -->
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                 </configuration>
             </plugin>
             <plugin>
-                <!-- TODO configure for exploded wars -->
                 <groupId>org.apache.openejb.maven</groupId>
                 <artifactId>tomee-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <version>${tomee.plugin.version}</version>
                 <configuration>
-                    <tomeeVersion>1.6.0</tomeeVersion>
+                    <tomeeVersion>${tomee.version}</tomeeVersion>
                     <tomeeClassifier>plus</tomeeClassifier>
                     <synchronization>
                         <extensions>
@@ -98,13 +91,18 @@
                         <updateInterval>1</updateInterval>
                     </synchronization>
                     <reloadOnUpdate>true</reloadOnUpdate>
-                    <!-- TODO disable once not needed anymore -->
-                    <removeDefaultWebapps>false</removeDefaultWebapps>
                     <libs>
                         <lib>org.postgresql:postgresql:${postgresql.version}</lib>
                     </libs>
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
