@@ -19,7 +19,8 @@ import org.apache.commons.logging.Log;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -114,7 +115,7 @@ public class ChatboxWorker {
                 }
 
                 // TODO magic value
-                settingsService.saveSetting("last_update", String.valueOf(new Date().getTime()/1000));
+                settingsService.saveSetting("last_update", String.valueOf(getEpochSeconds()));
             }
             catch (ChatboxWrapperException e) {
                 log.error("Exception while obtaining messages", e);
@@ -172,14 +173,14 @@ public class ChatboxWorker {
     public void importSmilies() {
         init();
 
-        Date now = new Date();
+        long epochSeconds = getEpochSeconds();
         // TODO constant
         String setting = settingsService.getSetting("last_smiley_import");
         if(setting != null) {
             long lastImportTimestamp = Long.parseLong(setting);
 
             // TODO magic number
-            if(now.getTime()-lastImportTimestamp < 3600000) {
+            if(epochSeconds-lastImportTimestamp < 3600) {
                 return;
             }
         }
@@ -195,10 +196,15 @@ public class ChatboxWorker {
             return;
         }
 
-        settingsService.saveSetting("last_smiley_import", String.valueOf(now.getTime()));
+        settingsService.saveSetting("last_smiley_import", String.valueOf(epochSeconds));
 
         for (SmileyDTO smileyDTO : smilies) {
             smileyService.saveSmiley(smileyDTO);
         }
+    }
+
+    // TODO create some CDI bean for time-related tasks
+    private long getEpochSeconds() {
+        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000;
     }
 }

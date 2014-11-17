@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +57,7 @@ public class MessageService {
         newRevision.setRevision(newRevisionId);
         newRevision.setShout(shout);
         newRevision.setDate(shout.getDate());
-        newRevision.setReplaced(new Date(new Date().getTime()-3600000)); // TODO
+        newRevision.setReplaced(Date.from(LocalDateTime.now().minusHours(1).atZone(ZoneId.systemDefault()).toInstant())); // TODO
         newRevision.setText(shout.getMessage());
         newRevision.setUser(shout.getUser().getId());
         newRevision.setShout(shout);

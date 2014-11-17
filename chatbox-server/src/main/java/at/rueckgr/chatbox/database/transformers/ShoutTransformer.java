@@ -6,9 +6,9 @@ import at.rueckgr.chatbox.unparser.MessageUnparser;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 @ApplicationScoped
 public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
@@ -43,7 +43,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
         messageDTO.setEpoch(shoutEntity.getEpoch());
         // messageDTO.setDate(shoutEntity.getDate());
         // TODO fix this ugly fuckup
-        messageDTO.setDate(new Date(shoutEntity.getDate().getTime()+3600000));
+        messageDTO.setDate(LocalDateTime.ofInstant(shoutEntity.getDate().toInstant(), ZoneId.systemDefault()).plusHours(1));
         messageDTO.setDeleted(shoutEntity.getDeleted() == 1);
         messageDTO.setRawMessage(rawMessage);
         messageDTO.setMessage(message);
@@ -59,16 +59,13 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
         shoutEntity.setEpoch(messageDTO.getEpoch());
         // shoutEntity.setDate(messageDTO.getDate());
         // TODO fix this ugly fuckup
-        shoutEntity.setDate(new Date(messageDTO.getDate().getTime()-3600000));
+        shoutEntity.setDate(Date.from(messageDTO.getDate().minusHours(1).atZone(ZoneId.systemDefault()).toInstant()));
         shoutEntity.setDeleted(messageDTO.isDeleted() ? 1 : 0);
         shoutEntity.setMessage(messageDTO.getRawMessage());
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(messageDTO.getDate());
-        shoutEntity.setYear(calendar.get(Calendar.YEAR));
-        shoutEntity.setMonth(calendar.get(Calendar.MONTH) + 1);
-        shoutEntity.setDay(calendar.get(Calendar.DAY_OF_MONTH));
-        shoutEntity.setHour(calendar.get(Calendar.HOUR_OF_DAY));
+        shoutEntity.setYear(messageDTO.getDate().getYear());
+        shoutEntity.setMonth(messageDTO.getDate().getMonth().getValue());
+        shoutEntity.setDay(messageDTO.getDate().getDayOfMonth());
+        shoutEntity.setHour(messageDTO.getDate().getHour());
 
         return shoutEntity;
     }

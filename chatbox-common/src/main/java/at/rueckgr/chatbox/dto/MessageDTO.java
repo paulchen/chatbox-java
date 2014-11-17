@@ -4,10 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @EqualsAndHashCode(exclude = { "rawMessage" })
@@ -21,7 +20,7 @@ public class MessageDTO implements ChatboxDTO, Comparable<MessageDTO> {
     private Integer epoch;
     private String message;
     private transient String rawMessage; // don't send raw message to clients
-    private Date date;
+    private LocalDateTime date;
     private boolean deleted;
     private UserDTO user;
 
@@ -29,7 +28,7 @@ public class MessageDTO implements ChatboxDTO, Comparable<MessageDTO> {
         super();
     }
 
-    public MessageDTO(Integer primaryId, Integer id, Integer epoch, String rawMessage, Date date, boolean deleted, UserDTO user) {
+    public MessageDTO(Integer primaryId, Integer id, Integer epoch, String rawMessage, LocalDateTime date, boolean deleted, UserDTO user) {
         this.primaryId = primaryId;
         this.id = id;
         this.epoch = epoch;
@@ -41,9 +40,9 @@ public class MessageDTO implements ChatboxDTO, Comparable<MessageDTO> {
 
     @Override
     public String toString() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String username = this.user.getName();
-        String dateString = dateFormat.format(this.date);
+        String dateString = dateTimeFormatter.format(this.date);
 
         return MessageFormat.format("[{0}] <{1}> {2}", dateString, username, this.message);
     }

@@ -23,16 +23,14 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -190,9 +188,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
         int lastPos = 0;
 
         List<MessageDTO> ret = new ArrayList<MessageDTO>();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy, HH:mm");
-        // TODO time zone fuckup
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        DateTimeFormatter dateTimeFormatter = createDateTimeFormatter();
         while (true) {
             int pos1 = data.indexOf("<!-- BEGIN TEMPLATE: vsa_chatbox_bit -->", lastPos);
             if (pos1 == -1) {
@@ -211,11 +207,11 @@ public class ChatboxImpl implements Serializable, Chatbox {
             int datepos1 = shout.indexOf("[") + 1;
             int datepos2 = shout.indexOf("]");
 
-            Date date;
+            LocalDateTime date;
             try {
-                date = dateFormat.parse(shout.substring(datepos1, datepos2));
+                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2))).plusHours(1);
             }
-            catch (ParseException e) {
+            catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
 
                 throw new ChatboxWrapperException("Exception while parsing the chatbox content", e);
@@ -265,7 +261,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
         }
     }
 
-    private MessageDTO createMessageDTO(int id, Date date, int memberId,
+    private MessageDTO createMessageDTO(int id, LocalDateTime date, int memberId,
                                         String memberNick, String nickColor, String message) {
         if (!this.users.containsKey(memberId)) {
             this.users.put(memberId, createUserDTO(memberId, memberNick, nickColor));
@@ -299,8 +295,7 @@ public class ChatboxImpl implements Serializable, Chatbox {
         int lastPos = 0;
 
         List<MessageDTO> ret = new ArrayList<MessageDTO>();
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy, HH:mm");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        DateTimeFormatter dateTimeFormatter = createDateTimeFormatter();
         while (true) {
             int pos1 = data.indexOf("<!-- BEGIN TEMPLATE: vsa_chatbox_archive_bit -->", lastPos);
             if (pos1 == -1) {
@@ -318,11 +313,11 @@ public class ChatboxImpl implements Serializable, Chatbox {
 
             int datepos1 = shout.indexOf("  ", idpos2);
             int datepos2 = shout.indexOf("</td>", datepos1);
-            Date date;
+            LocalDateTime date;
             try {
-                date = dateFormat.parse(shout.substring(datepos1, datepos2));
+                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2))).plusHours(1);
             }
-            catch (ParseException e) {
+            catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
 
                 throw new ChatboxWrapperException("Exception while parsing the chatbox content", e);
@@ -361,6 +356,11 @@ public class ChatboxImpl implements Serializable, Chatbox {
         checkMessageCount(25, ret.size());
 
         return ret;
+    }
+
+    private DateTimeFormatter createDateTimeFormatter() {
+        // TODO timezone fuckup
+        return DateTimeFormatter.ofPattern("dd-MM-yy, HH:mm");
     }
 
     public boolean post(String message) throws Exception {
