@@ -90,8 +90,7 @@ public class ChatboxWorker {
                     }
                 }
 
-                // TODO magic value
-                settingsService.saveSetting("last_update", String.valueOf(timeService.getEpochSeconds()));
+                settingsService.saveSetting(Settings.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
             }
             catch (ChatboxWrapperException e) {
                 log.error("Exception while obtaining messages", e);
@@ -150,8 +149,7 @@ public class ChatboxWorker {
         init();
 
         long epochSeconds = timeService.getEpochSeconds();
-        // TODO constant
-        String setting = settingsService.getSetting("last_smiley_import");
+        String setting = settingsService.getSetting(Settings.LAST_SMILEY_IMPORT);
         if(setting != null) {
             long lastImportTimestamp = Long.parseLong(setting);
 
@@ -172,7 +170,7 @@ public class ChatboxWorker {
             return;
         }
 
-        settingsService.saveSetting("last_smiley_import", String.valueOf(epochSeconds));
+        settingsService.saveSetting(Settings.LAST_SMILEY_IMPORT, String.valueOf(epochSeconds));
 
         for (SmileyDTO smileyDTO : smilies) {
             smileyService.saveSmiley(smileyDTO);

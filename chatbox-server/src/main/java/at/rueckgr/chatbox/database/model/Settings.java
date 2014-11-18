@@ -21,10 +21,12 @@ import javax.validation.constraints.NotNull;
 public class Settings implements ChatboxEntity {
     private static final long serialVersionUID = 8091561855611916113L;
 
+    public static final String QRY_FIND_ALL = "Settings.findAll";
+    
     public static final String FORUM_USERNAME = "forum_username";
     public static final String FORUM_PASSWORD = "forum_password";
-
-    public static final String QRY_FIND_ALL = "Settings.findAll";
+    public static final String LAST_UPDATE = "last_update";
+    public static final String LAST_SMILEY_IMPORT = "last_smiley_import";
 
     @Id
     private String key;
