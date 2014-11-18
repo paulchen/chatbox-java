@@ -4,7 +4,6 @@ import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
-import at.rueckgr.chatbox.dto.MessageSorter;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
@@ -126,8 +125,8 @@ public class ChatboxWorker {
     private MessageFetchResult processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
         log.debug(MessageFormat.format("Fetched {0} messages from chatbox", messages.size()));
 
-        Set<MessageDTO> newMessages = new TreeSet<MessageDTO>(new MessageSorter());
-        Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>(new MessageSorter());
+        Set<MessageDTO> newMessages = new TreeSet<MessageDTO>();
+        Set<MessageDTO> modifiedMessages = new TreeSet<MessageDTO>();
         for (MessageDTO message : messages) {
             message.setMessage(messageUnparser.unparse(message.getRawMessage()));
 
