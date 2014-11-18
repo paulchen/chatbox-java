@@ -65,7 +65,6 @@ public class Shout implements ChatboxEntity {
     private Integer day;
 
     @NotNull
-    // TODO this is a actually a Boolean
     private Integer deleted;
 
     @NotNull
