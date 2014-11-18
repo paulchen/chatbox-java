@@ -6,7 +6,9 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -28,9 +30,10 @@ public class UserCredential implements ChatboxEntity {
 
     private String cookie;
 
-    // TODO foreign key constraint
     @Id
-    private Integer id;
+    @OneToOne
+    @JoinColumn(name = "id")
+    private User id;
 
     private String password;
 
