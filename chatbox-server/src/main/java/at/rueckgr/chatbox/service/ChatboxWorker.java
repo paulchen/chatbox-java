@@ -9,6 +9,7 @@ import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
+import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
@@ -19,8 +20,6 @@ import org.apache.commons.logging.Log;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,6 +35,7 @@ public class ChatboxWorker {
     private @Inject MessageService messageService;
     private @Inject SettingsService settingsService;
     private @Inject SmileyService smileyService;
+    private @Inject TimeService timeService;
 
     private final Chatbox chatbox;
 
@@ -115,7 +115,7 @@ public class ChatboxWorker {
                 }
 
                 // TODO magic value
-                settingsService.saveSetting("last_update", String.valueOf(getEpochSeconds()));
+                settingsService.saveSetting("last_update", String.valueOf(timeService.getEpochSeconds()));
             }
             catch (ChatboxWrapperException e) {
                 log.error("Exception while obtaining messages", e);
@@ -173,7 +173,7 @@ public class ChatboxWorker {
     public void importSmilies() {
         init();
 
-        long epochSeconds = getEpochSeconds();
+        long epochSeconds = timeService.getEpochSeconds();
         // TODO constant
         String setting = settingsService.getSetting("last_smiley_import");
         if(setting != null) {
@@ -201,10 +201,5 @@ public class ChatboxWorker {
         for (SmileyDTO smileyDTO : smilies) {
             smileyService.saveSmiley(smileyDTO);
         }
-    }
-
-    // TODO create some CDI bean for time-related tasks
-    private long getEpochSeconds() {
-        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000;
     }
 }

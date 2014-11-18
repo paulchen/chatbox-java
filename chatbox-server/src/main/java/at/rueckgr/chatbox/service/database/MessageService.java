@@ -13,9 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,6 +27,7 @@ public class MessageService {
     private @Inject SmileyService smileyService;
     private @Inject WordService wordService;
     private @Inject UserService userService;
+    private @Inject TimeService timeService;
 
     private ShoutRevision findLatestShoutRevision(Shout shout) {
         if(shout.getId() == null) {
@@ -57,7 +56,7 @@ public class MessageService {
         newRevision.setRevision(newRevisionId);
         newRevision.setShout(shout);
         newRevision.setDate(shout.getDate());
-        newRevision.setReplaced(Date.from(LocalDateTime.now().minusHours(1).atZone(ZoneId.systemDefault()).toInstant())); // TODO
+        newRevision.setReplaced(timeService.toDate(LocalDateTime.now().minusHours(1)));
         newRevision.setText(shout.getMessage());
         newRevision.setUser(shout.getUser().getId());
         newRevision.setShout(shout);
