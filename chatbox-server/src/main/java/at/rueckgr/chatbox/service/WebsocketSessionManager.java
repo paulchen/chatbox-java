@@ -4,18 +4,19 @@ import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.message.ChatboxMessage;
 import at.rueckgr.chatbox.dto.message.FetchCurrentMessagesRequest;
 import at.rueckgr.chatbox.dto.message.NewMessagesNotification;
+import at.rueckgr.chatbox.service.events.NewMessagesEvent;
 import at.rueckgr.chatbox.util.GsonProcessor;
 import org.apache.commons.logging.Log;
 
 import javax.ejb.Asynchronous;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Singleton;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.TreeSet;
 
-@ApplicationScoped
+@Singleton
 public class WebsocketSessionManager {
     private List<WebsocketEndpoint> sessions = new ArrayList<WebsocketEndpoint>();
 
@@ -32,10 +33,11 @@ public class WebsocketSessionManager {
     }
 
     @Asynchronous
-    public void newMessages(Set<MessageDTO> newMessages, Set<MessageDTO> modifiedMessages) {
+    public void newMessages(@Observes NewMessagesEvent newMessagesEvent) {
         log.debug("Notifying all clients about new and updated messages");
 
-        String jsonMessage = gsonProcessor.encode(new NewMessagesNotification(newMessages, modifiedMessages));
+        NewMessagesNotification notification = new NewMessagesNotification(newMessagesEvent.getNewMessages(), newMessagesEvent.getModifiedMessages());
+        String jsonMessage = gsonProcessor.encode(notification);
 
         for (WebsocketEndpoint notifier : sessions) {
             notifier.notify(jsonMessage);

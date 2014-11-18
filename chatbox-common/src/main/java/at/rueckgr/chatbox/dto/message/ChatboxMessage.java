@@ -1,5 +1,7 @@
 package at.rueckgr.chatbox.dto.message;
 
-public interface ChatboxMessage {
+import java.io.Serializable;
+
+public interface ChatboxMessage extends Serializable {
 
 }

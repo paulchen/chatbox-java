@@ -9,6 +9,7 @@ import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
+import at.rueckgr.chatbox.service.events.NewMessagesEvent;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
@@ -17,6 +18,7 @@ import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
 import org.apache.commons.logging.Log;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.util.List;
@@ -27,7 +29,6 @@ import java.util.TreeSet;
 public class ChatboxWorker {
     private @Inject Log log;
     private @Inject MessageCache messageCache;
-    private @Inject WebsocketSessionManager newMessageNotifier;
     private @Inject ShoutTransformer shoutTransformer;
     private @Inject SmileyTransformer smileyTransformer;
     private @Inject MessageUnparser messageUnparser;
@@ -35,32 +36,9 @@ public class ChatboxWorker {
     private @Inject SettingsService settingsService;
     private @Inject SmileyService smileyService;
     private @Inject TimeService timeService;
+    private @Inject Event<NewMessagesEvent> newMessagesEvent;
 
     private final Chatbox chatbox;
-
-    private final class MessageFetchResult {
-        private final Set<MessageDTO> newMessages;
-        private final Set<MessageDTO> modifiedMessages;
-        private final int totalMessagesCount;
-
-        private MessageFetchResult(Set<MessageDTO> newMessages, Set<MessageDTO> modifiedMessages, int totalMessagesCount) {
-            this.newMessages = newMessages;
-            this.modifiedMessages = modifiedMessages;
-            this.totalMessagesCount = totalMessagesCount;
-        }
-
-        public Set<MessageDTO> getNewMessages() {
-            return newMessages;
-        }
-
-        public Set<MessageDTO> getModifiedMessages() {
-            return modifiedMessages;
-        }
-
-        public int getTotalMessagesCount() {
-            return totalMessagesCount;
-        }
-    }
 
     public ChatboxWorker() {
         chatbox = new ChatboxImpl();
@@ -93,10 +71,9 @@ public class ChatboxWorker {
 
             // TODO make try block smaller?
             try {
-                MessageFetchResult result = processMessages(chatbox.fetchCurrent(), false);
+                NewMessagesEvent result = processMessages(chatbox.fetchCurrent(), false);
                 if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
-                    // TODO use CDI events?
-                    newMessageNotifier.newMessages(result.getNewMessages(), result.getModifiedMessages());
+                    newMessagesEvent.fire(result);
                 }
 
                 if(result.getNewMessages().size() == result.getTotalMessagesCount()) {
@@ -122,7 +99,7 @@ public class ChatboxWorker {
         }
     }
 
-    private MessageFetchResult processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
+    private NewMessagesEvent processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
         log.debug(MessageFormat.format("Fetched {0} messages from chatbox", messages.size()));
 
         Set<MessageDTO> newMessages = new TreeSet<MessageDTO>();
@@ -166,7 +143,7 @@ public class ChatboxWorker {
             log.info("No new or modified messages");
         }
 
-        return new MessageFetchResult(newMessages, modifiedMessages, messages.size());
+        return new NewMessagesEvent(newMessages, modifiedMessages, messages.size());
     }
 
     public void importSmilies() {

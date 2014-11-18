@@ -1,11 +1,12 @@
 package at.rueckgr.chatbox.dto.message;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import lombok.Getter;
 
-import java.io.Serializable;
 import java.util.Collection;
 
-public class NewMessagesNotification implements ChatboxNotification, Serializable {
+@Getter
+public class NewMessagesNotification implements ChatboxNotification {
     private static final long serialVersionUID = -4990339131103447543L;
 
     private final Collection<MessageDTO> newMessages;
@@ -15,13 +16,5 @@ public class NewMessagesNotification implements ChatboxNotification, Serializabl
         super();
         this.newMessages = newMessages;
         this.modifiedMessages = modifiedMessages;
-    }
-
-    public Collection<MessageDTO> getNewMessages() {
-        return newMessages;
-    }
-
-    public Collection<MessageDTO> getModifiedMessages() {
-        return modifiedMessages;
     }
 }

@@ -18,11 +18,8 @@ import java.text.MessageFormat;
 public class WebsocketEndpoint implements Serializable {
     private static final long serialVersionUID = 3031583136358384436L;
 
-    @Inject
-    private Log log;
-
-    @Inject
-    private WebsocketSessionManager sessionManager;
+    private @Inject Log log;
+    private @Inject WebsocketSessionManager sessionManager;
 
     private transient Session session;
 
