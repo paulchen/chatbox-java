@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.wrapper;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
@@ -34,7 +35,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChatboxImpl implements Serializable, Chatbox {
+public class ChatboxImpl implements Chatbox {
     private static final long serialVersionUID = 3629673172370130749L;
 
     private static Log log = LogFactory.getLog(ChatboxImpl.class);
@@ -47,10 +48,15 @@ public class ChatboxImpl implements Serializable, Chatbox {
     private static final String FAQ_URL = "http://www.informatik-forum.at/faq.php";
     private static final String SMILIES_URL = "http://www.informatik-forum.at/misc.php";
 
+    private static final String USERS_URL = "http://www.informatik-forum.at/misc.php?show=ccbusers";
+
     private static final String TOKEN_PATTERN = "^.*var SECURITYTOKEN = \"([a-f0-9\\-]+)\";.*$";
     private static final String SMILIES_PATTERN = "<div class=\"smilietext td\">([^<]+)</div>[^<]+"
             + "<div class=\"smilieimage td\"><img src=\"[^\"]*\\/([^\\/\"]+)\"[^>]+></div>[^<]+"
             + "<div class=\"smiliedesc td\">([^<]+)</div>";
+
+    private static final String VISIBLE_USERS_PATTERN = "<a href=\"member.php\\?u=([0-9]+)\" title=\"[^\"]+\">(<B><Font Color=\"([a-z]+)\">)?([^<]+)<";
+    private static final String INVISIBLE_USERS_PATTERN = "Invisible";
 
     private ChatboxSession session;
     private transient CloseableHttpClient client;
@@ -423,6 +429,48 @@ public class ChatboxImpl implements Serializable, Chatbox {
         }
 
         return result;
+    }
+
+    @Override
+    public OnlineUsersInfo fetchOnlineUsers() throws ChatboxWrapperException {
+        log.debug("Fetching online users");
+        this.session.logUserdata();
+
+        final String data = fetchURL(USERS_URL, new ResultChecker() {
+            private static final long serialVersionUID = -5443491000158508968L;
+
+            public boolean isOk(String responseString) {
+                return !responseString.contains("DOCTYPE");
+            }
+        });
+
+        Pattern visibleUsersPattern = Pattern.compile(VISIBLE_USERS_PATTERN);
+        Matcher visibleUsersMatcher = visibleUsersPattern.matcher(data);
+        List<UserDTO> visibleUsers = new ArrayList<UserDTO>();
+        while(visibleUsersMatcher.find()) {
+            String userIdString = visibleUsersMatcher.group(1);
+            String userColor = visibleUsersMatcher.group(3);
+            if(userColor == null) {
+                userColor = "-";
+            }
+            String username = visibleUsersMatcher.group(4);
+
+            log.debug(MessageFormat.format("User online: {0} {1} {2}", userIdString, userColor, username));
+
+            visibleUsers.add(createUserDTO(Integer.parseInt(userIdString), username, userColor));
+        }
+
+        Pattern invisibleUsersPattern = Pattern.compile(INVISIBLE_USERS_PATTERN);
+        Matcher invisibleUsersMatcher = invisibleUsersPattern.matcher(data);
+        int invisibleUsers = 0;
+        while(invisibleUsersMatcher.find()) {
+            invisibleUsers++;
+        }
+
+        log.debug(MessageFormat.format("{0} invisible user(s) online", invisibleUsers));
+        log.info(MessageFormat.format("{0} user(s) currently online", visibleUsers.size()+invisibleUsers));
+
+        return new OnlineUsersInfo(visibleUsers, invisibleUsers);
     }
 
     private CloseableHttpClient getClient() {

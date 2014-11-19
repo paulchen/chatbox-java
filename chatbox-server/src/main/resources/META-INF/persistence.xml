@@ -6,7 +6,7 @@
     <persistence-unit name="chatbox" transaction-type="JTA">
         <jta-data-source>${jpa.datasource}</jta-data-source>
 
-        <class>at.rueckgr.chatbox.database.model.InvisibleUser</class>
+        <class>at.rueckgr.chatbox.database.model.InvisibleUsers</class>
         <class>at.rueckgr.chatbox.database.model.OnlineUser</class>
         <class>at.rueckgr.chatbox.database.model.Settings</class>
         <class>at.rueckgr.chatbox.database.model.ShoutRevision</class>

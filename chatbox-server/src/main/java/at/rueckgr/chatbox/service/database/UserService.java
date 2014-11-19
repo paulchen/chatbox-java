@@ -1,9 +1,12 @@
 package at.rueckgr.chatbox.service.database;
 
+import at.rueckgr.chatbox.database.model.InvisibleUsers;
+import at.rueckgr.chatbox.database.model.OnlineUser;
 import at.rueckgr.chatbox.database.model.User;
 import at.rueckgr.chatbox.database.model.UserCategory;
 import at.rueckgr.chatbox.database.transformers.UserCategoryTransformer;
 import at.rueckgr.chatbox.database.transformers.UserTransformer;
+import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
 
@@ -13,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @ApplicationScoped
 @Transactional
@@ -22,18 +26,20 @@ public class UserService {
     private @Inject UserCategoryTransformer userCategoryTransformer;
 
     public User findUser(UserDTO userDTO) {
-        User userEntity = em.find(User.class, userDTO.getId());
-        boolean newEntity = false;
-        if(userEntity == null) {
-            userEntity = new User();
-            newEntity = true;
+        synchronized(this) {
+            User userEntity = em.find(User.class, userDTO.getId());
+            boolean newEntity = false;
+            if (userEntity == null) {
+                userEntity = new User();
+                newEntity = true;
+            }
+            userTransformer.updateEntity(userEntity, userDTO);
+            userEntity.setUserCategory(findUserCategory(userDTO.getUserCategory()));
+            if (newEntity) {
+                em.persist(userEntity);
+            }
+            return userEntity;
         }
-        userTransformer.updateEntity(userEntity, userDTO);
-        userEntity.setUserCategory(findUserCategory(userDTO.getUserCategory()));
-        if(newEntity) {
-            em.persist(userEntity);
-        }
-        return userEntity;
     }
 
     private UserCategory findUserCategory(UserCategoryDTO userCategory) {
@@ -59,5 +65,33 @@ public class UserService {
         catch (NoResultException e) {
             return null;
         }
+    }
+
+    private void logInvisibleUsers(int invisibleUsersCount, Date date) {
+        InvisibleUsers invisibleUser = new InvisibleUsers();
+        invisibleUser.setUsers(invisibleUsersCount);
+        invisibleUser.setDate(date);
+
+        em.persist(invisibleUser);
+    }
+
+    public void logOnlineUsers(OnlineUsersInfo onlineUsersInfo) {
+        Date date = new Date();
+
+        logInvisibleUsers(onlineUsersInfo.getInvisibleUsers(), date);
+
+        for(UserDTO userDTO : onlineUsersInfo.getOnlineUsers()) {
+            logOnlineUser(userDTO, date);
+        }
+    }
+
+    private void logOnlineUser(UserDTO userDTO, Date date) {
+        User user = findUser(userDTO);
+
+        OnlineUser onlineUser = new OnlineUser();
+        onlineUser.setDate(date);
+        onlineUser.setUser(user);
+
+        em.persist(onlineUser);
     }
 }

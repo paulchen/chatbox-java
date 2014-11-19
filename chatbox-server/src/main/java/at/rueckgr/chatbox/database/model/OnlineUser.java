@@ -3,7 +3,10 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
@@ -11,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -32,13 +35,15 @@ public class OnlineUser implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "OnlineUser.findAll";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private Timestamp timestamp;
+    @Column(name = "timestamp")
+    private Date date;
 
     //bi-directional many-to-one association to User
     @ManyToOne
-    @JoinColumn(name = "user")
-    private User userBean;
+    @JoinColumn(name = "user_id")
+    private User user;
 }

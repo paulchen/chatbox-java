@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.wrapper;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 
 import java.io.Serializable;
@@ -21,4 +22,6 @@ public interface Chatbox extends Serializable {
     boolean hasSession();
 
     List<SmileyDTO> fetchSmilies() throws ChatboxWrapperException;
+
+    OnlineUsersInfo fetchOnlineUsers() throws ChatboxWrapperException;
 }

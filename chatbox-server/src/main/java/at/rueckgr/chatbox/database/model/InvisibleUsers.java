@@ -3,12 +3,15 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
+import java.util.Date;
 
 
 /**
@@ -16,19 +19,21 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "invisible_users")
-@NamedQuery(name = InvisibleUser.QRY_FIND_ALL, query = "SELECT i FROM InvisibleUser i")
+@NamedQuery(name = InvisibleUsers.QRY_FIND_ALL, query = "SELECT i FROM InvisibleUsers i")
 @Getter
 @Setter
-public class InvisibleUser implements ChatboxEntity {
+public class InvisibleUsers implements ChatboxEntity {
     private static final long serialVersionUID = 2321180948048945868L;
 
     public static final String QRY_FIND_ALL = "InvisibleUser.findAll";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull
-    private Timestamp timestamp;
+    @Column(name = "timestamp")
+    private Date date;
 
     @NotNull
     private Integer users;
