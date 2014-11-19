@@ -2,6 +2,7 @@ package at.rueckgr.chatbox.unparser;
 
 import at.rueckgr.chatbox.unparser.plugins.Unparser;
 import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import org.reflections.Reflections;
 
 import javax.annotation.PostConstruct;
@@ -10,7 +11,6 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

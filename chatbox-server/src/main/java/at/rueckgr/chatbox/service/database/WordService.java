@@ -4,13 +4,13 @@ import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.model.ShoutWords;
 import at.rueckgr.chatbox.database.model.Word;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

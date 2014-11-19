@@ -1,11 +1,11 @@
 package at.rueckgr.chatbox.service.database;
 
 import at.rueckgr.chatbox.database.model.Settings;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 
 @ApplicationScoped
 @Transactional

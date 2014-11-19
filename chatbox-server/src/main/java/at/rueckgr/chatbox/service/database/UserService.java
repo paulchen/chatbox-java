@@ -9,13 +9,13 @@ import at.rueckgr.chatbox.database.transformers.UserTransformer;
 import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
+import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import java.util.Date;
 
 @ApplicationScoped
