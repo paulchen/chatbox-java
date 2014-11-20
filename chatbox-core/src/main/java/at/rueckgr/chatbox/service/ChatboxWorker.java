@@ -37,6 +37,7 @@ public class ChatboxWorker {
     private @Inject SmileyService smileyService;
     private @Inject TimeService timeService;
     private @Inject Event<NewMessagesEvent> newMessagesEvent;
+    private @Inject MailService mailService;
 
     private final Chatbox chatbox;
 
@@ -72,6 +73,7 @@ public class ChatboxWorker {
             // TODO make try block smaller?
             try {
                 NewMessagesEvent result = processMessages(chatbox.fetchCurrent(), false);
+
                 if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
                     newMessagesEvent.fire(result);
                 }
@@ -92,8 +94,10 @@ public class ChatboxWorker {
 
                 settingsService.saveSetting(Settings.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
             }
-            catch (ChatboxWrapperException e) {
+            catch (Exception e) {
                 log.error("Exception while obtaining messages", e);
+
+                mailService.sendExceptionMail(e);
             }
         }
     }

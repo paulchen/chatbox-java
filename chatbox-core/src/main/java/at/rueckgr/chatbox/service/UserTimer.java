@@ -24,6 +24,7 @@ public class UserTimer {
     private @Inject Log log;
     private @Inject ChatboxTimer chatboxTimer;
     private @Inject UserWorker userWorker;
+    private @Inject MailService mailService;
 
     private @Resource TimerService timerService;
 
@@ -50,6 +51,11 @@ public class UserTimer {
         running = true;
         try {
             userWorker.doWork();
+        }
+        catch (Exception e) {
+            log.error("Exception occurred while recording online users", e);
+
+            mailService.sendExceptionMail(e);
         }
         finally {
             startTimer();

@@ -1,0 +1,14 @@
+Dear admin,
+
+An error has just occurred: The input file did not contain the expected
+number of messages.
+
+Expected: $expected
+
+Actual: $actual
+
+URL: $url
+
+
+Regards,
+The Chatbox Archive
