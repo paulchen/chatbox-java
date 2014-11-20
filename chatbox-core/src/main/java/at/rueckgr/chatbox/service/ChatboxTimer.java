@@ -24,6 +24,7 @@ import javax.inject.Inject;
 public class ChatboxTimer {
     private @Inject Log log;
     private @Inject ChatboxWorker worker;
+    private @Inject MailService mailService;
 
     private @Resource TimerService timerService;
 
@@ -33,6 +34,8 @@ public class ChatboxTimer {
     @PostConstruct
     public void startup() {
         log.info("ChatboxTimer starting up");
+
+        mailService.sendMail();
 
         running = true;
 
