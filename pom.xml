@@ -36,6 +36,9 @@
     <modules>
         <module>chatbox-build-tools</module>
         <module>chatbox-common</module>
+        <module>chatbox-core</module>
+        <module>chatbox-bot</module>
+        <module>chatbox-websockets</module>
         <module>chatbox-server</module>
         <module>chatbox-wrapper</module>
         <module>chatbox-android</module>

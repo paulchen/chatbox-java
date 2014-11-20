@@ -1,10 +1,10 @@
 package at.rueckgr.chatbox.service;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
+import at.rueckgr.chatbox.dto.events.NewMessagesEvent;
 import at.rueckgr.chatbox.dto.message.ChatboxMessage;
 import at.rueckgr.chatbox.dto.message.FetchCurrentMessagesRequest;
 import at.rueckgr.chatbox.dto.message.NewMessagesNotification;
-import at.rueckgr.chatbox.service.events.NewMessagesEvent;
 import at.rueckgr.chatbox.util.GsonProcessor;
 import org.apache.commons.logging.Log;
 

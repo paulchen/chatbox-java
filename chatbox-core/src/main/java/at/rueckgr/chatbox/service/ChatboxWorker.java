@@ -9,7 +9,7 @@ import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
-import at.rueckgr.chatbox.service.events.NewMessagesEvent;
+import at.rueckgr.chatbox.dto.events.NewMessagesEvent;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;

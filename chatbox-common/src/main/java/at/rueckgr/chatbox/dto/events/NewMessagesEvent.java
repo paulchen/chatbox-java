@@ -1,4 +1,4 @@
-package at.rueckgr.chatbox.service.events;
+package at.rueckgr.chatbox.dto.events;
 
 import at.rueckgr.chatbox.dto.MessageDTO;
 import lombok.Getter;

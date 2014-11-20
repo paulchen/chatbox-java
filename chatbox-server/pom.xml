@@ -3,8 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- TODO clean shutdown does not always work -->
-
     <parent>
         <groupId>at.rueckgr.chatbox</groupId>
         <artifactId>chatbox</artifactId>
@@ -21,50 +19,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
-            <artifactId>chatbox-common</artifactId>
+            <artifactId>chatbox-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
-            <artifactId>chatbox-wrapper</artifactId>
+            <artifactId>chatbox-bot</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
+            <groupId>at.rueckgr.chatbox</groupId>
+            <artifactId>chatbox-websockets</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <jpa.datasource>chatbox</jpa.datasource>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
