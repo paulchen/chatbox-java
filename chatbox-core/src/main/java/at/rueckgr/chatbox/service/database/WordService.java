@@ -66,12 +66,14 @@ public class WordService {
     private Map<Word, Integer> extractWords(Shout shoutEntity) {
         String message = StringUtils.replaceEach(shoutEntity.getMessage(),
                 new String[]{",", ".", "!", "?"}, new String[]{"", "", "", ""});
-        String[] words = message.split("[\\s]+");
+        String[] words = message.toLowerCase().split("[\\s]+");
 
         Map<String, Integer> wordList = new HashMap<String, Integer>();
         for(String foundWord : words) {
-            int count = wordList.containsKey(foundWord) ? wordList.get(foundWord)+1 : 1;
-            wordList.put(foundWord, count);
+            if(foundWord.matches("^[a-z]+$")) {
+                int count = wordList.containsKey(foundWord) ? wordList.get(foundWord) + 1 : 1;
+                wordList.put(foundWord, count);
+            }
         }
 
         Map<Word, Integer> ret = new HashMap<Word, Integer>(wordList.size());
