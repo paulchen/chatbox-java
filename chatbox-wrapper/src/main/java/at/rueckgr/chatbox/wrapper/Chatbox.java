@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.wrapper;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.SmileyDTO;
+import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
 
 import java.io.Serializable;
 import java.util.List;

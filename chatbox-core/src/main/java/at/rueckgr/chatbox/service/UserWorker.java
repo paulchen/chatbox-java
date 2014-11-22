@@ -7,7 +7,7 @@ import at.rueckgr.chatbox.service.database.UserService;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
-import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
+import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 

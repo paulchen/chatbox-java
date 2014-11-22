@@ -5,6 +5,10 @@ import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.dto.UserCategoryDTO;
 import at.rueckgr.chatbox.dto.UserDTO;
+import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
+import at.rueckgr.chatbox.wrapper.exception.OtherProblemException;
+import at.rueckgr.chatbox.wrapper.exception.PollingException;
+import at.rueckgr.chatbox.wrapper.exception.WrongMessageCountException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.translate.NumericEntityEscaper;
@@ -23,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.time.DateTimeException;
@@ -104,10 +109,15 @@ public class ChatboxImpl implements Chatbox {
             response = getClient().execute(getRequest);
             responseString = getStringFromInputStream(response.getEntity().getContent());
         }
+        catch (SocketException e) {
+            log.error("Exception during login", e);
+
+            throw new PollingException("Exception during login", e);
+        }
         catch (IOException e) {
             log.error("Exception during login", e);
 
-            throw new ChatboxWrapperException("Exception during login", e);
+            throw new OtherProblemException("Exception during login", e);
         }
         finally {
             if (response != null) {
@@ -126,7 +136,7 @@ public class ChatboxImpl implements Chatbox {
         if (!matcher.matches()) {
             log.info("Login failed");
 
-            throw new ChatboxWrapperException("Unable to login");
+            throw new OtherProblemException("Unable to login");
         }
 
         session.setSecurityToken(matcher.group(1));
@@ -150,16 +160,21 @@ public class ChatboxImpl implements Chatbox {
                 if (!checker.isOk(responseString)) {
                     log.info("Unable to fetch chatbox contents despite re-login");
 
-                    throw new ChatboxWrapperException("Unable to fetch chatbox contents despite re-login");
+                    throw new OtherProblemException("Unable to fetch chatbox contents despite re-login");
                 }
             }
 
             return responseString;
         }
+        catch (SocketException e) {
+            log.error("Exception while fetching chatbox contents", e);
+
+            throw new PollingException("Exception while fetching chatbox contents", e);
+        }
         catch (IOException e) {
             log.error("Exception while fetching chatbox contents", e);
 
-            throw new ChatboxWrapperException("Exception while fetching chatbox contents", e);
+            throw new OtherProblemException("Exception while fetching chatbox contents", e);
         }
         finally {
             if (response != null) {
@@ -220,7 +235,7 @@ public class ChatboxImpl implements Chatbox {
             catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
 
-                throw new ChatboxWrapperException("Exception while parsing the chatbox content", e);
+                throw new OtherProblemException("Exception while parsing the chatbox content", e);
             }
 
             int memberpos1 = shout.indexOf("member.php?u=") + 13;
@@ -252,18 +267,18 @@ public class ChatboxImpl implements Chatbox {
         }
 
         // TODO magic number
-        checkMessageCount(30, ret.size());
+        checkMessageCount(30, ret.size(), false, CURRENT_URL);
 
         return ret;
     }
 
-    private void checkMessageCount(int expected, int actual) throws ChatboxWrapperException {
+    private void checkMessageCount(int expected, int actual, boolean archive, String url) throws ChatboxWrapperException {
         if (expected != actual) {
             String message = MessageFormat.format("Wrong number of messages fetched from chatbox (expected {0}, actual {1})", expected, actual);
 
             log.error(message);
 
-            throw new ChatboxWrapperException(message);
+            throw new WrongMessageCountException(expected, actual, archive, url);
         }
     }
 
@@ -290,7 +305,8 @@ public class ChatboxImpl implements Chatbox {
         log.debug("Fetching chatbox archive, page " + page);
         this.session.logUserdata();
 
-        final String data = fetchURL(MessageFormat.format(ARCHIVE_URL, page), new ResultChecker() {
+        String url = MessageFormat.format(ARCHIVE_URL, page);
+        final String data = fetchURL(url, new ResultChecker() {
             private static final long serialVersionUID = -6840776392819411021L;
 
             public boolean isOk(String responseString) {
@@ -326,7 +342,7 @@ public class ChatboxImpl implements Chatbox {
             catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
 
-                throw new ChatboxWrapperException("Exception while parsing the chatbox content", e);
+                throw new OtherProblemException("Exception while parsing the chatbox content", e);
             }
 
             int memberpos1 = shout.indexOf("member.php?u=") + 13;
@@ -359,7 +375,7 @@ public class ChatboxImpl implements Chatbox {
             lastPos = pos2;
         }
 
-        checkMessageCount(25, ret.size());
+        checkMessageCount(25, ret.size(), true, url);
 
         return ret;
     }

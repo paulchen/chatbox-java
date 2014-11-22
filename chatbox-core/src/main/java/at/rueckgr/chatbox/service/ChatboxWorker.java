@@ -5,16 +5,18 @@ import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.SmileyDTO;
+import at.rueckgr.chatbox.dto.events.NewMessagesEvent;
 import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
-import at.rueckgr.chatbox.dto.events.NewMessagesEvent;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
-import at.rueckgr.chatbox.wrapper.ChatboxWrapperException;
+import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
+import at.rueckgr.chatbox.wrapper.exception.PollingException;
+import at.rueckgr.chatbox.wrapper.exception.WrongMessageCountException;
 import org.apache.commons.logging.Log;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -93,6 +95,16 @@ public class ChatboxWorker {
                 }
 
                 settingsService.saveSetting(Settings.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
+            }
+            catch (PollingException e) {
+                log.error("Exception while obtaining messages", e);
+
+                /* ignore this exception */
+            }
+            catch (WrongMessageCountException e) {
+                log.error("Exception while obtaining messages", e);
+
+                mailService.sendUnexpectedMessageCountMail(e.getExpected(), e.getActual(), e.getUrl());
             }
             catch (Exception e) {
                 log.error("Exception while obtaining messages", e);

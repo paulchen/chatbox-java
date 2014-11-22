@@ -27,7 +27,6 @@ public class MailService {
         sendMail(messageText);
     }
 
-    // TODO unused because this class is not accessible from the module chatbox-wrapper -.-
     public void sendUnexpectedMessageCountMail(int expected, int actual, String url) {
         Map<String, Object> objects = new HashMap<String, Object>();
         objects.put("expected", expected);
