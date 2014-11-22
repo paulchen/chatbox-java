@@ -3,6 +3,8 @@ Dear admin,
 An exception has just occurred.
 
 
+Environment: $environment
+
 Message:
 
 $message

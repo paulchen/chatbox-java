@@ -3,6 +3,8 @@ Dear admin,
 An error has just occurred: The input file did not contain the expected
 number of messages.
 
+Environment: $environment
+
 Expected: $expected
 
 Actual: $actual

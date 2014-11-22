@@ -27,6 +27,7 @@ public class Settings implements ChatboxEntity {
     public static final String FORUM_PASSWORD = "forum_password";
     public static final String LAST_UPDATE = "last_update";
     public static final String LAST_SMILEY_IMPORT = "last_smiley_import";
+    public static final String ENVIRONMENT = "environment";
 
     @Id
     private String key;

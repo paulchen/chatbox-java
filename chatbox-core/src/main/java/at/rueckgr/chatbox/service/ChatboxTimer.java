@@ -1,5 +1,7 @@
 package at.rueckgr.chatbox.service;
 
+import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.service.database.SettingsService;
 import org.apache.commons.logging.Log;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +17,7 @@ import javax.ejb.TimerService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import java.text.MessageFormat;
 
 @Startup
 @Singleton
@@ -24,6 +27,7 @@ import javax.inject.Inject;
 public class ChatboxTimer {
     private @Inject Log log;
     private @Inject ChatboxWorker worker;
+    private @Inject SettingsService settingsService;
 
     private @Resource TimerService timerService;
 
@@ -33,6 +37,7 @@ public class ChatboxTimer {
     @PostConstruct
     public void startup() {
         log.info("ChatboxTimer starting up");
+        log.info(MessageFormat.format("Environment: {0}", settingsService.getSetting(Settings.ENVIRONMENT)));
 
         running = true;
 

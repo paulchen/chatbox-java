@@ -1,5 +1,7 @@
 package at.rueckgr.chatbox.service;
 
+import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.util.VelocityService;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -14,6 +16,7 @@ import java.util.Map;
 @ApplicationScoped
 public class MailService {
     private @Inject VelocityService velocityService;
+    private @Inject SettingsService settingsService;
 
     public void sendExceptionMail(Exception e) {
         String stackTrace = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
@@ -21,6 +24,7 @@ public class MailService {
         Map<String, Object> objects = new HashMap<String, Object>();
         objects.put("message", e.getMessage());
         objects.put("stacktrace", stackTrace);
+        objects.put("environment", settingsService.getSetting(Settings.ENVIRONMENT));
 
         String messageText = velocityService.renderTemplate("exception", objects);
 
@@ -32,6 +36,7 @@ public class MailService {
         objects.put("expected", expected);
         objects.put("actual", actual);
         objects.put("url", url);
+        objects.put("environment", settingsService.getSetting(Settings.ENVIRONMENT));
 
         String messageText = velocityService.renderTemplate("message_count", objects);
 
