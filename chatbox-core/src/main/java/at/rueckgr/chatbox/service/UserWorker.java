@@ -4,10 +4,12 @@ import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.UserService;
+import at.rueckgr.chatbox.util.ExceptionHelper;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
+import at.rueckgr.chatbox.wrapper.exception.PollingException;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
@@ -19,6 +21,7 @@ public class UserWorker {
     private @Inject Log log;
     private @Inject SettingsService settingsService;
     private @Inject UserService userService;
+    private @Inject ExceptionHelper exceptionHelper;
 
     private final Chatbox chatbox;
 
@@ -42,6 +45,9 @@ public class UserWorker {
             OnlineUsersInfo onlineUsersInfo = chatbox.fetchOnlineUsers();
 
             userService.logOnlineUsers(onlineUsersInfo);
+        }
+        catch (PollingException e) {
+            exceptionHelper.handlePollingException(e);
         }
         catch (ChatboxWrapperException e) {
             throw ExceptionUtils.throwAsRuntimeException(e);

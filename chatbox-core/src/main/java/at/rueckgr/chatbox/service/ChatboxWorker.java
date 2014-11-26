@@ -11,6 +11,7 @@ import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
+import at.rueckgr.chatbox.util.ExceptionHelper;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
@@ -40,6 +41,7 @@ public class ChatboxWorker {
     private @Inject TimeService timeService;
     private @Inject Event<NewMessagesEvent> newMessagesEvent;
     private @Inject MailService mailService;
+    private @Inject ExceptionHelper exceptionHelper;
 
     private final Chatbox chatbox;
 
@@ -97,9 +99,7 @@ public class ChatboxWorker {
                 settingsService.saveSetting(Settings.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
             }
             catch (PollingException e) {
-                log.error("Exception while obtaining messages", e);
-
-                /* ignore this exception */
+                exceptionHelper.handlePollingException(e);
             }
             catch (WrongMessageCountException e) {
                 log.error("Exception while obtaining messages", e);
