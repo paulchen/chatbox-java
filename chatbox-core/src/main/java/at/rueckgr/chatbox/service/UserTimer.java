@@ -64,7 +64,6 @@ public class UserTimer {
     }
 
     private void startTimer() {
-        // TODO wake up regularly to check if timer is running
         // TODO configurable interval
         timerService.createSingleActionTimer(5000, new TimerConfig());
     }
