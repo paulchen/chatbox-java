@@ -38,6 +38,8 @@
         <h2.version>1.4.182</h2.version>
         <sql.maven.version>1.5</sql.maven.version>
         <maven.resources.version>2.7</maven.resources.version>
+        <testng.version>6.8.8</testng.version>
+        <openejb.version>4.7.1</openejb.version>
 
         <h2.path>/tmp/chatbox</h2.path>
         <h2.driver.name>org.h2.Driver</h2.driver.name>
@@ -50,6 +52,7 @@
 
     <modules>
         <module>chatbox-build-tools</module>
+        <module>chatbox-test</module>
         <module>chatbox-common</module>
         <module>chatbox-core</module>
         <module>chatbox-bot</module>
@@ -162,6 +165,18 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.deltaspike.cdictrl</groupId>
+                <artifactId>deltaspike-cdictrl-api</artifactId>
+                <version>${deltaspike.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.deltaspike.cdictrl</groupId>
+                <artifactId>deltaspike-cdictrl-openejb</artifactId>
+                <version>${deltaspike.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.glassfish.tyrus</groupId>
                 <artifactId>tyrus-server</artifactId>
                 <version>${tyrus.version}</version>
@@ -256,6 +271,18 @@
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
                 <version>${h2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.openejb</groupId>
+                <artifactId>openejb-core</artifactId>
+                <version>${openejb.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
