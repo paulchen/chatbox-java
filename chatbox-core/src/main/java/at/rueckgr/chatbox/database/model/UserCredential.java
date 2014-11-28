@@ -11,6 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -26,21 +27,29 @@ public class UserCredential implements ChatboxEntity {
 
     public static final String QRY_FIND_ALL = "UserCredential.findAll";
 
-    @Column(name = "access_token")
+    @NotNull
+    @Column(name = "access_token", nullable = false)
     @Lob
     private String accessToken;
 
+    @NotNull
     @Lob
+    @Column(name = "cookie", nullable = false)
     private String cookie;
 
     @Id
-    @OneToOne
-    @JoinColumn(name = "id")
+    @NotNull
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id", nullable = false)
     private User id;
 
+    @NotNull
     @Lob
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @NotNull
     @Lob
+    @Column(name = "securitytoken", nullable = false)
     private String securitytoken;
 }

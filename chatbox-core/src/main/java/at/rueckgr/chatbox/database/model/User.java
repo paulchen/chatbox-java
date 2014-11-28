@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -32,14 +33,17 @@ public class User implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "User.findAll";
 
     @Id
+    @NotNull
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
     @Lob
+    @Column(name = "name", nullable = false)
     private String name;
 
-    //bi-directional many-to-one association to UserCategory
-    @ManyToOne
-    @JoinColumn(name = "category")
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category", nullable = false)
     private UserCategory userCategory;
 }

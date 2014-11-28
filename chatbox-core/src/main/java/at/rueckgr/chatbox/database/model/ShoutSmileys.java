@@ -11,13 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author paulchen
@@ -44,23 +44,24 @@ public class ShoutSmileys implements ChatboxEntity {
     public static final String QRY_FIND_BY_SHOUT = "ShoutSmileys.findByShout";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shout_smilies_id_seq")
     @SequenceGenerator(name = "shout_smilies_id_seq", sequenceName = "shout_smilies_id_seq")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "shout", referencedColumnName = "primary_id")
-    })
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "shout", nullable = false)
     private Shout shout;
 
+    @NotNull
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "smiley", referencedColumnName = "id")
-    })
+    @JoinColumn(name = "smiley", nullable = false)
     private Smiley smiley;
 
-    @Column(nullable = false)
+    @NotNull
+    @Column(name = "count", nullable = false)
     private int count;
 
     public ShoutSmileys() {

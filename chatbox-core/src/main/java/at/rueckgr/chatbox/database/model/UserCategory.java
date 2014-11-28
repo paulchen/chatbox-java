@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -33,15 +34,19 @@ public class UserCategory implements ChatboxEntity {
     public static final String QRY_FIND_BY_NAME = "UserCategory.findByName";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_categories_id_seq1")
     @SequenceGenerator(name = "user_categories_id_seq1", sequenceName = "user_categories_id_seq1")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
     @Lob
+    @Column(name = "color", nullable = false)
     private String color;
 
     @NotNull
     @Lob
+    @Column(name = "name", nullable = false)
     private String name;
 }

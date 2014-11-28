@@ -34,27 +34,35 @@ public class Request implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "Request.findAll";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_id_seq1")
     @SequenceGenerator(name = "requests_id_seq1", sequenceName = "requests_id_seq1")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", nullable = false)
     private Date date;
 
     @NotNull
     @Lob
+    @Column(name = "url", nullable = false)
     private String url;
 
     @NotNull
     @Lob
+    @Column(name = "ip", nullable = false)
     private String ip;
 
-    @Column(name = "request_time")
+    @NotNull
+    @Column(name = "request_time", nullable = false)
     private Double requestTime;
 
     @NotNull
+    @Column(name = "browser", nullable = false)
     private String browser;
 
+    @NotNull
+    @Column(name = "username", nullable = false)
     private String username;
 }

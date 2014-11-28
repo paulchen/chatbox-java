@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -49,31 +48,36 @@ public class ShoutRevision implements ChatboxEntity {
     public static final String QRY_FIND_LATEST = "ShoutRevision.findLatest";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shout_revisions_id_seq")
     @SequenceGenerator(name = "shout_revisions_id_seq", sequenceName = "shout_revisions_id_seq")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
+    @Column(name = "revision", nullable = false)
     private Integer revision;
 
     @NotNull
+    @Column(name = "date", nullable = false)
     private Date date;
 
     @NotNull
+    @Column(name = "replaced", nullable = false)
     private Date replaced;
 
     @NotNull
     @Lob
+    @Column(name = "text", nullable = false)
     private String text;
 
     @NotNull
-    @Column(name = "user_id")
-    private Integer user;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    //bi-directional many-to-one association to Shout
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "shout", referencedColumnName = "primary_id"),
-    })
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "shout", nullable = false)
     private Shout shout;
 }

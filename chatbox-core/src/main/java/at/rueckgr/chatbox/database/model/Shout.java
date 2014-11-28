@@ -49,40 +49,49 @@ public class Shout implements ChatboxEntity {
     public static final String QRY_FIND_LAST = "Shout.findLast";
 
     @NotNull
-    @Column(name = "primary_id")
+    @Column(name = "primary_id", nullable = false)
     @Id
     private Integer primaryId;
 
     @NotNull
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
+    @Column(name = "epoch", nullable = false)
     private Integer epoch;
 
     @NotNull
+    @Column(name = "date", nullable = false)
     private Date date;
 
     @NotNull
+    @Column(name = "day", nullable = false)
     private Integer day;
 
     @NotNull
+    @Column(name = "deleted", nullable = false)
     private Integer deleted;
 
     @NotNull
+    @Column(name = "hour", nullable = false)
     private Integer hour;
 
     @NotNull
     @Lob
+    @Column(name = "message", nullable = false)
     private String message;
 
     @NotNull
+    @Column(name = "month", nullable = false)
     private Integer month;
 
     @NotNull
+    @Column(name = "year", nullable = false)
     private Integer year;
 
-    //bi-directional many-to-one association to User
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

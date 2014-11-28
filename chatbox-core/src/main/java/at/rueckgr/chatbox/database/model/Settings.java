@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -31,10 +32,13 @@ public class Settings implements ChatboxEntity {
     public static final String ENVIRONMENT = "environment";
 
     @Id
+    @NotNull
+    @Column(name = "key", nullable = false, length = 50)
     private String key;
 
     @NotNull
     @Lob
+    @Column(name = "value", nullable = false)
     private String value;
 
     public Settings() {

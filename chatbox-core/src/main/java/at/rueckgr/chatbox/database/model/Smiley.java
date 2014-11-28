@@ -34,17 +34,21 @@ public class Smiley implements ChatboxEntity {
     public static final String QRY_FIND_BY_FILENAME = "Smiley.findByFilename";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smilies_id_seq1")
     @SequenceGenerator(name = "smilies_id_seq1", sequenceName = "smilies_id_seq1")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
+    @Column(name = "filename", nullable = false, length = 100)
     private String filename;
 
-    @Column(unique = true)
+    @Column(name = "code", unique = true, length = 100)
     private String code;
 
     @Lob
+    @Column(name = "meaning")
     private String meaning;
 
     public Smiley() {

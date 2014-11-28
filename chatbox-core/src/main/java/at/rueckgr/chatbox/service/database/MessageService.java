@@ -58,7 +58,7 @@ public class MessageService {
         newRevision.setDate(shout.getDate());
         newRevision.setReplaced(timeService.toDate(LocalDateTime.now().minusHours(1)));
         newRevision.setText(shout.getMessage());
-        newRevision.setUser(shout.getUser().getId());
+        newRevision.setUser(shout.getUser());
         newRevision.setShout(shout);
 
         em.persist(newRevision);

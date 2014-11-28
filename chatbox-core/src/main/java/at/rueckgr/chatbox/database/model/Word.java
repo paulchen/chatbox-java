@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.database.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,11 +33,14 @@ public class Word implements ChatboxEntity {
     public static final String FIND_BY_WORD = "Word.findByWord";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq1")
     @SequenceGenerator(name = "words_id_seq1", sequenceName = "words_id_seq1")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
+    @Column(name = "word", nullable = false, length = 100)
     private String word;
 
     public Word() {

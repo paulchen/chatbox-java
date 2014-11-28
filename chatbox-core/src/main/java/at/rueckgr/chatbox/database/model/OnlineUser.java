@@ -36,16 +36,18 @@ public class OnlineUser implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "OnlineUser.findAll";
 
     @Id
+    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "online_users_id_seq")
     @SequenceGenerator(name = "online_users_id_seq", sequenceName = "online_users_id_seq")
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @NotNull
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", nullable = false)
     private Date date;
 
-    //bi-directional many-to-one association to User
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
