@@ -22,7 +22,7 @@ public class MailService {
         Map<String, Object> objects = new HashMap<String, Object>();
         objects.put("message", e.getMessage());
         objects.put("stacktrace", stackTrace);
-        objects.put("environment", stageService.getEnvironment());
+        objects.put("environment", stageService.getEnvironment().getSettingsValue());
 
         String messageText = velocityService.renderTemplate("exception", objects);
 
@@ -34,7 +34,7 @@ public class MailService {
         objects.put("expected", expected);
         objects.put("actual", actual);
         objects.put("url", url);
-        objects.put("environment", stageService.getEnvironment());
+        objects.put("environment", stageService.getEnvironment().getSettingsValue());
 
         String messageText = velocityService.renderTemplate("message_count", objects);
 

@@ -1,33 +1,37 @@
 package at.rueckgr.chatbox.service;
 
+import at.rueckgr.chatbox.Stage;
 import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.service.database.SettingsService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.text.MessageFormat;
 
 @ApplicationScoped
 public class StageService {
-    // TODO use enum?
-    private static final String ENVIRONMENT_PRODUCTION = "prod";
-    private static final String ENVIRONMENT_TEST = "test";
-    private static final String ENVIRONMENT_DEVELOPMENT = "dev";
-
     private @Inject SettingsService settingsService;
 
-    public String getEnvironment() {
-        return settingsService.getSetting(Settings.ENVIRONMENT);
+    public Stage getEnvironment() {
+        String stageName = settingsService.getSetting(Settings.ENVIRONMENT);
+        for(Stage stage : Stage.values()) {
+            if(stage.getSettingsValue().endsWith(stageName)) {
+                return stage;
+            }
+        }
+
+        throw new IllegalStateException(MessageFormat.format("Invalid environment setting in database: {0}", stageName));
     }
 
     public boolean isProduction() {
-        return getEnvironment().equals(ENVIRONMENT_PRODUCTION);
+        return getEnvironment().equals(Stage.PRODUCTION);
     }
 
     public boolean isTest() {
-        return getEnvironment().equals(ENVIRONMENT_TEST);
+        return getEnvironment().equals(Stage.TEST);
     }
 
     public boolean isDevelopment() {
-        return getEnvironment().equals(ENVIRONMENT_DEVELOPMENT);
+        return getEnvironment().equals(Stage.DEVELOPMENT);
     }
 }
