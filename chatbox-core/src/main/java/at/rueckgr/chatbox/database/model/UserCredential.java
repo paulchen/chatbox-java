@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -26,8 +27,10 @@ public class UserCredential implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "UserCredential.findAll";
 
     @Column(name = "access_token")
+    @Lob
     private String accessToken;
 
+    @Lob
     private String cookie;
 
     @Id
@@ -35,7 +38,9 @@ public class UserCredential implements ChatboxEntity {
     @JoinColumn(name = "id")
     private User id;
 
+    @Lob
     private String password;
 
+    @Lob
     private String securitytoken;
 }

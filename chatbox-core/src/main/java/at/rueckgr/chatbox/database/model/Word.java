@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -31,7 +32,8 @@ public class Word implements ChatboxEntity {
     public static final String FIND_BY_WORD = "Word.findByWord";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq1")
+    @SequenceGenerator(name = "words_id_seq1", sequenceName = "words_id_seq1")
     private Integer id;
 
     @NotNull

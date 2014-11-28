@@ -11,9 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -47,7 +49,8 @@ public class ShoutRevision implements ChatboxEntity {
     public static final String QRY_FIND_LATEST = "ShoutRevision.findLatest";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shout_revisions_id_seq")
+    @SequenceGenerator(name = "shout_revisions_id_seq", sequenceName = "shout_revisions_id_seq")
     private Integer id;
 
     @NotNull
@@ -60,6 +63,7 @@ public class ShoutRevision implements ChatboxEntity {
     private Date replaced;
 
     @NotNull
+    @Lob
     private String text;
 
     @NotNull

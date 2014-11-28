@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -32,7 +34,8 @@ public class Request implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "Request.findAll";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "requests_id_seq1")
+    @SequenceGenerator(name = "requests_id_seq1", sequenceName = "requests_id_seq1")
     private Integer id;
 
     @NotNull
@@ -40,9 +43,11 @@ public class Request implements ChatboxEntity {
     private Date date;
 
     @NotNull
+    @Lob
     private String url;
 
     @NotNull
+    @Lob
     private String ip;
 
     @Column(name = "request_time")

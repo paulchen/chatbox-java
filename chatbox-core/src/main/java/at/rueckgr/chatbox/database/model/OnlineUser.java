@@ -12,6 +12,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -35,7 +36,8 @@ public class OnlineUser implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "OnlineUser.findAll";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "online_users_id_seq")
+    @SequenceGenerator(name = "online_users_id_seq", sequenceName = "online_users_id_seq")
     private Integer id;
 
     @NotNull

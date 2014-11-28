@@ -14,10 +14,6 @@
 
     <packaging>war</packaging>
 
-    <properties>
-        <jsf.project_stage>Development</jsf.project_stage>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -30,15 +26,6 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>prod</id>
-            <properties>
-                <jsf.project_stage>Production</jsf.project_stage>
-            </properties>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>

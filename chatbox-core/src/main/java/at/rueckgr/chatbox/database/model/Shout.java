@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -71,6 +72,7 @@ public class Shout implements ChatboxEntity {
     private Integer hour;
 
     @NotNull
+    @Lob
     private String message;
 
     @NotNull

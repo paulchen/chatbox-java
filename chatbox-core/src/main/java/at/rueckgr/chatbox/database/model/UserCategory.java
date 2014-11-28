@@ -4,9 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -29,11 +33,15 @@ public class UserCategory implements ChatboxEntity {
     public static final String QRY_FIND_BY_NAME = "UserCategory.findByName";
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_categories_id_seq1")
+    @SequenceGenerator(name = "user_categories_id_seq1", sequenceName = "user_categories_id_seq1")
     private Integer id;
 
     @NotNull
+    @Lob
     private String color;
 
     @NotNull
+    @Lob
     private String name;
 }

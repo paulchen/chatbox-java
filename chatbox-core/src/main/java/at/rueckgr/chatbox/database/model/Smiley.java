@@ -8,9 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -31,14 +34,17 @@ public class Smiley implements ChatboxEntity {
     public static final String QRY_FIND_BY_FILENAME = "Smiley.findByFilename";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smilies_id_seq1")
+    @SequenceGenerator(name = "smilies_id_seq1", sequenceName = "smilies_id_seq1")
     private Integer id;
 
+    @NotNull
     private String filename;
 
     @Column(unique = true)
     private String code;
 
+    @Lob
     private String meaning;
 
     public Smiley() {

@@ -15,7 +15,7 @@
     <name>chatbox-core</name>
 
     <properties>
-        <jpa.datasource>chatbox_dev</jpa.datasource>
+        <jpa.datasource>chatbox_h2</jpa.datasource>
     </properties>
 
     <dependencies>
@@ -66,6 +66,13 @@
 
     <profiles>
         <profile>
+            <id>test</id>
+            <properties>
+                <jpa.datasource>chatbox_dev</jpa.datasource>
+            </properties>
+        </profile>
+
+        <profile>
             <id>prod</id>
             <properties>
                 <jpa.datasource>chatbox</jpa.datasource>
@@ -74,6 +81,107 @@
     </profiles>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa-maven-plugin</artifactId>
+                <version>${openjpa.version}</version>
+
+                <configuration>
+                    <addDefaultConstructor>true</addDefaultConstructor>
+                    <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
+                    <sqlAction>build</sqlAction>
+                    <sqlFile>${project.build.directory}/database.sql</sqlFile>
+                    <connectionDriverName>org.apache.commons.dbcp.BasicDataSource</connectionDriverName>
+                    <connectionProperties>
+                        driverClassName=${h2.driver.name},
+                        url=${h2.connection.url},
+                        username=${h2.user},
+                        password=${h2.password}
+                    </connectionProperties>
+                    <toolProperties>
+                        <MappingDefaults>ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict</MappingDefaults>
+                    </toolProperties>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enhance-classes</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>commons-dbcp</groupId>
+                        <artifactId>commons-dbcp</artifactId>
+                        <version>1.4</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>${sql.maven.version}</version>
+
+                <configuration>
+                    <driver>${h2.driver.name}</driver>
+                    <url>${h2.connection.url}</url>
+                    <username>${h2.user}</username>
+                    <password>${h2.password}</password>
+                    <onError>abort</onError>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>setup-test-database</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <srcFiles>
+                                <srcFile>src/main/sql/drop.sql</srcFile>
+                                <srcFile>src/main/sql/database.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>setup-testdata</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <orderFile>ascending</orderFile>
+                            <fileset>
+                                <basedir>${basedir}/src/test/sql/</basedir>
+                                <includes>
+                                    <include>*.sql</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                    </execution>
+
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -34,6 +35,7 @@ public class User implements ChatboxEntity {
     private Integer id;
 
     @NotNull
+    @Lob
     private String name;
 
     //bi-directional many-to-one association to UserCategory

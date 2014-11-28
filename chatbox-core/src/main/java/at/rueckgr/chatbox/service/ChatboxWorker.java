@@ -42,6 +42,7 @@ public class ChatboxWorker {
     private @Inject Event<NewMessagesEvent> newMessagesEvent;
     private @Inject MailService mailService;
     private @Inject ExceptionHelper exceptionHelper;
+    private @Inject StageService stageService;
 
     private final Chatbox chatbox;
 
@@ -82,7 +83,7 @@ public class ChatboxWorker {
                     newMessagesEvent.fire(result);
                 }
 
-                if(result.getNewMessages().size() == result.getTotalMessagesCount()) {
+                if(!stageService.isDevelopment() && result.getNewMessages().size() == result.getTotalMessagesCount()) {
                     int archivePage = 2;
                     while (true) {
                         log.debug(MessageFormat.format("Fetching chatbox archive page {0}", archivePage));

@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class Settings implements ChatboxEntity {
     private String key;
 
     @NotNull
+    @Lob
     private String value;
 
     public Settings() {

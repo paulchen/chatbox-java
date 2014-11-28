@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tomee>
-    <!-- TODO centralize access credentials -->
     <Resource id="chatbox" type="javax.sql.DataSource">
         JdbcDriver org.postgresql.Driver
         JdbcUrl jdbc:postgresql://localhost:5432/chatbox
         UserName chatbox
         Password password
+    </Resource>
+    <Resource id="chatbox_h2" type="javax.sql.DataSource">
+        JdbcDriver ${h2.driver.name}
+        JdbcUrl ${h2.connection.url}
+        UserName ${h2.user}
+        Password ${h2.password}
     </Resource>
     <Resource id="chatbox_dev" type="javax.sql.DataSource">
         JdbcDriver org.postgresql.Driver

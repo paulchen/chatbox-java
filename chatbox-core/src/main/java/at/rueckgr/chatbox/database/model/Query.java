@@ -9,9 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -34,7 +36,8 @@ public class Query implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "Query.findAll";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "queries_id_seq1")
+    @SequenceGenerator(name = "queries_id_seq1", sequenceName = "queries_id_seq1")
     private Integer id;
 
     @NotNull
@@ -46,9 +49,11 @@ public class Query implements ChatboxEntity {
     private Date date;
 
     @NotNull
+    @Lob
     private String query;
 
     @NotNull
+    @Lob
     private String parameters;
 
     @NotNull

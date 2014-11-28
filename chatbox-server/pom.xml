@@ -50,8 +50,38 @@
                 <version>${war.plugin.version}</version>
                 <configuration>
                     <webXml>../chatbox-web/src/main/webapp/WEB-INF/web.xml</webXml>
+                    <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven.resources.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-tomee-conf</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/tomee/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/tomee/</directory>
+                                    <includes>
+                                        <include>**/*.xml</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.openejb.maven</groupId>
                 <artifactId>tomee-maven-plugin</artifactId>
@@ -59,6 +89,7 @@
                 <configuration>
                     <tomeeVersion>${tomee.version}</tomeeVersion>
                     <tomeeClassifier>plus</tomeeClassifier>
+                    <config>${project.build.directory}/tomee/conf</config>
                     <synchronization>
                         <extensions>
                             <extension>.class</extension>
@@ -69,9 +100,17 @@
                     <reloadOnUpdate>true</reloadOnUpdate>
                     <libs>
                         <lib>org.postgresql:postgresql:${postgresql.version}</lib>
+                        <lib>com.h2database:h2:${h2.version}</lib>
                     </libs>
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/tomee/conf</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 </project>
