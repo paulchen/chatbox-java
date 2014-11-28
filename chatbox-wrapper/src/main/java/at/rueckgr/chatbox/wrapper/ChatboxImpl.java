@@ -230,7 +230,7 @@ public class ChatboxImpl implements Chatbox {
 
             LocalDateTime date;
             try {
-                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2))).plusHours(1);
+                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2).trim())).plusHours(1);
             }
             catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
@@ -337,7 +337,7 @@ public class ChatboxImpl implements Chatbox {
             int datepos2 = shout.indexOf("</td>", datepos1);
             LocalDateTime date;
             try {
-                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2))).plusHours(1);
+                date = LocalDateTime.from(dateTimeFormatter.parse(shout.substring(datepos1, datepos2).trim())).plusHours(1);
             }
             catch (DateTimeException e) {
                 log.error("Exception while parsing the chatbox content", e);
