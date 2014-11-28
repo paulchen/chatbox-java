@@ -41,6 +41,7 @@
         <testng.version>6.8.8</testng.version>
         <openejb.version>4.7.1</openejb.version>
         <maven.reports.version>2.7</maven.reports.version>
+        <cobertura.plugin.version>2.6</cobertura.plugin.version>
 
         <h2.path>/tmp/chatbox</h2.path>
         <h2.driver.name>org.h2.Driver</h2.driver.name>
@@ -90,6 +91,12 @@
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>${cobertura.plugin.version}</version>
             </plugin>
         </plugins>
     </reporting>
