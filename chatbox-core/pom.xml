@@ -94,6 +94,7 @@
                 <version>${openjpa.version}</version>
 
                 <configuration>
+                    <includes>**/database/model/*.class</includes>
                     <addDefaultConstructor>true</addDefaultConstructor>
                     <enforcePropertyRestrictions>true</enforcePropertyRestrictions>
                     <sqlAction>build</sqlAction>
