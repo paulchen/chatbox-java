@@ -2,59 +2,53 @@ package at.rueckgr.chatbox.unparser;
 
 import at.rueckgr.chatbox.unparser.plugins.Unparser;
 import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
-import org.apache.deltaspike.jpa.api.transaction.Transactional;
+import org.apache.commons.logging.Log;
+import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.reflections.Reflections;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * @author paulchen
  */
 @ApplicationScoped
-@Transactional
-public class MessageUnparser implements Serializable {
-    private static final long serialVersionUID = 8276059772935603595L;
+public class MessageUnparser {
+    private Map<Integer, Class<? extends UnparserPlugin>> unparsers = new HashMap<Integer, Class<? extends UnparserPlugin>>();
 
-    private List<UnparserPlugin> unparsers = new ArrayList<UnparserPlugin>();
-
-    @Inject
-    private BeanManager beanManager;
+    private @Inject Log log;
 
     @PostConstruct
-    @SuppressWarnings("unchecked")
     public void init() {
         Reflections reflections = new Reflections(this.getClass().getPackage().getName());
-        Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(Unparser.class);
-        for(Class<?> clazz : annotatedClasses) {
-            unparsers.add(createInstance((Class<UnparserPlugin>) clazz));
+        Set<Class<? extends UnparserPlugin>> classes = reflections.getSubTypesOf(UnparserPlugin.class);
+        for (Class<? extends UnparserPlugin> clazz : classes) {
+            Unparser annotation = clazz.getAnnotation(Unparser.class);
+            if(annotation != null) {
+                unparsers.put(annotation.order(), clazz);
+            }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends UnparserPlugin> T createInstance(Class<T> clazz) {
-        Bean<T> bean = (Bean<T>) beanManager.resolve(beanManager.getBeans(clazz));
-        CreationalContext<T> creationalContext = beanManager.createCreationalContext(bean);
-        return bean.create(creationalContext);
     }
 
     public String unparse(String rawMessage) {
         String message = rawMessage;
 
-        for(UnparserPlugin unparserPlugin : unparsers) {
+        for (Map.Entry<Integer, Class<? extends UnparserPlugin>> entry : unparsers.entrySet()) {
+            UnparserPlugin unparserPlugin = BeanProvider.getContextualReference(entry.getValue());
             message = unparserPlugin.unparse(message);
         }
 
-        // remove all remaining HTML
-        message = message.replaceAll("<[^>]+>", "");
+        if(message.contains("<")) {
+            log.info(MessageFormat.format("Message contains HTML code after unparsing; message in DB: {0}; unparsed message: {1}", rawMessage, message));
+
+            // remove all remaining HTML
+            message = message.replaceAll("<[^>]+>", "");
+        }
 
         return message;
     }
