@@ -11,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author paulchen
@@ -19,7 +18,7 @@ import java.util.regex.Pattern;
 @Unparser
 @ApplicationScoped
 @Transactional
-public class SmileyUnparser extends AbstractUnparserPlugin {
+public class SmileyUnparser extends AbstractSearchReplaceUnparser {
     private static final String SMILEY_PATTERN = "<img src=\"[^\"]*/([^\"/]+)\" border=\"0\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"inlineimg\" />";
 
     private @Inject Log log;
@@ -27,25 +26,14 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
     private @Inject SmileyService smileyService;
 
     @Override
-    public String unparse(String input) {
-        log.debug(MessageFormat.format("Message before unparsing smileys: {0}", input));
+    protected String getPattern() {
+        return SMILEY_PATTERN;
+    }
 
-        // taken from: http://www.javamex.com/tutorials/regular_expressions/search_replace_loop.shtml
-        Pattern pattern = Pattern.compile(SMILEY_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        StringBuffer stringBuffer = new StringBuffer(input.length());
-
-        while(matcher.find()) {
-            String filename = matcher.group(1);
-            String smileyCode = findSmiley(filename);
-            matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(smileyCode));
-        }
-        matcher.appendTail(stringBuffer);
-
-        String output = stringBuffer.toString();
-        log.debug(MessageFormat.format("Message after unparsing smileys: {0}", output));
-
-        return output;
+    @Override
+    protected String getReplacement(Matcher matcher) {
+        String filename = matcher.group(1);
+        return findSmiley(filename);
     }
 
     private String findSmiley(String filename) {
@@ -60,7 +48,7 @@ public class SmileyUnparser extends AbstractUnparserPlugin {
             }
         }
         else {
-            log.debug("Smiley not found in database");
+            log.debug(MessageFormat.format("Smiley '{0}' not found in database", filename));
         }
 
         // TODO BUG: first smiley is not properly replaced if it has just been imported from the database

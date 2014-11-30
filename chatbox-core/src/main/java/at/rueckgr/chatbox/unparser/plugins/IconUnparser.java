@@ -6,36 +6,30 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import javax.enterprise.context.ApplicationScoped;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Unparser
 @ApplicationScoped
-public class IconUnparser extends AbstractUnparserPlugin {
+public class IconUnparser extends AbstractSearchReplaceUnparser {
     private static final String ICON_PATTERN = "<a href=\"([^\"]+)\"><img style=\"max-height: 50px\" src=\"([^\"]+)\" /></a>";
     private static final String REPLACEMENT = "[icon]{0}[/icon]";
 
     @Override
-    public String unparse(String input) {
-        Pattern pattern = Pattern.compile(ICON_PATTERN);
-        Matcher matcher = pattern.matcher(input);
-        StringBuffer stringBuffer = new StringBuffer(input.length());
+    protected String getPattern() {
+        return ICON_PATTERN;
+    }
 
-        while(matcher.find()) {
-            String match = matcher.group(0);
+    @Override
+    protected String getReplacement(Matcher matcher) {
+        String match = matcher.group(0);
 
-            String url1 = StringEscapeUtils.unescapeHtml4(matcher.group(1));
-            String url2 = StringEscapeUtils.unescapeHtml4(matcher.group(2));
+        String url1 = StringEscapeUtils.unescapeHtml4(matcher.group(1));
+        String url2 = StringEscapeUtils.unescapeHtml4(matcher.group(2));
 
-            if(StringUtils.equals(url1, url2)) {
-                String replacement = MessageFormat.format(REPLACEMENT, url1);
-                matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(replacement));
-            }
-            else {
-                matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(match));
-            }
+        if(StringUtils.equals(url1, url2)) {
+            return MessageFormat.format(REPLACEMENT, url1);
         }
-        matcher.appendTail(stringBuffer);
-
-        return stringBuffer.toString();
+        else {
+             return match;
+        }
     }
 }
