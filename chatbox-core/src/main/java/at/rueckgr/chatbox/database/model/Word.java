@@ -33,7 +33,6 @@ public class Word implements ChatboxEntity {
     public static final String FIND_BY_WORD = "Word.findByWord";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq1")
     @SequenceGenerator(name = "words_id_seq1", sequenceName = "words_id_seq1")
     @Column(name = "id", nullable = false)

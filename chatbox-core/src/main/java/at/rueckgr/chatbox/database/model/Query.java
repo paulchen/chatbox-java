@@ -41,7 +41,6 @@ public class Query implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "Query.findAll";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "queries_id_seq1")
     @SequenceGenerator(name = "queries_id_seq1", sequenceName = "queries_id_seq1")
     @Column(name = "id", nullable = false)

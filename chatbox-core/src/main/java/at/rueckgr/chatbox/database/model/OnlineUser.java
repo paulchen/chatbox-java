@@ -36,7 +36,6 @@ public class OnlineUser implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "OnlineUser.findAll";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "online_users_id_seq")
     @SequenceGenerator(name = "online_users_id_seq", sequenceName = "online_users_id_seq")
     @Column(name = "id", nullable = false)

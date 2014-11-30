@@ -34,7 +34,6 @@ public class UserCategory implements ChatboxEntity {
     public static final String QRY_FIND_BY_NAME = "UserCategory.findByName";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_categories_id_seq1")
     @SequenceGenerator(name = "user_categories_id_seq1", sequenceName = "user_categories_id_seq1")
     @Column(name = "id", nullable = false)

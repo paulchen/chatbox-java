@@ -29,7 +29,6 @@ public class InvisibleUsers implements ChatboxEntity {
     public static final String QRY_FIND_ALL = "InvisibleUser.findAll";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invisible_users_id_seq")
     @SequenceGenerator(name = "invisible_users_id_seq", sequenceName = "invisible_users_id_seq")
     @Column(name = "id", nullable = false)

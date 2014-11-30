@@ -34,7 +34,6 @@ public class Smiley implements ChatboxEntity {
     public static final String QRY_FIND_BY_FILENAME = "Smiley.findByFilename";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smilies_id_seq1")
     @SequenceGenerator(name = "smilies_id_seq1", sequenceName = "smilies_id_seq1")
     @Column(name = "id", nullable = false)

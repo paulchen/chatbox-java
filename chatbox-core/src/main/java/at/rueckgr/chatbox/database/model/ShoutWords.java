@@ -44,7 +44,6 @@ public class ShoutWords implements ChatboxEntity {
     public static final String QRY_FIND_BY_SHOUT = "ShoutWords.findByShout";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shout_words_id_seq")
     @SequenceGenerator(name = "shout_words_id_seq", sequenceName = "shout_words_id_seq")
     @Column(name = "id", nullable = false)

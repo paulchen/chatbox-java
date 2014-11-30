@@ -48,7 +48,6 @@ public class ShoutRevision implements ChatboxEntity {
     public static final String QRY_FIND_LATEST = "ShoutRevision.findLatest";
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shout_revisions_id_seq")
     @SequenceGenerator(name = "shout_revisions_id_seq", sequenceName = "shout_revisions_id_seq")
     @Column(name = "id", nullable = false)
