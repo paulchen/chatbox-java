@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Unparser(order = 4)
+@Unparser(dependsOn = IconUnparser.class)
 @ApplicationScoped
 public class LinkUnparser extends AbstractUnparserPlugin {
     private static final String ICON_PATTERN = "<a href=\"([^\"]*)\" target=\"_blank\">([^<]*)</a>";

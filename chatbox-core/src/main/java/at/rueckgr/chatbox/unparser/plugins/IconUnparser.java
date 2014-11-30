@@ -8,7 +8,7 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Unparser(order = 3)
+@Unparser
 @ApplicationScoped
 public class IconUnparser extends AbstractUnparserPlugin {
     private static final String ICON_PATTERN = "<a href=\"([^\"]+)\"><img style=\"max-height: 50px\" src=\"([^\"]+)\" /></a>";

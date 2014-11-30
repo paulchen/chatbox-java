@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 /**
  * @author paulchen
  */
-@Unparser(order = 1)
+@Unparser
 @ApplicationScoped
 @Transactional
 public class SmileyUnparser extends AbstractUnparserPlugin {
