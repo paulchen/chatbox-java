@@ -1,5 +1,7 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import javax.enterprise.context.ApplicationScoped;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
@@ -19,8 +21,8 @@ public class LinkUnparser extends AbstractUnparserPlugin {
         StringBuffer stringBuffer = new StringBuffer(input.length());
 
         while(matcher.find()) {
-            String url = matcher.group(1);
-            String description = matcher.group(2);
+            String url = StringEscapeUtils.unescapeHtml4(matcher.group(1));
+            String description = StringEscapeUtils.unescapeHtml4(matcher.group(2));
 
             String replacement = MessageFormat.format(REPLACEMENT, url, description);
             matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(replacement));

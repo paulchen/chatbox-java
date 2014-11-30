@@ -1,6 +1,7 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.text.MessageFormat;
@@ -22,8 +23,8 @@ public class IconUnparser extends AbstractUnparserPlugin {
         while(matcher.find()) {
             String match = matcher.group(0);
 
-            String url1 = matcher.group(1);
-            String url2 = matcher.group(2);
+            String url1 = StringEscapeUtils.unescapeHtml4(matcher.group(1));
+            String url2 = StringEscapeUtils.unescapeHtml4(matcher.group(2));
 
             if(StringUtils.equals(url1, url2)) {
                 String replacement = MessageFormat.format(REPLACEMENT, url1);
