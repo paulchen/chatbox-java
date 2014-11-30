@@ -30,7 +30,11 @@ public class MessageUnparser {
         for (Class<? extends UnparserPlugin> clazz : classes) {
             Unparser annotation = clazz.getAnnotation(Unparser.class);
             if(annotation != null) {
-                unparsers.put(annotation.order(), clazz);
+                int order = annotation.order();
+                if(unparsers.containsKey(order)) {
+                    throw new RuntimeException(MessageFormat.format("Two unparsers have the same order setting: {0} and {1}", clazz, unparsers.get(order)));
+                }
+                unparsers.put(order, clazz);
             }
         }
     }
