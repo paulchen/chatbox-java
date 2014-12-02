@@ -4,7 +4,6 @@ import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.service.ChatboxWorker;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,7 +20,6 @@ import java.util.regex.Matcher;
 public class SmileyUnparser extends AbstractSearchReplaceUnparser {
     private static final String SMILEY_PATTERN = "<img src=\"[^\"]*/([^\"/]+)\" border=\"0\" alt=\"[^\"]*\" title=\"[^\"]*\" class=\"inlineimg\" />";
 
-    private @Inject Log log;
     private @Inject ChatboxWorker chatboxWorker;
     private @Inject SmileyService smileyService;
 

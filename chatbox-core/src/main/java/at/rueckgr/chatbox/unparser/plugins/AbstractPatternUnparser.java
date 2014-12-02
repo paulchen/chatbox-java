@@ -1,14 +1,9 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
-import org.apache.commons.logging.Log;
-
-import javax.inject.Inject;
 import java.text.MessageFormat;
 
 public abstract class AbstractPatternUnparser extends AbstractUnparserPlugin {
     protected abstract String[][] getReplacements();
-
-    private @Inject Log log;
 
     @Override
     public String unparse(String input) {

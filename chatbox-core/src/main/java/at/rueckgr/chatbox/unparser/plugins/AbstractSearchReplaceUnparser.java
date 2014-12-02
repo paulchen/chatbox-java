@@ -1,15 +1,10 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
-import org.apache.commons.logging.Log;
-
-import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlugin {
-    private @Inject Log log;
-
     @Override
     public String unparse(String input) {
         log.debug(MessageFormat.format("Message before unparsing using Unparser {0}: {1}", getClass().getSimpleName(), input));
