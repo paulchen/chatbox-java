@@ -10,7 +10,7 @@ public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlug
         log.debug(MessageFormat.format("Message before unparsing using Unparser {0}: {1}", getClass().getSimpleName(), input));
 
         // taken from: http://www.javamex.com/tutorials/regular_expressions/search_replace_loop.shtml
-        Pattern pattern = Pattern.compile(getPattern());
+        Pattern pattern = Pattern.compile(getPattern(), getFlags());
         Matcher matcher = pattern.matcher(input);
         StringBuffer stringBuffer = new StringBuffer(input.length());
 
@@ -29,4 +29,8 @@ public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlug
     protected abstract String getPattern();
 
     protected abstract String getReplacement(Matcher matcher);
+
+    protected int getFlags() {
+        return 0;
+    }
 }

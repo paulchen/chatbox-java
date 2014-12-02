@@ -2,6 +2,7 @@ package at.rueckgr.chatbox.unparser;
 
 import at.rueckgr.chatbox.unparser.plugins.Unparser;
 import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
+import at.rueckgr.chatbox.util.UnparserUtil;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.jgrapht.DirectedGraph;
@@ -27,6 +28,7 @@ public class MessageUnparser {
     private List<Class<? extends UnparserPlugin>> unparsers = new ArrayList<Class<? extends UnparserPlugin>>();
 
     private @Inject Log log;
+    private @Inject UnparserUtil unparserUtil;
 
     @PostConstruct
     public void init() {
@@ -99,7 +101,7 @@ public class MessageUnparser {
             log.info(MessageFormat.format("Message contains HTML code after unparsing; message in DB: {0}; unparsed message: {1}", rawMessage, message));
 
             // remove all remaining HTML
-            message = message.replaceAll("<[^>]+>", "");
+            message = unparserUtil.removeHtml(message);
         }
 
         return message;

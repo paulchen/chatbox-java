@@ -24,6 +24,7 @@ public class CodeUnparserTest extends ContainerTest {
 
     @Test
     public void testUnparse() {
+        // taken from http://www.informatik-forum.at/misc.php?do=bbcode
         String test = "this is some text before the tag " +
                 "<!-- BEGIN TEMPLATE: bbcode_code -->\n" +
                 "<div class=\"bbcode_container\">\n" +
