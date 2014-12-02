@@ -16,11 +16,18 @@ public class UnderlineUnparserTest extends ContainerTest {
     }
 
     @Test
+    public void testNoItalics() {
+        String test = "This is <b>some</b> text";
+        String expected = "This is <b>some</b> text";
+
+        assertEquals(underlineUnparser.unparse(test), expected);
+    }
+
+    @Test
     public void testUnparse() {
         String test = "This is <u>some</u> text";
         String expected = "This is [u]some[/u] text";
 
         assertEquals(underlineUnparser.unparse(test), expected);
     }
-
 }

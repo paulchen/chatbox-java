@@ -16,6 +16,14 @@ public class BoldUnparserTest extends ContainerTest {
     }
 
     @Test
+    public void testNoBold() {
+        String test = "This is <i>some</i> text";
+        String expected = "This is <i>some</i> text";
+
+        assertEquals(boldUnparser.unparse(test), expected);
+    }
+
+    @Test
     public void testUnparse() {
         String test = "This is <b>some</b> text";
         String expected = "This is [b]some[/b] text";

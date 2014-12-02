@@ -16,6 +16,14 @@ public class ItalicsUnparserTest extends ContainerTest {
     }
 
     @Test
+    public void testNoItalics() {
+        String test = "This is <b>some</b> text";
+        String expected = "This is <b>some</b> text";
+
+        assertEquals(italicsUnparser.unparse(test), expected);
+    }
+
+    @Test
     public void testUnparse() {
         String test = "This is <i>some</i> text";
         String expected = "This is [i]some[/i] text";
