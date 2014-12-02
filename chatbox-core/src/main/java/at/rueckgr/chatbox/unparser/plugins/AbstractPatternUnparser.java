@@ -7,14 +7,14 @@ public abstract class AbstractPatternUnparser extends AbstractUnparserPlugin {
 
     @Override
     public String unparse(String input) {
-        log.debug(MessageFormat.format("Message before unparsing italics: {0}", input));
+        log.debug(MessageFormat.format("Message before unparsing using Unparser {0}: {1}", getClass().getSimpleName(), input));
 
         String output = input;
         for (String[] replacement : getReplacements()) {
             output = output.replaceAll(replacement[0], replacement[1]);
         }
 
-        log.debug(MessageFormat.format("Message after unparsing italics: {0}", output));
+        log.debug(MessageFormat.format("Message after unparsing using Unparser {0}: {1}", getClass().getSimpleName(), output));
 
         return output;
     }
