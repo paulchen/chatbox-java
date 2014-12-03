@@ -30,5 +30,4 @@ public class BoldUnparserTest extends ContainerTest {
 
         assertThat(boldUnparser.unparse(test)).isEqualTo(expected);
     }
-
 }

@@ -30,5 +30,4 @@ public class StrikeUnparserTest extends ContainerTest {
 
         assertThat(strikeUnparser.unparse(test)).isEqualTo(expected);
     }
-
 }

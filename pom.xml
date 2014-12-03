@@ -147,6 +147,7 @@
                     <excludes>
                         **/receiver/**
                     </excludes>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
                 </configuration>
             </plugin>
         </plugins>

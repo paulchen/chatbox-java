@@ -30,5 +30,4 @@ public class IndentUnparserTest extends ContainerTest {
 
         assertThat(indentUnparser.unparse(test)).isEqualTo(expected);
     }
-
 }
