@@ -13,9 +13,10 @@ public class StageServiceTest extends ContainerTest {
 
     @Test
     public void testService() {
-        assertThat(stageService.getEnvironment()).isEqualTo(Stage.DEVELOPMENT);
-        assertThat(stageService.isDevelopment()).isTrue();
+        assertThat(stageService.getEnvironment()).isEqualTo(Stage.UNIT_TEST);
+        assertThat(stageService.isDevelopment()).isFalse();
         assertThat(stageService.isTest()).isFalse();
         assertThat(stageService.isProduction()).isFalse();
+        assertThat(stageService.isUnitTest()).isTrue();
     }
 }

@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum Stage {
     PRODUCTION("prod"),
     TEST("test"),
-    DEVELOPMENT("dev");
+    DEVELOPMENT("dev"),
+    UNIT_TEST("unit-test");
 
     @Getter
     private String settingsValue;

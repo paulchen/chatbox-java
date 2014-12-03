@@ -34,4 +34,8 @@ public class StageService {
     public boolean isDevelopment() {
         return getEnvironment().equals(Stage.DEVELOPMENT);
     }
+
+    public boolean isUnitTest() {
+        return getEnvironment().equals(Stage.UNIT_TEST);
+    }
 }
