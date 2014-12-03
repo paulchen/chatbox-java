@@ -6,16 +6,16 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class StageServiceTest extends ContainerTest {
     private @Inject StageService stageService;
 
     @Test
     public void testService() {
-        assertEquals(stageService.getEnvironment(), Stage.DEVELOPMENT);
-        assertTrue(stageService.isDevelopment());
-        assertFalse(stageService.isTest());
-        assertFalse(stageService.isProduction());
+        assertThat(stageService.getEnvironment()).isEqualTo(Stage.DEVELOPMENT);
+        assertThat(stageService.isDevelopment()).isTrue();
+        assertThat(stageService.isTest()).isFalse();
+        assertThat(stageService.isProduction()).isFalse();
     }
 }

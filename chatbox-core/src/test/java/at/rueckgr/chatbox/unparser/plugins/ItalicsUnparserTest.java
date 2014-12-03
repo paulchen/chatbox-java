@@ -5,14 +5,14 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ItalicsUnparserTest extends ContainerTest {
     private @Inject ItalicsUnparser italicsUnparser;
 
     @Test
     public void testUnparseEmpty() {
-        assertEquals(italicsUnparser.unparse(""), "");
+        assertThat(italicsUnparser.unparse("")).isEmpty();
     }
 
     @Test
@@ -20,7 +20,7 @@ public class ItalicsUnparserTest extends ContainerTest {
         String test = "This is <b>some</b> text";
         String expected = "This is <b>some</b> text";
 
-        assertEquals(italicsUnparser.unparse(test), expected);
+        assertThat(italicsUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -28,7 +28,6 @@ public class ItalicsUnparserTest extends ContainerTest {
         String test = "This is <i>some</i> text";
         String expected = "This is [i]some[/i] text";
 
-        assertEquals(italicsUnparser.unparse(test), expected);
+        assertThat(italicsUnparser.unparse(test)).isEqualTo(expected);
     }
-
 }

@@ -5,21 +5,21 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CodeUnparserTest extends ContainerTest {
     private @Inject CodeUnparser codeUnparser;
 
     @Test
     public void testUnparseEmpty() {
-        assertEquals(codeUnparser.unparse(""), "");
+        assertThat(codeUnparser.unparse("")).isEmpty();
     }
 
     @Test
     public void testUnparseNoTag() {
         String test = "this is some text";
 
-        assertEquals(codeUnparser.unparse(test), test);
+        assertThat(codeUnparser.unparse(test)).isEqualTo(test);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class CodeUnparserTest extends ContainerTest {
                 "</script>[/code]" +
                 "and this is some text after the tag";
 
-        assertEquals(codeUnparser.unparse(test), expected);
+        assertThat(codeUnparser.unparse(test)).isEqualTo(expected);
     }
 
 }

@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.testng.Assert.*;
 
 public class FontUnparserTest extends ContainerTest {
@@ -14,14 +15,14 @@ public class FontUnparserTest extends ContainerTest {
     public void testUnparseNoTag() {
         String test = "This is some text";
 
-        assertEquals(fontUnparser.unparse(test), test);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(test);
     }
 
     @Test
     public void testUnparseEmpty() {
         String test = "";
 
-        assertEquals(fontUnparser.unparse(test), test);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(test);
     }
 
     @Test
@@ -29,7 +30,7 @@ public class FontUnparserTest extends ContainerTest {
         String test = "This <font color=\"blue\">is</font> some text";
         String expected = "This [color=blue]is[/color] some text";
 
-        assertEquals(fontUnparser.unparse(test), expected);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -37,7 +38,7 @@ public class FontUnparserTest extends ContainerTest {
         String test = "This <font size=\"+2\">is</font> some text";
         String expected = "This [size=+2]is[/size] some text";
 
-        assertEquals(fontUnparser.unparse(test), expected);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class FontUnparserTest extends ContainerTest {
         String test = "This <font face=\"courier\">is</font> some text";
         String expected = "This [font=courier]is[/font] some text";
 
-        assertEquals(fontUnparser.unparse(test), expected);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -55,6 +56,6 @@ public class FontUnparserTest extends ContainerTest {
         String expected = "This is [font=courier]some [size=+2]longer [color=blue]text[/color][/size] [color=red]which[/color][/font] " +
                 "is used for testing [color=blue]the [size=+2]FontUnparser[/size] with[/color] nested font tags";
 
-        assertEquals(fontUnparser.unparse(test), expected);
+        assertThat(fontUnparser.unparse(test)).isEqualTo(expected);
     }
 }

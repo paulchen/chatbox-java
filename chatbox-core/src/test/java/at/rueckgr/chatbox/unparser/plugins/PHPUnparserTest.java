@@ -5,21 +5,21 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PHPUnparserTest extends ContainerTest {
     private @Inject PHPUnparser phpUnparser;
 
     @Test
     public void testUnparseEmpty() {
-        assertEquals(phpUnparser.unparse(""), "");
+        assertThat(phpUnparser.unparse("")).isEmpty();
     }
 
     @Test
     public void testUnparseNoTag() {
         String test = "this is some text";
 
-        assertEquals(phpUnparser.unparse(test), test);
+        assertThat(phpUnparser.unparse(test)).isEqualTo(test);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class PHPUnparserTest extends ContainerTest {
                 "}[/php]" +
                 "and this is some text after the tag";
 
-        assertEquals(phpUnparser.unparse(test), expected);
+        assertThat(phpUnparser.unparse(test)).isEqualTo(expected);
     }
 
 }

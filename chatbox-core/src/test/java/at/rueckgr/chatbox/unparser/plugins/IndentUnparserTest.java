@@ -5,14 +5,14 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class IndentUnparserTest extends ContainerTest {
     private @Inject IndentUnparser indentUnparser;
 
     @Test
     public void testUnparseEmpty() {
-        assertEquals(indentUnparser.unparse(""), "");
+        assertThat(indentUnparser.unparse("")).isEmpty();
     }
 
     @Test
@@ -20,7 +20,7 @@ public class IndentUnparserTest extends ContainerTest {
         String test = "This is <i>some</i> text";
         String expected = "This is <i>some</i> text";
 
-        assertEquals(indentUnparser.unparse(test), expected);
+        assertThat(indentUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -28,7 +28,7 @@ public class IndentUnparserTest extends ContainerTest {
         String test = "This is <blockquote><div>some</div></blockquote> text";
         String expected = "This is [indent]some[/indent] text";
 
-        assertEquals(indentUnparser.unparse(test), expected);
+        assertThat(indentUnparser.unparse(test)).isEqualTo(expected);
     }
 
 }

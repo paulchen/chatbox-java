@@ -5,14 +5,14 @@ import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.testng.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UnderlineUnparserTest extends ContainerTest {
     private @Inject UnderlineUnparser underlineUnparser;
 
     @Test
     public void testUnparseEmpty() {
-        assertEquals(underlineUnparser.unparse(""), "");
+        assertThat(underlineUnparser.unparse("")).isEmpty();
     }
 
     @Test
@@ -20,7 +20,7 @@ public class UnderlineUnparserTest extends ContainerTest {
         String test = "This is <b>some</b> text";
         String expected = "This is <b>some</b> text";
 
-        assertEquals(underlineUnparser.unparse(test), expected);
+        assertThat(underlineUnparser.unparse(test)).isEqualTo(expected);
     }
 
     @Test
@@ -28,6 +28,6 @@ public class UnderlineUnparserTest extends ContainerTest {
         String test = "This is <u>some</u> text";
         String expected = "This is [u]some[/u] text";
 
-        assertEquals(underlineUnparser.unparse(test), expected);
+        assertThat(underlineUnparser.unparse(test)).isEqualTo(expected);
     }
 }
