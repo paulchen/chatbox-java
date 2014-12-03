@@ -25,6 +25,7 @@ public class UserTimer {
     private @Inject ChatboxTimer chatboxTimer;
     private @Inject UserWorker userWorker;
     private @Inject MailService mailService;
+    private @Inject StageService stageService;
 
     private @Resource TimerService timerService;
 
@@ -64,6 +65,11 @@ public class UserTimer {
     }
 
     private void startTimer() {
+        if(stageService.isUnitTest()) {
+            log.info("Current environment is 'unit-test', don't start worker now");
+            return;
+        }
+
         // TODO configurable interval
         timerService.createSingleActionTimer(5000, new TimerConfig());
     }

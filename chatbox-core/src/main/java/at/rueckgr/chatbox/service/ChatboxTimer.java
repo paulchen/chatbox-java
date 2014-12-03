@@ -28,6 +28,7 @@ public class ChatboxTimer {
     private @Inject Log log;
     private @Inject ChatboxWorker worker;
     private @Inject SettingsService settingsService;
+    private @Inject StageService stageService;
 
     private @Resource TimerService timerService;
 
@@ -38,6 +39,11 @@ public class ChatboxTimer {
     public void startup() {
         log.info("ChatboxTimer starting up");
         log.info(MessageFormat.format("Environment: {0}", settingsService.getSetting(Settings.ENVIRONMENT)));
+
+        if(stageService.isUnitTest()) {
+            unitTesting();
+            return;
+        }
 
         running = true;
 
@@ -69,6 +75,11 @@ public class ChatboxTimer {
     private void invokeWorker() {
         log.info("Worker not running, (re)starting");
 
+        if(stageService.isUnitTest()) {
+            unitTesting();
+            return;
+        }
+
         try {
             worker.run();
         }
@@ -79,5 +90,9 @@ public class ChatboxTimer {
 
     public boolean isInitialized() {
         return initialized;
+    }
+
+    private void unitTesting() {
+        log.info("Current environment is 'unit-test', don't start worker now");
     }
 }
