@@ -3,6 +3,8 @@ package at.rueckgr.chatbox.unparser;
 import at.rueckgr.chatbox.unparser.plugins.Unparser;
 import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
 import at.rueckgr.chatbox.util.UnparserUtil;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.jgrapht.DirectedGraph;
@@ -54,6 +56,12 @@ public class MessageUnparser {
 
         // add artificial plugin
         graph.addVertex(FirstUnparser.class);
+
+        // TODO OMG, generics hell! refactoring required!
+        // we need this list because we can't add an edge between two vertices before these vertices are added
+        List<Pair<Class<? extends UnparserPlugin>, Class<? extends UnparserPlugin>>> edgesToAdd =
+                new ArrayList<Pair<Class<? extends UnparserPlugin>, Class<? extends UnparserPlugin>>>();
+
         for (Class<? extends UnparserPlugin> clazz : classes) {
             if(clazz.isAnnotationPresent(Unparser.class)) {
                 Unparser annotation = clazz.getAnnotation(Unparser.class);
@@ -64,9 +72,15 @@ public class MessageUnparser {
 
                 // add the dependencies which are specified using the annotation
                 for (Class<? extends UnparserPlugin> dependency : annotation.dependsOn()) {
-                    graph.addEdge(dependency, clazz);
+                    ImmutablePair<Class<? extends UnparserPlugin>, Class<? extends UnparserPlugin>> e =
+                            new ImmutablePair<Class<? extends UnparserPlugin>, Class<? extends UnparserPlugin>>(dependency, clazz);
+                    edgesToAdd.add(e);
                 }
             }
+        }
+
+        for (Pair<Class<? extends UnparserPlugin>, Class<? extends UnparserPlugin>> edge : edgesToAdd) {
+            graph.addEdge(edge.getLeft(), edge.getRight());
         }
 
         // ensure that there are no cycles
