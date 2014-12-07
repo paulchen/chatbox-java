@@ -7,6 +7,7 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import java.text.MessageFormat;
 
 @ApplicationScoped
 @Transactional
@@ -15,7 +16,14 @@ public class SettingsService {
 
     public String getSetting(Setting setting) {
         Settings settings = em.find(Settings.class, setting.getDatabaseName());
-        return (settings == null) ? null : settings.getValue();
+        if(settings == null) {
+            if(setting.isRequired()) {
+                throw new RuntimeException(MessageFormat.format("Database setting not found: {0}", setting.getDatabaseName()));
+            }
+
+            return null;
+        }
+        return settings.getValue();
     }
 
     public void saveSetting(Setting setting, String value) {
@@ -28,6 +36,12 @@ public class SettingsService {
         else {
             settings = new Settings(key, value);
             em.persist(settings);
+        }
+    }
+
+    public void checkSettings() {
+        for (Setting setting : Setting.values()) {
+            getSetting(setting);
         }
     }
 }

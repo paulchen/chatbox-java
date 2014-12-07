@@ -52,6 +52,13 @@ public class ChatboxWorker {
     }
 
     private void init() {
+        try {
+            settingsService.checkSettings();
+        }
+        catch (Exception e) {
+            mailService.sendExceptionMail(e);
+        }
+
         chatboxUtil.init(chatbox);
     }
 
