@@ -1,7 +1,7 @@
 package at.rueckgr.chatbox.signanz.dailystats;
 
 import at.rueckgr.chatbox.Plugin;
-import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.service.MailService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.signanz.BotService;
@@ -181,10 +181,10 @@ public class DailyStatsScheduler {
     }
 
     private String getBaseUrl() {
-        return settingsService.getSetting(Settings.BASE_URL);
+        return settingsService.getSetting(Setting.BASE_URL);
     }
 
     private int getMaxRank() {
-        return Integer.parseInt(settingsService.getSetting(Settings.DAILY_STATS_RANKS));
+        return Integer.parseInt(settingsService.getSetting(Setting.DAILY_STATS_RANKS));
     }
 }

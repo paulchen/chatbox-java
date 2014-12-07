@@ -1,6 +1,6 @@
 package at.rueckgr.chatbox.service;
 
-import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import org.apache.commons.logging.Log;
 
@@ -38,7 +38,7 @@ public class ChatboxTimer {
     @PostConstruct
     public void startup() {
         log.info("ChatboxTimer starting up");
-        log.info(MessageFormat.format("Environment: {0}", settingsService.getSetting(Settings.ENVIRONMENT)));
+        log.info(MessageFormat.format("Environment: {0}", settingsService.getSetting(Setting.ENVIRONMENT)));
 
         if(stageService.isUnitTest()) {
             unitTesting();

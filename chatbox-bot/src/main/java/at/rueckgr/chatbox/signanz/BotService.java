@@ -1,6 +1,6 @@
 package at.rueckgr.chatbox.signanz;
 
-import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
@@ -24,8 +24,8 @@ public class BotService {
     @PostConstruct
     public void init() {
         if(!chatbox.hasSession()) {
-            String username = settingsService.getSetting(Settings.FORUM_USERNAME);
-            String password = settingsService.getSetting(Settings.FORUM_PASSWORD);
+            String username = settingsService.getSetting(Setting.FORUM_USERNAME);
+            String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
 
             chatbox.setSession(new ChatboxSession(username, password));
         }
@@ -36,6 +36,6 @@ public class BotService {
     }
 
     public boolean isActive()  {
-        return StringUtils.equals(settingsService.getSetting(Settings.BOT_ACTIVE), "1");
+        return StringUtils.equals(settingsService.getSetting(Setting.BOT_ACTIVE), "1");
     }
 }

@@ -1,7 +1,7 @@
 package at.rueckgr.chatbox.service;
 
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.Stage;
-import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.service.database.SettingsService;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,7 +13,7 @@ public class StageService {
     private @Inject SettingsService settingsService;
 
     public Stage getEnvironment() {
-        String stageName = settingsService.getSetting(Settings.ENVIRONMENT);
+        String stageName = settingsService.getSetting(Setting.ENVIRONMENT);
         for(Stage stage : Stage.values()) {
             if(stage.getSettingsValue().endsWith(stageName)) {
                 return stage;

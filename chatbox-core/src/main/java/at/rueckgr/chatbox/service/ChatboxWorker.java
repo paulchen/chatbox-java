@@ -1,6 +1,6 @@
 package at.rueckgr.chatbox.service;
 
-import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.MessageDTO;
@@ -51,9 +51,10 @@ public class ChatboxWorker {
     }
 
     private void init() {
+        // TODO refactor to some service method
         if(!chatbox.hasSession()) {
-            String username = settingsService.getSetting(Settings.FORUM_USERNAME);
-            String password = settingsService.getSetting(Settings.FORUM_PASSWORD);
+            String username = settingsService.getSetting(Setting.FORUM_USERNAME);
+            String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
 
             chatbox.setSession(new ChatboxSession(username, password));
         }
@@ -97,7 +98,7 @@ public class ChatboxWorker {
                     }
                 }
 
-                settingsService.saveSetting(Settings.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
+                settingsService.saveSetting(Setting.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
             }
             catch (PollingException e) {
                 exceptionHelper.handlePollingException(e);
@@ -166,7 +167,7 @@ public class ChatboxWorker {
         init();
 
         long epochSeconds = timeService.getEpochSeconds();
-        String setting = settingsService.getSetting(Settings.LAST_SMILEY_IMPORT);
+        String setting = settingsService.getSetting(Setting.LAST_SMILEY_IMPORT);
         if(setting != null) {
             long lastImportTimestamp = Long.parseLong(setting);
 
@@ -187,7 +188,7 @@ public class ChatboxWorker {
             return;
         }
 
-        settingsService.saveSetting(Settings.LAST_SMILEY_IMPORT, String.valueOf(epochSeconds));
+        settingsService.saveSetting(Setting.LAST_SMILEY_IMPORT, String.valueOf(epochSeconds));
 
         for (SmileyDTO smileyDTO : smilies) {
             smileyService.saveSmiley(smileyDTO);

@@ -25,15 +25,6 @@ public class Settings implements ChatboxEntity {
 
     public static final String QRY_FIND_ALL = "Settings.findAll";
     
-    public static final String FORUM_USERNAME = "forum_username";
-    public static final String FORUM_PASSWORD = "forum_password";
-    public static final String LAST_UPDATE = "last_update";
-    public static final String LAST_SMILEY_IMPORT = "last_smiley_import";
-    public static final String ENVIRONMENT = "environment";
-    public static final String BOT_ACTIVE = "bot_active";
-    public static final String BASE_URL = "base_url";
-    public static final String DAILY_STATS_RANKS = "daily_stats_ranks";
-
     @Id
     @NotNull
     @Column(name = "key", nullable = false, length = 50)

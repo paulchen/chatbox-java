@@ -1,6 +1,6 @@
 package at.rueckgr.chatbox.service;
 
-import at.rueckgr.chatbox.database.model.Settings;
+import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.UserService;
@@ -31,8 +31,8 @@ public class UserWorker {
 
     private void init() {
         if(!chatbox.hasSession()) {
-            String username = settingsService.getSetting(Settings.FORUM_USERNAME);
-            String password = settingsService.getSetting(Settings.FORUM_PASSWORD);
+            String username = settingsService.getSetting(Setting.FORUM_USERNAME);
+            String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
 
             chatbox.setSession(new ChatboxSession(username, password));
         }
