@@ -11,10 +11,6 @@ import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 
-/**
- * @author paulchen
- */
-@Unparser
 @ApplicationScoped
 @Transactional
 public class SmileyUnparser extends AbstractSearchReplaceUnparser {

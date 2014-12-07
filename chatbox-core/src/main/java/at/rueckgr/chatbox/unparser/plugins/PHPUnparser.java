@@ -8,7 +8,6 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Unparser
 @ApplicationScoped
 public class PHPUnparser extends AbstractSearchReplaceUnparser {
     private static final String PATTERN = "<!-- BEGIN TEMPLATE: bbcode_php -->\\s*" +

@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlugin {
+public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlugin implements UnparserPlugin {
     @Override
     public String unparse(String input) {
         log.debug(MessageFormat.format("Message before unparsing using Unparser {0}: {1}", getClass().getSimpleName(), input));

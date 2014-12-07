@@ -1,8 +1,7 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
-/**
- * @author paulchen
- */
-public interface UnparserPlugin {
+import at.rueckgr.chatbox.Plugin;
+
+public interface UnparserPlugin extends Plugin {
     String unparse(String input);
 }

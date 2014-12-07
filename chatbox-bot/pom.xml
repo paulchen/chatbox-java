@@ -20,13 +20,19 @@
         </dependency>
         <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
-            <artifactId>chatbox-common</artifactId>
+            <artifactId>chatbox-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>at.rueckgr.chatbox</groupId>
             <artifactId>chatbox-wrapper</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-maven-plugin</artifactId>
+            <version>${openjpa.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

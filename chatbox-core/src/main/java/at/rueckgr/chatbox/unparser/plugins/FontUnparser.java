@@ -8,7 +8,6 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Unparser
 @ApplicationScoped
 public class FontUnparser extends AbstractUnparserPlugin {
     @Getter

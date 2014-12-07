@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 
-@Unparser
 @ApplicationScoped
 public class IconUnparser extends AbstractSearchReplaceUnparser {
     private static final String ICON_PATTERN = "<a href=\"([^\"]+)\"><img style=\"max-height: 50px\" src=\"([^\"]+)\" /></a>";

@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.text.MessageFormat;
 import java.util.regex.Matcher;
 
-@Unparser
 @ApplicationScoped
 public class CodeUnparser extends AbstractSearchReplaceUnparser {
     private static final String PATTERN = "<!-- BEGIN TEMPLATE: bbcode_code -->\\s*" +

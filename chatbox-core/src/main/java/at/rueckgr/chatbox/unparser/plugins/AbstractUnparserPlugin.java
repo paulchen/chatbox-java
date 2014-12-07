@@ -1,12 +1,10 @@
 package at.rueckgr.chatbox.unparser.plugins;
 
+import at.rueckgr.chatbox.AbstractPlugin;
 import org.apache.commons.logging.Log;
 
 import javax.inject.Inject;
 
-/**
- * @author paulchen
- */
-public abstract class AbstractUnparserPlugin implements UnparserPlugin {
+public abstract class AbstractUnparserPlugin extends AbstractPlugin implements UnparserPlugin {
     protected @Inject Log log;
 }
