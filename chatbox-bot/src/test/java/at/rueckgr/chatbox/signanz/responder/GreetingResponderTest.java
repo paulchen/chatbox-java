@@ -17,7 +17,7 @@ public class GreetingResponderTest extends ContainerTest {
         simpleTest("signanz :inlove:", "test :inlove:");
         simpleTest("signanz :druegg:", "test :druegg:");
         simpleTest("signanz :knutsch:", "test :knutsch:");
-        simpleTest("signanz :highfive:", "test :highfive:");
+        simpleTest("signanz :hf:", "test :hf:");
         simpleTest("signanz <3", "test <3");
     }
 
@@ -28,6 +28,11 @@ public class GreetingResponderTest extends ContainerTest {
         simpleTest("signanz /]", "test [\\");
         simpleTest("signanz [\\", "test /]");
         simpleTest("signanz (\\ ^ . ^ /)", "test (\\ ^ . ^ /)");
+    }
+
+    @Test
+    public void testTroest() {
+        simpleTest("signanz :traurig:", "test :troest:");
     }
 
     private void simpleTest(String input, String expectedOutput) {

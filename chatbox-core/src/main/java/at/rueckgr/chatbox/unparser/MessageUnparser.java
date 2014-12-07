@@ -45,6 +45,13 @@ public class MessageUnparser {
             message = unparserUtil.removeHtml(message);
         }
 
+        // TODO improve this
+        message = message.replaceAll("&amp;", "&");
+        message = message.replaceAll("&lt;", "<");
+        message = message.replaceAll("&gt;", ">");
+        message = message.replaceAll("&quot;", "\"");
+        message = message.replaceAll("&apos;", "'");
+        
         return message;
     }
 }

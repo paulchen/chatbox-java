@@ -25,18 +25,20 @@ public class GreetingResponder extends AbstractResponderPlugin {
             {"<3", "<3"},
     };
 
-    private String lovePattern;
     private @Inject Log log;
-
     private @Inject SettingsService settingsService;
+
+    private String lovePattern;
     private String brohoofPattern;
+    private String troestPattern;
 
     @PostConstruct
     public void init() {
         String username = settingsService.getSetting(Setting.FORUM_USERNAME);
 
-        lovePattern = MessageFormat.format("\\s*{0}\\s*:(inlove|druegg|highfive|knutsch):\\s*", Pattern.quote(username));
+        lovePattern = MessageFormat.format("\\s*{0}\\s*:(inlove|druegg|hf|knutsch):\\s*", Pattern.quote(username));
         brohoofPattern = MessageFormat.format("\\s*{0}\\s*([/\\\\\\(\\)\\[\\]\\.\\^<3 ]+)\\s*", Pattern.quote(username));
+        troestPattern = MessageFormat.format("\\s*{0}\\s*:(traurig):\\s*", Pattern.quote(username));
     }
 
     @Override
@@ -47,6 +49,7 @@ public class GreetingResponder extends AbstractResponderPlugin {
         List<String> messagesToPost = new ArrayList<String>();
         checkLovePattern(messagesToPost, message, username);
         checkBrohoofPattern(messagesToPost, message, username);
+        checkTroestPattern(messagesToPost, message, username);
 
         return new ResponderResult(message, messagesToPost);
     }
@@ -70,6 +73,14 @@ public class GreetingResponder extends AbstractResponderPlugin {
                     break;
                 }
             }
+        }
+    }
+
+    private void checkTroestPattern(List<String> messagesToPost, String message, String username) {
+        Pattern pattern = Pattern.compile(troestPattern);
+        Matcher matcher = pattern.matcher(message);
+        if(matcher.matches()) {
+            messagesToPost.add(MessageFormat.format("{0} :troest:", username, matcher.group(1)));
         }
     }
 }
