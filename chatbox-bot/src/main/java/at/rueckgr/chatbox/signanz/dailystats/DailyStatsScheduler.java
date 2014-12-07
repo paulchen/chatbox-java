@@ -9,15 +9,31 @@ import at.rueckgr.chatbox.signanz.dailystats.prefix.PrefixPlugin;
 import at.rueckgr.chatbox.signanz.dailystats.stats.StatsPlugin;
 import at.rueckgr.chatbox.signanz.dailystats.suffix.SuffixPlugin;
 import at.rueckgr.chatbox.util.DependencyHelper;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
@@ -26,6 +42,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+// TODO refactor this class
 @Singleton
 public class DailyStatsScheduler {
     private @Inject EntityManager em;
@@ -41,9 +58,15 @@ public class DailyStatsScheduler {
         }
 
         List<String> messages = new ArrayList<String>();
-        messages.addAll(buildPrefixMessages());
-        messages.addAll(buildStatsMessages());
-        messages.addAll(buildSuffixMessages());
+        List<String> urls = new ArrayList<String>();
+
+        addMessages(messages, buildPrefixMessages());
+
+        List<StatsBuilderResult> builderResults = buildStatsMessages();
+        addMessages(messages, builderResults);
+        addUrls(urls, builderResults);
+
+        addMessages(messages, buildSuffixMessages());
 
         for (String message : messages) {
             try {
@@ -54,62 +77,148 @@ public class DailyStatsScheduler {
             }
         }
 
-        queryPages();
+        try {
+            queryPages(urls);
+        }
+        catch (Exception e) {
+            mailService.sendExceptionMail(e);
+        }
     }
 
-    private void queryPages() {
-        // TODO perform GET request on detail URLs
+    private void addMessages(List<String> messages, List<? extends BuilderResult> builderResults) {
+        for (BuilderResult builderResult : builderResults) {
+            messages.add(builderResult.getResultString());
+        }
     }
 
-    private interface MessageBuilder<T extends Plugin> {
-        String buildMessage(T plugin);
+    private void addUrls(List<String> messages, List<StatsBuilderResult> builderResults) {
+        for (StatsBuilderResult builderResult : builderResults) {
+            String url = builderResult.getUrl();
+            if(url != null) {
+                messages.add(url);
+            }
+        }
+    }
+
+    // TODO move to other class
+    private void queryPages(List<String> urls) throws Exception {
+        String host = settingsService.getSetting(Setting.HOSTNAME);
+        int port = Integer.parseInt(settingsService.getSetting(Setting.PORT));
+        String scheme = settingsService.getSetting(Setting.SCHEME);
+        String username = settingsService.getSetting(Setting.UPDATE_USERNAME);
+        String password = settingsService.getSetting(Setting.UPDATE_PASSWORD);
+
+        HttpHost target = new HttpHost(host, port, scheme);
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(new AuthScope(target.getHostName(), target.getPort()), new UsernamePasswordCredentials(username, password));
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultCredentialsProvider(credentialsProvider).build();
+
+        CloseableHttpResponse response = null;
+        try {
+            AuthCache authCache = new BasicAuthCache();
+            BasicScheme basicAuth = new BasicScheme();
+            authCache.put(target, basicAuth);
+
+            HttpClientContext localContext = HttpClientContext.create();
+            localContext.setAuthCache(authCache);
+
+            for (String url : urls) {
+                HttpGet getRequest = new HttpGet(url);
+                response = httpClient.execute(target, getRequest, localContext);
+                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    response.close();
+                    mailService.sendHttpRequestFailedMail(url, response.getStatusLine());
+                }
+                response.close();
+            }
+        }
+        finally {
+            try {
+                httpClient.close();
+            }
+            catch (IOException e) {
+                // ignore
+            }
+
+            if(response != null) {
+                try {
+                    response.close();
+                }
+                catch (IOException e) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    private interface MessageBuilder<T extends Plugin, R extends BuilderResult> {
+        R buildMessage(T plugin);
+    }
+
+    @Getter
+    private class BuilderResult {
+        private final String resultString;
+
+        public BuilderResult(String resultString) {
+            this.resultString = resultString;
+        }
+    }
+
+    @Getter
+    private class StatsBuilderResult extends BuilderResult {
+        private final String url;
+
+        public StatsBuilderResult(String resultString, String url) {
+            super(resultString);
+            this.url = url;
+        }
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Plugin> List<String> buildMessages(Class<T> pluginSuperClass, MessageBuilder<T> messageBuilder) {
+    private <T extends Plugin, R extends BuilderResult> List<R> buildMessages(Class<T> pluginSuperClass, MessageBuilder<T, R> messageBuilder) {
         Collection<Class<? extends Plugin>> pluginTypes = dependencyHelper.getPluginTypes(pluginSuperClass);
 
-        List<String> messages = new ArrayList<String>();
+        List<R> results = new ArrayList<R>();
         for (Class<? extends Plugin> clazz : pluginTypes) {
             T prefixClass = (T) BeanProvider.getContextualReference(clazz);
 
-            String message = messageBuilder.buildMessage(prefixClass);
-            if(message != null) {
-                messages.add(message);
+            R result = messageBuilder.buildMessage(prefixClass);
+            if(result!= null) {
+                results.add(result);
             }
         }
 
-        return messages;
+        return results;
     }
 
-    private List<String> buildPrefixMessages() {
-        return buildMessages(PrefixPlugin.class, new MessageBuilder<PrefixPlugin>() {
+    private List<BuilderResult> buildPrefixMessages() {
+        return buildMessages(PrefixPlugin.class, new MessageBuilder<PrefixPlugin, BuilderResult>() {
             @Override
-            public String buildMessage(PrefixPlugin plugin) {
+            public BuilderResult buildMessage(PrefixPlugin plugin) {
                 if(plugin.isActive()) {
-                    return plugin.getMessage();
+                    return new BuilderResult(plugin.getMessage());
                 }
                 return null;
             }
         });
     }
 
-    private List<String> buildSuffixMessages() {
-        return buildMessages(SuffixPlugin.class, new MessageBuilder<SuffixPlugin>() {
+    private List<BuilderResult> buildSuffixMessages() {
+        return buildMessages(SuffixPlugin.class, new MessageBuilder<SuffixPlugin, BuilderResult>() {
             @Override
-            public String buildMessage(SuffixPlugin plugin) {
+            public BuilderResult buildMessage(SuffixPlugin plugin) {
                 if(plugin.isActive()) {
-                    return plugin.getMessage();
+                    return new BuilderResult(plugin.getMessage());
                 }
                 return null;
             }
         });
     }
 
-    private List<String> buildStatsMessages() {
-        return buildMessages(StatsPlugin.class, new MessageBuilder<StatsPlugin>() {
+    private List<StatsBuilderResult> buildStatsMessages() {
+        return buildMessages(StatsPlugin.class, new MessageBuilder<StatsPlugin, StatsBuilderResult>() {
             @Override
-            public String buildMessage(StatsPlugin plugin) {
+            public StatsBuilderResult buildMessage(StatsPlugin plugin) {
                 if(!plugin.isActive()) {
                     return null;
                 }
@@ -126,7 +235,7 @@ public class DailyStatsScheduler {
         });
     }
 
-    private String buildStatsMessage(List<StatsResult> result, String name, String detailsLink) {
+    private StatsBuilderResult buildStatsMessage(List<StatsResult> result, String name, String detailsLink) {
         long total = 0;
         StringBuilder topSpammers = new StringBuilder();
         int maxRank = getMaxRank();
@@ -154,10 +263,17 @@ public class DailyStatsScheduler {
             }
         }
 
+        String message;
+        String url = null;
         if(detailsLink != null) {
-            return MessageFormat.format("Messages in {0}: {1}; top spammers: {2}; [url={3}?{4}]more details[/url]", name, total, topSpammers.toString(), getBaseUrl(), detailsLink);
+            url = MessageFormat.format("{0}?{1}", getBaseUrl(), detailsLink);
+            message = MessageFormat.format("Messages in {0}: {1}; top spammers: {2}; [url={3}]more details[/url]", name, total, topSpammers.toString(), url);
         }
-        return MessageFormat.format("Messages in {0}: {1}; top spammers: {2}", name, total, topSpammers.toString());
+        else {
+            message = MessageFormat.format("Messages in {0}: {1}; top spammers: {2}", name, total, topSpammers.toString());
+        }
+
+        return new StatsBuilderResult(message, url);
     }
 
     private String formatUsername(StatsResult statsResult) {

@@ -1,0 +1,15 @@
+Dear admin,
+
+An error has just occurred: An HTTP request failed
+
+Environment: $environment
+
+URL: $url
+
+Status code: $status_code
+
+Reason phrase: $reason
+
+
+Regards,
+The Chatbox Archive

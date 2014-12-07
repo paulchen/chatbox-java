@@ -5,6 +5,7 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 import org.apache.deltaspike.core.util.ExceptionUtils;
+import org.apache.http.StatusLine;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -41,6 +42,18 @@ public class MailService {
         sendMail(messageText);
     }
 
+    public void sendHttpRequestFailedMail(String url, StatusLine statusLine) {
+        Map<String, Object> objects = new HashMap<String, Object>();
+        objects.put("url", url);
+        objects.put("status_code", statusLine.getStatusCode());
+        objects.put("reason", statusLine.getReasonPhrase());
+        objects.put("environment", stageService.getEnvironment().getSettingsValue());
+
+        String messageText = velocityService.renderTemplate("http_request_failed", objects);
+
+        sendMail(messageText);
+    }
+
     private void sendMail(String messageText) {
         // TODO hard-coded strings
         try {
@@ -57,4 +70,5 @@ public class MailService {
             throw ExceptionUtils.throwAsRuntimeException(emailException);
         }
     }
+
 }

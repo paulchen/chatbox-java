@@ -417,6 +417,8 @@ public class ChatboxImpl implements Chatbox {
         String result = getStringFromInputStream(response.getEntity().getContent());
         response.close();
 
+        // TODO close client?
+
         return result;
     }
 
