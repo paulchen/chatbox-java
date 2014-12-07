@@ -1,7 +1,9 @@
 package at.rueckgr.chatbox.signanz.dailystats.prefix;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 
+@ApplicationScoped
 public class HappyNewYear extends AbstractPrefixPlugin implements PrefixPlugin {
     @Override
     public boolean isActive() {
