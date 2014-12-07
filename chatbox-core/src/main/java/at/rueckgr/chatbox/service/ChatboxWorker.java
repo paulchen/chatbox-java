@@ -11,10 +11,10 @@ import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
+import at.rueckgr.chatbox.util.ChatboxUtil;
 import at.rueckgr.chatbox.util.ExceptionHelper;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
-import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
 import at.rueckgr.chatbox.wrapper.exception.PollingException;
 import at.rueckgr.chatbox.wrapper.exception.WrongMessageCountException;
@@ -43,6 +43,7 @@ public class ChatboxWorker {
     private @Inject MailService mailService;
     private @Inject ExceptionHelper exceptionHelper;
     private @Inject StageService stageService;
+    private @Inject ChatboxUtil chatboxUtil;
 
     private final Chatbox chatbox;
 
@@ -51,13 +52,7 @@ public class ChatboxWorker {
     }
 
     private void init() {
-        // TODO refactor to some service method
-        if(!chatbox.hasSession()) {
-            String username = settingsService.getSetting(Setting.FORUM_USERNAME);
-            String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
-
-            chatbox.setSession(new ChatboxSession(username, password));
-        }
+        chatboxUtil.init(chatbox);
     }
 
     public void loadExistingShouts() {

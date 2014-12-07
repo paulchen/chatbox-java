@@ -2,9 +2,9 @@ package at.rueckgr.chatbox.signanz;
 
 import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.service.database.SettingsService;
+import at.rueckgr.chatbox.util.ChatboxUtil;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
-import at.rueckgr.chatbox.wrapper.ChatboxSession;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -16,6 +16,7 @@ public class BotService {
     private final Chatbox chatbox;
 
     private @Inject SettingsService settingsService;
+    private @Inject ChatboxUtil chatboxUtil;
 
     public BotService() {
         this.chatbox = new ChatboxImpl();
@@ -23,12 +24,7 @@ public class BotService {
 
     @PostConstruct
     public void init() {
-        if(!chatbox.hasSession()) {
-            String username = settingsService.getSetting(Setting.FORUM_USERNAME);
-            String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
-
-            chatbox.setSession(new ChatboxSession(username, password));
-        }
+        chatboxUtil.init(chatbox);
     }
 
     public void post(String message) throws Exception {
