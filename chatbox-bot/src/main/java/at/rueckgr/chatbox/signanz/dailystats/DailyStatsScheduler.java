@@ -1,8 +1,10 @@
 package at.rueckgr.chatbox.signanz.dailystats;
 
 import at.rueckgr.chatbox.Plugin;
+import at.rueckgr.chatbox.database.model.Settings;
 import at.rueckgr.chatbox.service.MailService;
-import at.rueckgr.chatbox.signanz.BotPoster;
+import at.rueckgr.chatbox.service.database.SettingsService;
+import at.rueckgr.chatbox.signanz.BotService;
 import at.rueckgr.chatbox.signanz.dailystats.prefix.PrefixPlugin;
 import at.rueckgr.chatbox.signanz.dailystats.stats.StatsPlugin;
 import at.rueckgr.chatbox.signanz.dailystats.suffix.SuffixPlugin;
@@ -26,16 +28,18 @@ import java.util.Map;
 
 @Singleton
 public class DailyStatsScheduler {
-    private static final int MAX_RANK = 5; // TODO configurable
-    private static final String BASE_URL = "https://rueckgr.at/~paulchen/chatbox/details.php"; // TODO configurable
-
     private @Inject EntityManager em;
-    private @Inject BotPoster botPoster;
+    private @Inject BotService botService;
     private @Inject DependencyHelper dependencyHelper;
     private @Inject MailService mailService;
+    private @Inject SettingsService settingsService;
 
     @Schedule // default is midnight
     public void dailyStats() {
+        if(!botService.isActive()) {
+            return;
+        }
+
         List<String> messages = new ArrayList<String>();
         messages.addAll(buildPrefixMessages());
         messages.addAll(buildStatsMessages());
@@ -43,7 +47,7 @@ public class DailyStatsScheduler {
 
         for (String message : messages) {
             try {
-                botPoster.post(message);
+                botService.post(message);
             }
             catch (Exception e) {
                 mailService.sendExceptionMail(e);
@@ -125,11 +129,12 @@ public class DailyStatsScheduler {
     private String buildStatsMessage(List<StatsResult> result, String name, String detailsLink) {
         long total = 0;
         StringBuilder topSpammers = new StringBuilder();
+        int maxRank = getMaxRank();
 
         for(int rank = 1; rank <= result.size(); rank++) {
             int currentRank = rank;
             total += result.get(rank-1).getShouts();
-            if(rank <= MAX_RANK) {
+            if(rank <= maxRank) {
                 List<String> usernames = new ArrayList<String>();
                 usernames.add(formatUsername(result.get(rank-1)));
                 while(rank<result.size() && result.get(rank-1).getShouts() == result.get(rank).getShouts()) {
@@ -150,7 +155,7 @@ public class DailyStatsScheduler {
         }
 
         if(detailsLink != null) {
-            return MessageFormat.format("Messages in {0}: {1}; top spammers: {2}; [url={3}?{4}]more details[/url]", name, total, topSpammers.toString(), BASE_URL, detailsLink);
+            return MessageFormat.format("Messages in {0}: {1}; top spammers: {2}; [url={3}?{4}]more details[/url]", name, total, topSpammers.toString(), getBaseUrl(), detailsLink);
         }
         return MessageFormat.format("Messages in {0}: {1}; top spammers: {2}", name, total, topSpammers.toString());
     }
@@ -161,7 +166,7 @@ public class DailyStatsScheduler {
 
         String url;
         try {
-            url = MessageFormat.format("{0}?user={1}", BASE_URL, URLEncoder.encode(username, "UTF-8"));
+            url = MessageFormat.format("{0}?user={1}", getBaseUrl(), URLEncoder.encode(username, "UTF-8"));
         }
         catch (UnsupportedEncodingException e) {
             throw ExceptionUtils.throwAsRuntimeException(e);
@@ -173,5 +178,13 @@ public class DailyStatsScheduler {
         }
 
         return MessageFormat.format("[url={0}]{1}[/url]", url, ret);
+    }
+
+    private String getBaseUrl() {
+        return settingsService.getSetting(Settings.BASE_URL);
+    }
+
+    private int getMaxRank() {
+        return Integer.parseInt(settingsService.getSetting(Settings.DAILY_STATS_RANKS));
     }
 }

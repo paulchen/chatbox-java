@@ -67,8 +67,7 @@ public class DependencyHelper {
 
             // add the dependencies which are specified using the annotation
             for (Class<? extends Plugin> dependency : plugin.getDependencies()) {
-                ImmutablePair<Class<? extends Plugin>, Class<? extends Plugin>> e = new ImmutablePair<Class<? extends Plugin>, Class<? extends Plugin>>(dependency, clazz);
-                edgesToAdd.add(e);
+                edgesToAdd.add(new ImmutablePair<Class<? extends Plugin>, Class<? extends Plugin>>(dependency, clazz));
             }
         }
 

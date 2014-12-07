@@ -5,18 +5,19 @@ import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
 import at.rueckgr.chatbox.wrapper.ChatboxSession;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class BotPoster {
+public class BotService {
     private final Chatbox chatbox;
 
     private @Inject SettingsService settingsService;
 
-    public BotPoster() {
+    public BotService() {
         this.chatbox = new ChatboxImpl();
     }
 
@@ -32,5 +33,9 @@ public class BotPoster {
 
     public void post(String message) throws Exception {
         chatbox.post(message);
+    }
+
+    public boolean isActive()  {
+        return StringUtils.equals(settingsService.getSetting(Settings.BOT_ACTIVE), "1");
     }
 }
