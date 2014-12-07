@@ -69,12 +69,7 @@ public class DailyStatsScheduler {
         addMessages(messages, buildSuffixMessages());
 
         for (String message : messages) {
-            try {
-                botService.post(message);
-            }
-            catch (Exception e) {
-                mailService.sendExceptionMail(e);
-            }
+            botService.post(message);
         }
 
         try {

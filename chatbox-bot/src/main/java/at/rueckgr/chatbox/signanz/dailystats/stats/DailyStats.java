@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ApplicationScoped
-public class DailyStats extends AbstractStatsPlugin implements StatsPlugin {
+public class DailyStats extends AbstractStatsPlugin {
     private @Inject StatsUtils statsUtils;
 
     @Override

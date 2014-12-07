@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
-public class HappyNewYear extends AbstractPrefixPlugin implements PrefixPlugin {
+public class HappyNewYear extends AbstractPrefixPlugin {
     @Override
     public boolean isActive() {
         return LocalDateTime.now().getDayOfYear() == 1;

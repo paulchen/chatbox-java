@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @ApplicationScoped
-public class YearlyStats extends AbstractStatsPlugin implements StatsPlugin {
+public class YearlyStats extends AbstractStatsPlugin {
     private @Inject StatsUtils statsUtils;
     private @Inject TimeService timeService;
 

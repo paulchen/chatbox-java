@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @ApplicationScoped
-public class MonthlyStats extends AbstractStatsPlugin implements StatsPlugin {
+public class MonthlyStats extends AbstractStatsPlugin {
     private @Inject StatsUtils statsUtils;
     private @Inject TimeService timeService;
 
