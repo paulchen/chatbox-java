@@ -8,6 +8,7 @@ import at.rueckgr.chatbox.dto.UserDTO;
 import at.rueckgr.chatbox.wrapper.exception.ChatboxWrapperException;
 import at.rueckgr.chatbox.wrapper.exception.OtherProblemException;
 import at.rueckgr.chatbox.wrapper.exception.PollingException;
+import at.rueckgr.chatbox.wrapper.exception.PostException;
 import at.rueckgr.chatbox.wrapper.exception.WrongMessageCountException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -381,6 +382,7 @@ public class ChatboxImpl implements Chatbox {
     }
 
     private DateTimeFormatter createDateTimeFormatter() {
+        // TODO don't always create new DateTimeFormatters
         // TODO timezone fuckup
         return DateTimeFormatter.ofPattern("dd-MM-yy, HH:mm");
     }
@@ -389,26 +391,46 @@ public class ChatboxImpl implements Chatbox {
         log.info("Posting message to chatbox: " + message);
         this.session.logUserdata();
 
+        String result = executePostRequest(message);
+        if (!result.isEmpty()) {
+            login();
+
+            result = executePostRequest(message);
+        }
+
+        if(!result.isEmpty()) {
+            throw new PostException("Could not post message to chatbox");
+        }
+
+        return result.isEmpty();
+    }
+
+    private String executePostRequest(String message) throws Exception {
         HttpPost postRequest = new HttpPost(POST_URL);
         List<NameValuePair> postData = new ArrayList<NameValuePair>();
         postData.add(new BasicNameValuePair("do", "cb_postnew"));
-        postData.add(new BasicNameValuePair("vsacb_newmessage", StringEscapeUtils.ESCAPE_XML.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate(message)));
+        postData.add(new BasicNameValuePair("vsacb_newmessage", escapeMessageForPosting(message)));
         postData.add(new BasicNameValuePair("securitytoken", this.session.getSecurityToken()));
         postRequest.setEntity(new UrlEncodedFormEntity(postData, Charset.forName("ISO-8859-1")));
+
         CloseableHttpResponse response = getClient().execute(postRequest);
-
         String result = getStringFromInputStream(response.getEntity().getContent());
-        if (!result.isEmpty()) {
-            response.close();
-            login();
-
-            response = getClient().execute(postRequest);
-            result = getStringFromInputStream(response.getEntity().getContent());
-        }
-
         response.close();
 
-        return result.isEmpty();
+        return result;
+    }
+
+    private String escapeMessageForPosting(String message) {
+        // TODO improve this
+        String output = StringEscapeUtils.ESCAPE_XML.with(NumericEntityEscaper.between(0x7f, Integer.MAX_VALUE)).translate(message);
+
+        output = output.replaceAll("&amp;", "&");
+        output = output.replaceAll("&lt;", "<");
+        output = output.replaceAll("&gt;", ">");
+        output = output.replaceAll("&quot;", "\"");
+        output = output.replaceAll("&apos;", "'");
+
+        return output;
     }
 
     @Override
