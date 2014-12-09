@@ -262,10 +262,10 @@ public class DailyStatsScheduler {
         String url = null;
         if(detailsLink != null) {
             url = MessageFormat.format("{0}?{1}", getBaseUrl(), detailsLink);
-            message = MessageFormat.format("Messages in {0}: {1}; top spammers: {2}; [url={3}]more details[/url]", name, total, topSpammers.toString(), url);
+            message = MessageFormat.format("Messages in {0}: {1,number,#}; top spammers: {2}; [url={3}]more details[/url]", name, total, topSpammers.toString(), url);
         }
         else {
-            message = MessageFormat.format("Messages in {0}: {1}; top spammers: {2}", name, total, topSpammers.toString());
+            message = MessageFormat.format("Messages in {0}: {1,number,#}; top spammers: {2}", name, total, topSpammers.toString());
         }
 
         return new StatsBuilderResult(message, url);
