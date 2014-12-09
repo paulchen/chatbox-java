@@ -56,6 +56,8 @@ public class ChatboxWorker {
             settingsService.checkSettings();
         }
         catch (Exception e) {
+            log.error("Error while checking settings", e);
+
             mailService.sendExceptionMail(e);
         }
 

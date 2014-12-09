@@ -12,6 +12,7 @@ import at.rueckgr.chatbox.signanz.dailystats.suffix.SuffixPlugin;
 import at.rueckgr.chatbox.util.DependencyHelper;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 
@@ -31,6 +32,7 @@ import java.util.Map;
 // TODO refactor this class
 @Singleton
 public class DailyStatsScheduler {
+    private @Inject Log log;
     private @Inject EntityManager em;
     private @Inject BotService botService;
     private @Inject DependencyHelper dependencyHelper;
@@ -59,12 +61,7 @@ public class DailyStatsScheduler {
             botService.post(message);
         }
 
-        try {
-            queryPages(urls);
-        }
-        catch (Exception e) {
-            mailService.sendExceptionMail(e);
-        }
+        queryPages(urls);
     }
 
     private void addMessages(List<String> messages, List<? extends BuilderResult> builderResults) {
@@ -82,9 +79,16 @@ public class DailyStatsScheduler {
         }
     }
 
-    private void queryPages(List<String> urls) throws Exception {
+    private void queryPages(List<String> urls) {
         for (String url : urls) {
-            httpHelper.fetchChatboxArchiveUrl(url);
+            try {
+                httpHelper.fetchChatboxArchiveUrl(url);
+            }
+            catch (Exception e) {
+                log.error(MessageFormat.format("Error while retrieving URL {0}", url), e);
+
+                mailService.sendExceptionMail(e);
+            }
         }
     }
 
