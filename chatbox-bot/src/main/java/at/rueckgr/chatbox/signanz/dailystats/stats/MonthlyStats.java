@@ -52,7 +52,7 @@ public class MonthlyStats extends AbstractStatsPlugin {
         String month = statsUtils.getPaddedMonth(yesterday);
         String year = statsUtils.getPaddedYear(yesterday);
 
-        return MessageFormat.format("month={0}&year={1}", month, year);
+        return MessageFormat.format("month={0}&year={1,number,#}", month, year);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MonthlyStats extends AbstractStatsPlugin {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
         String monthname = yesterday.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
-        return MessageFormat.format("{0} {1}", monthname, String.valueOf(yesterday.getYear()));
+        return MessageFormat.format("{0} {1,number,#}", monthname, yesterday.getYear());
     }
 
     @Override

@@ -47,7 +47,7 @@ public class DailyStats extends AbstractStatsPlugin {
         String month = statsUtils.getPaddedMonth(yesterday);
         String year = statsUtils.getPaddedYear(yesterday);
 
-        return MessageFormat.format("day={0}&month={1}&year={2}", day, month, year);
+        return MessageFormat.format("day={0}&month={1}&year={2,number,#}", day, month, year);
     }
 
     @Override

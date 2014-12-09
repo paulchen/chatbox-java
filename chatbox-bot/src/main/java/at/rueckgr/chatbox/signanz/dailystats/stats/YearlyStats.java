@@ -48,14 +48,14 @@ public class YearlyStats extends AbstractStatsPlugin {
 
         String year = statsUtils.getPaddedYear(yesterday);
 
-        return MessageFormat.format("year={0}", year);
+        return MessageFormat.format("year={0,number,#}", year);
     }
 
     @Override
     public String getName() {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 
-        return MessageFormat.format("{0}", String.valueOf(yesterday.getYear()));
+        return MessageFormat.format("{0,number,#}", String.valueOf(yesterday.getYear()));
     }
 
     @Override

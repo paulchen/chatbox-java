@@ -47,7 +47,7 @@ public class ChatboxImpl implements Chatbox {
     private static Log log = LogFactory.getLog(ChatboxImpl.class);
 
     private static final String CURRENT_URL = "http://www.informatik-forum.at/misc.php?show=ccbmessages";
-    private static final String ARCHIVE_URL = "http://www.informatik-forum.at/misc.php?do=ccarc&page={0}";
+    private static final String ARCHIVE_URL = "http://www.informatik-forum.at/misc.php?do=ccarc&page={0,number,#}";
     private static final String POST_URL = "http://www.informatik-forum.at/misc.php";
 
     private static final String LOGIN_URL = "http://www.informatik-forum.at/login.php?do=login";
