@@ -8,5 +8,5 @@ MERGE INTO SETTINGS (key, value) VALUES ('daily_stats_ranks', '5');
 MERGE INTO SETTINGS (key, value) VALUES ('hostname', 'rueckgr.at');
 MERGE INTO SETTINGS (key, value) VALUES ('port', '443');
 MERGE INTO SETTINGS (key, value) VALUES ('scheme', 'https');
-MERGE INTO SETTINGS (key, value) VALUES ('update_username', 'update');
-MERGE INTO SETTINGS (key, value) VALUES ('update_password', 'TODO');
+MERGE INTO SETTINGS (key, value) VALUES ('update_username', 'chatbox');
+MERGE INTO SETTINGS (key, value) VALUES ('update_password', 'foreverspam');
