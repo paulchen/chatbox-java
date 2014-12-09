@@ -48,7 +48,7 @@ public class YearlyStats extends AbstractStatsPlugin {
 
         String year = statsUtils.getPaddedYear(yesterday);
 
-        return MessageFormat.format("year={0,number,#}", year);
+        return MessageFormat.format("year={0}", year);
     }
 
     @Override

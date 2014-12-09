@@ -52,7 +52,7 @@ public class MonthlyStats extends AbstractStatsPlugin {
         String month = statsUtils.getPaddedMonth(yesterday);
         String year = statsUtils.getPaddedYear(yesterday);
 
-        return MessageFormat.format("month={0}&year={1,number,#}", month, year);
+        return MessageFormat.format("month={0}&year={1}", month, year);
     }
 
     @Override
