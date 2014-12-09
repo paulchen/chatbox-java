@@ -24,6 +24,7 @@ import javax.persistence.TypedQuery;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,6 +46,10 @@ public class DailyStatsScheduler {
         if(!botService.isActive()) {
             return;
         }
+        if(!isMidnight()) {
+            // I don't know why this is necessary; @Schedule seems to fire on deployment?!
+            return;
+        }
 
         List<String> messages = new ArrayList<String>();
         List<String> urls = new ArrayList<String>();
@@ -62,6 +67,12 @@ public class DailyStatsScheduler {
         }
 
         queryPages(urls);
+    }
+
+    private boolean isMidnight() {
+        LocalTime localTime = LocalTime.now();
+
+        return localTime.getHour() == 0 && localTime.getMinute() == 0;
     }
 
     private void addMessages(List<String> messages, List<? extends BuilderResult> builderResults) {
