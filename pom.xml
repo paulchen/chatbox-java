@@ -46,8 +46,9 @@
         <assertj.version>1.7.0</assertj.version>
 
         <h2.path>/tmp/chatbox</h2.path>
+        <h2.port>9090</h2.port>
         <h2.driver.name>org.h2.Driver</h2.driver.name>
-        <h2.connection.url>jdbc:h2:file:${h2.path}/chatboxdb;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=9090</h2.connection.url>
+        <h2.connection.url>jdbc:h2:file:${h2.path}/chatboxdb;AUTO_SERVER=TRUE;AUTO_SERVER_PORT=${h2.port}</h2.connection.url>
         <h2.user>sa</h2.user>
         <h2.password/>
 
