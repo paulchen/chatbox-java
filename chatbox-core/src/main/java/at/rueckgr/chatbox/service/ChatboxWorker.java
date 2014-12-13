@@ -102,7 +102,7 @@ public class ChatboxWorker {
                     }
                 }
 
-                settingsService.saveSetting(Setting.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
+                updateSettings();
             }
             catch (PollingException e) {
                 exceptionHelper.handlePollingException(e);
@@ -118,6 +118,13 @@ public class ChatboxWorker {
                 mailService.sendExceptionMail(e);
             }
         }
+    }
+
+    private void updateSettings() {
+        settingsService.saveSetting(Setting.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
+        settingsService.saveSetting(Setting.MAX_SHOUT_ID, String.valueOf(messageCache.getMaxShoutId()));
+        settingsService.saveSetting(Setting.TOTAL_SHOUTS, String.valueOf(messageService.getTotalShouts()));
+        settingsService.saveSetting(Setting.VISIBLE_SHOUTS, String.valueOf(messageService.getVisibleShouts()));
     }
 
     private NewMessagesEvent processMessages(List<MessageDTO> messages, boolean checkInDatabase) {

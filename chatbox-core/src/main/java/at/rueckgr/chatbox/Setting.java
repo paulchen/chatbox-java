@@ -17,7 +17,12 @@ public enum Setting {
     PORT("port", true),
     SCHEME("scheme", true),
     UPDATE_USERNAME("update_username", true),
-    UPDATE_PASSWORD("update_password", true);
+    UPDATE_PASSWORD("update_password", true),
+    CURRENT_EPOCH("current_epoch", false),
+    MAX_SHOUT_ID("max_shout_id", false),
+    TOTAL_SHOUTS("total_shouts", false),
+    VISIBLE_SHOUTS("visible_shouts", false);
+
 
     private final String databaseName;
     private final boolean required;

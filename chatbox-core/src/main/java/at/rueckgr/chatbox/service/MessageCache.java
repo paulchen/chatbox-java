@@ -55,4 +55,15 @@ public class MessageCache {
     public Collection<MessageDTO> getAllMessages() {
         return new TreeSet<MessageDTO>(this.messages.values());
     }
+
+    public int getMaxShoutId() {
+        Integer maxId = null;
+        for (Integer id : messages.keySet()) {
+            if(maxId == null || maxId < id) {
+                maxId = id;
+            }
+        }
+
+        return maxId;
+    }
 }

@@ -106,4 +106,11 @@ public class MessageService {
         return result;
     }
 
+    public long getTotalShouts() {
+        return em.createNamedQuery(Shout.QRY_COUNT_ALL, Long.class).getSingleResult();
+    }
+
+    public long getVisibleShouts() {
+        return em.createNamedQuery(Shout.QRY_COUNT_VISIBLE, Long.class).getSingleResult();
+    }
 }

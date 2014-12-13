@@ -37,7 +37,8 @@ import java.util.Date;
         }
 )
 @NamedQueries({
-    @NamedQuery(name = Shout.QRY_FIND_ALL, query = "SELECT s FROM Shout s"),
+    @NamedQuery(name = Shout.QRY_COUNT_ALL, query = "SELECT COUNT(s) FROM Shout s"),
+    @NamedQuery(name = Shout.QRY_COUNT_VISIBLE, query = "SELECT COUNT(s) FROM Shout s WHERE s.deleted = 0"),
     @NamedQuery(name = Shout.QRY_FIND_LAST, query = "SELECT s FROM Shout s ORDER BY s.epoch DESC, s.id DESC")
 })
 @Getter
@@ -45,7 +46,8 @@ import java.util.Date;
 public class Shout implements ChatboxEntity {
     private static final long serialVersionUID = -2072701453185873070L;
 
-    public static final String QRY_FIND_ALL = "Shout.findAll";
+    public static final String QRY_COUNT_ALL = "Shout.countAll";
+    public static final String QRY_COUNT_VISIBLE = "Shout.countVisible";
     public static final String QRY_FIND_LAST = "Shout.findLast";
 
     @NotNull
