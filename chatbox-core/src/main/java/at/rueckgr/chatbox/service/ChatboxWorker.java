@@ -82,8 +82,13 @@ public class ChatboxWorker {
 
             // TODO make try block smaller?
             try {
+                boolean newMessages = false;
+
                 NewMessagesEvent result = processMessages(chatbox.fetchCurrent(), false);
 
+                if (result.getNewMessages().size() > 0) {
+                    newMessages = true;
+                }
                 if (result.getNewMessages().size() > 0 || result.getModifiedMessages().size() > 0) {
                     newMessagesEvent.fire(result);
                 }
@@ -102,7 +107,7 @@ public class ChatboxWorker {
                     }
                 }
 
-                updateSettings();
+                updateSettings(newMessages);
             }
             catch (PollingException e) {
                 exceptionHelper.handlePollingException(e);
@@ -120,11 +125,14 @@ public class ChatboxWorker {
         }
     }
 
-    private void updateSettings() {
+    private void updateSettings(boolean newMessages) {
         settingsService.saveSetting(Setting.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
-        settingsService.saveSetting(Setting.MAX_SHOUT_ID, String.valueOf(messageCache.getMaxShoutId()));
-        settingsService.saveSetting(Setting.TOTAL_SHOUTS, String.valueOf(messageService.getTotalShouts()));
-        settingsService.saveSetting(Setting.VISIBLE_SHOUTS, String.valueOf(messageService.getVisibleShouts()));
+
+        if(newMessages) {
+            settingsService.saveSetting(Setting.MAX_SHOUT_ID, String.valueOf(messageCache.getMaxShoutId()));
+            settingsService.saveSetting(Setting.TOTAL_SHOUTS, String.valueOf(messageService.getTotalShouts()));
+            settingsService.saveSetting(Setting.VISIBLE_SHOUTS, String.valueOf(messageService.getVisibleShouts()));
+        }
     }
 
     private NewMessagesEvent processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
