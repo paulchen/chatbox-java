@@ -56,17 +56,17 @@
     </properties>
 
     <modules>
-        <module>chatbox-build-tools</module>
-        <module>chatbox-test</module>
-        <module>chatbox-common</module>
-        <module>chatbox-core</module>
-        <module>chatbox-bot</module>
-        <module>chatbox-websockets</module>
-        <module>chatbox-web</module>
-        <module>chatbox-server</module>
-        <module>chatbox-wrapper</module>
-        <module>chatbox-android</module>
-        <module>chatbox-cli</module>
+        <module>build-tools</module>
+        <module>test</module>
+        <module>common</module>
+        <module>core</module>
+        <module>bot</module>
+        <module>websockets</module>
+        <module>web</module>
+        <module>server</module>
+        <module>wrapper</module>
+        <module>android</module>
+        <module>cli</module>
     </modules>
 
 

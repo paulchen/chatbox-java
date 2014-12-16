@@ -49,7 +49,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${war.plugin.version}</version>
                 <configuration>
-                    <webXml>../chatbox-web/src/main/webapp/WEB-INF/web.xml</webXml>
+                    <webXml>../web/src/main/webapp/WEB-INF/web.xml</webXml>
                     <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
                 </configuration>
             </plugin>
