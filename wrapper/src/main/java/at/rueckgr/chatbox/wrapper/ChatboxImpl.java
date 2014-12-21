@@ -199,13 +199,7 @@ public class ChatboxImpl implements Chatbox {
         log.debug("Fetching chatbox contents");
         this.session.logUserdata();
 
-        final String data = fetchURL(CURRENT_URL, new ResultChecker() {
-            private static final long serialVersionUID = -4362478425988622360L;
-
-            public boolean isOk(String responseString) {
-                return !responseString.contains("DOCTYPE");
-            }
-        });
+        final String data = fetchURL(CURRENT_URL, responseString -> !responseString.contains("DOCTYPE"));
 
         int lastPos = 0;
 
@@ -307,13 +301,7 @@ public class ChatboxImpl implements Chatbox {
         this.session.logUserdata();
 
         String url = MessageFormat.format(ARCHIVE_URL, page);
-        final String data = fetchURL(url, new ResultChecker() {
-            private static final long serialVersionUID = -6840776392819411021L;
-
-            public boolean isOk(String responseString) {
-                return !responseString.isEmpty();
-            }
-        });
+        final String data = fetchURL(url, responseString -> !responseString.isEmpty());
 
         int lastPos = 0;
 
@@ -387,7 +375,7 @@ public class ChatboxImpl implements Chatbox {
         return DateTimeFormatter.ofPattern("dd-MM-yy, HH:mm");
     }
 
-    public boolean post(String message) throws Exception {
+    public void post(String message) throws Exception {
         log.info("Posting message to chatbox: " + message);
         this.session.logUserdata();
 
@@ -401,8 +389,6 @@ public class ChatboxImpl implements Chatbox {
         if(!result.isEmpty()) {
             throw new PostException("Could not post message to chatbox");
         }
-
-        return result.isEmpty();
     }
 
     private String executePostRequest(String message) throws Exception {
@@ -447,13 +433,7 @@ public class ChatboxImpl implements Chatbox {
 
     @Override
     public List<SmileyDTO> fetchSmilies() throws ChatboxWrapperException {
-        final String data = fetchURL(SMILIES_URL, new ResultChecker() {
-            private static final long serialVersionUID = -6840776392819411021L;
-
-            public boolean isOk(String responseString) {
-                return !responseString.isEmpty();
-            }
-        });
+        final String data = fetchURL(SMILIES_URL, responseString -> !responseString.isEmpty());
 
         List<SmileyDTO> result = new ArrayList<SmileyDTO>();
 
@@ -476,13 +456,7 @@ public class ChatboxImpl implements Chatbox {
         log.debug("Fetching online users");
         this.session.logUserdata();
 
-        final String data = fetchURL(USERS_URL, new ResultChecker() {
-            private static final long serialVersionUID = -5443491000158508968L;
-
-            public boolean isOk(String responseString) {
-                return !responseString.contains("DOCTYPE");
-            }
-        });
+        final String data = fetchURL(USERS_URL, responseString -> !responseString.contains("DOCTYPE"));
 
         Pattern visibleUsersPattern = Pattern.compile(VISIBLE_USERS_PATTERN);
         Matcher visibleUsersMatcher = visibleUsersPattern.matcher(data);

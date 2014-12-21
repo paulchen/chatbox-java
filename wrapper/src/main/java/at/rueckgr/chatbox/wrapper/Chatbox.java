@@ -16,7 +16,7 @@ public interface Chatbox extends Serializable {
 
     List<MessageDTO> fetchArchive(int page) throws ChatboxWrapperException;
 
-    boolean post(String message) throws Exception;
+    void post(String message) throws Exception;
 
     void setSession(ChatboxSession chatboxSession);
 

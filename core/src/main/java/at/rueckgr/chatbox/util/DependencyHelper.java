@@ -2,7 +2,6 @@ package at.rueckgr.chatbox.util;
 
 import at.rueckgr.chatbox.AbstractPlugin;
 import at.rueckgr.chatbox.Plugin;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class DependencyHelper {
@@ -66,9 +66,9 @@ public class DependencyHelper {
             Plugin plugin = BeanProvider.getContextualReference(clazz);
 
             // add the dependencies which are specified using the annotation
-            for (Class<? extends Plugin> dependency : plugin.getDependencies()) {
-                edgesToAdd.add(new ImmutablePair<Class<? extends Plugin>, Class<? extends Plugin>>(dependency, clazz));
-            }
+            edgesToAdd.addAll(plugin.getDependencies().stream()
+                    .map(dependency -> new ImmutablePair<Class<? extends Plugin>, Class<? extends Plugin>>(dependency, clazz))
+                    .collect(Collectors.toList()));
         }
 
         for (Pair<Class<? extends Plugin>, Class<? extends Plugin>> edge : edgesToAdd) {
@@ -97,12 +97,7 @@ public class DependencyHelper {
 
     public List<Class<? extends Plugin>> getPluginTypes(final Class<? extends Plugin> pluginSubClass) {
         Set<Class<? extends Plugin>> classes = reflections.getSubTypesOf(Plugin.class);
-        return resolveDependencies(Collections2.filter(classes, new Predicate<Class<? extends Plugin>>() {
-            @Override
-            public boolean apply(Class<? extends Plugin> clazz) {
-                return pluginSubClass.isAssignableFrom(clazz);
-            }
-        }));
+        return resolveDependencies(Collections2.filter(classes, pluginSubClass::isAssignableFrom));
     }
 
     private class FirstPlugin extends AbstractPlugin {

@@ -67,9 +67,7 @@ public class ChatboxWorker {
     public void loadExistingShouts() {
         init();
 
-        for (MessageDTO existingShout : messageService.getLastShouts(MessageCache.CACHE_SIZE)) {
-            this.messageCache.update(existingShout);
-        }
+        messageService.getLastShouts(MessageCache.CACHE_SIZE).forEach(this.messageCache::update);
     }
 
     public void run() {
@@ -209,8 +207,6 @@ public class ChatboxWorker {
 
         settingsService.saveSetting(Setting.LAST_SMILEY_IMPORT, String.valueOf(epochSeconds));
 
-        for (SmileyDTO smileyDTO : smilies) {
-            smileyService.saveSmiley(smileyDTO);
-        }
+        smilies.forEach(smileyService::saveSmiley);
     }
 }

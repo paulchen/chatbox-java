@@ -4,7 +4,6 @@ import org.apache.deltaspike.cdise.api.CdiContainer;
 import org.apache.deltaspike.cdise.api.CdiContainerLoader;
 import org.apache.deltaspike.core.api.projectstage.ProjectStage;
 import org.apache.deltaspike.core.util.ProjectStageProducer;
-import org.apache.deltaspike.core.api.provider.BeanProvider;
 import org.apache.webbeans.config.PropertyLoader;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -17,7 +16,6 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.AnnotatedType;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.inject.spi.InjectionTarget;
-import javax.inject.Qualifier;
 import java.util.Properties;
 
 /**
@@ -29,10 +27,6 @@ public abstract class ContainerTest {
     // nice to know, since testng executes tests in parallel.
     protected static int containerRefCount;
 
-    protected ProjectStage runInProjectStage() {
-        return ProjectStage.UnitTest;
-    }
-
     /**
      * Starts container
      * @throws Exception in case of severe problem
@@ -43,7 +37,7 @@ public abstract class ContainerTest {
 
         if (cdiContainer == null) {
             // setting up the Apache DeltaSpike ProjectStage
-            ProjectStage projectStage = runInProjectStage();
+            ProjectStage projectStage = ProjectStage.UnitTest;
             ProjectStageProducer.setProjectStage(projectStage);
 
             cdiContainer = CdiContainerLoader.getCdiContainer();
@@ -55,11 +49,6 @@ public abstract class ContainerTest {
         else {
             cleanInstances();
         }
-    }
-
-
-    public static CdiContainer getCdiContainer() {
-        return cdiContainer;
     }
 
     /**
@@ -101,7 +90,7 @@ public abstract class ContainerTest {
      * some contexts. You could also restart the ApplicationScoped context
      * if you have some caches in your classes.
      */
-    public final void cleanInstances() throws Exception {
+    public final void cleanInstances() {
         cdiContainer.getContextControl().stopContext(RequestScoped.class);
         cdiContainer.getContextControl().startContext(RequestScoped.class);
         cdiContainer.getContextControl().stopContext(SessionScoped.class);
@@ -129,9 +118,5 @@ public abstract class ContainerTest {
      */
     protected void cleanUpDb() throws Exception {
         //Override in subclasses when needed
-    }
-
-    protected <T> T getInstance(Class<T> type, Qualifier... qualifiers) {
-        return BeanProvider.getContextualReference(type, qualifiers);
     }
 }

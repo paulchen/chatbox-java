@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // TODO refactor this class
 @Singleton
@@ -62,9 +63,7 @@ public class DailyStatsScheduler {
 
         addMessages(messages, buildSuffixMessages());
 
-        for (String message : messages) {
-            botService.post(message);
-        }
+        messages.forEach(botService::post);
 
         queryPages(urls);
     }
@@ -76,9 +75,9 @@ public class DailyStatsScheduler {
     }
 
     private void addMessages(List<String> messages, List<? extends BuilderResult> builderResults) {
-        for (BuilderResult builderResult : builderResults) {
-            messages.add(builderResult.getResultString());
-        }
+        messages.addAll(builderResults.stream()
+                .map(BuilderResult::getResultString)
+                .collect(Collectors.toList()));
     }
 
     private void addUrls(List<String> messages, List<StatsBuilderResult> builderResults) {
@@ -144,46 +143,37 @@ public class DailyStatsScheduler {
     }
 
     private List<BuilderResult> buildPrefixMessages() {
-        return buildMessages(PrefixPlugin.class, new MessageBuilder<PrefixPlugin, BuilderResult>() {
-            @Override
-            public BuilderResult buildMessage(PrefixPlugin plugin) {
-                if(plugin.isActive()) {
-                    return new BuilderResult(plugin.getMessage());
-                }
-                return null;
+        return buildMessages(PrefixPlugin.class, plugin -> {
+            if(plugin.isActive()) {
+                return new BuilderResult(plugin.getMessage());
             }
+            return null;
         });
     }
 
     private List<BuilderResult> buildSuffixMessages() {
-        return buildMessages(SuffixPlugin.class, new MessageBuilder<SuffixPlugin, BuilderResult>() {
-            @Override
-            public BuilderResult buildMessage(SuffixPlugin plugin) {
-                if(plugin.isActive()) {
-                    return new BuilderResult(plugin.getMessage());
-                }
-                return null;
+        return buildMessages(SuffixPlugin.class, plugin -> {
+            if(plugin.isActive()) {
+                return new BuilderResult(plugin.getMessage());
             }
+            return null;
         });
     }
 
     private List<StatsBuilderResult> buildStatsMessages() {
-        return buildMessages(StatsPlugin.class, new MessageBuilder<StatsPlugin, StatsBuilderResult>() {
-            @Override
-            public StatsBuilderResult buildMessage(StatsPlugin plugin) {
-                if(!plugin.isActive()) {
-                    return null;
-                }
-
-                TypedQuery<StatsResult> query = em.createQuery(plugin.getQuery(), StatsResult.class);
-                Map<String, Object> parameters = plugin.getParameters();
-                for (String key : parameters.keySet()) {
-                    query.setParameter(key, parameters.get(key));
-                }
-                List<StatsResult> result = query.getResultList();
-
-                return buildStatsMessage(result, plugin.getName(), plugin.getDetailsLink());
+        return buildMessages(StatsPlugin.class, plugin -> {
+            if(!plugin.isActive()) {
+                return null;
             }
+
+            TypedQuery<StatsResult> query = em.createQuery(plugin.getQuery(), StatsResult.class);
+            Map<String, Object> parameters = plugin.getParameters();
+            for (String key : parameters.keySet()) {
+                query.setParameter(key, parameters.get(key));
+            }
+            List<StatsResult> result = query.getResultList();
+
+            return buildStatsMessage(result, plugin.getName(), plugin.getDetailsLink());
         });
     }
 

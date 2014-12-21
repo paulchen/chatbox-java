@@ -26,21 +26,16 @@ public class WordService {
         query.setParameter("shout", shoutEntity);
         List<ShoutWords> currentWords = query.getResultList();
 
-        for(ShoutWords word : currentWords) {
-            if(!containsWord(shoutWords, word)) {
-                em.remove(word);
-            }
-        }
+        currentWords.stream()
+                .filter(word -> !containsWord(shoutWords, word))
+                .forEach(em::remove);
 
         // to avoid unique-constraint violations
         em.flush();
 
-        for(Word word : shoutWords.keySet()) {
-            if(!containsWord(currentWords, word, shoutWords.get(word))) {
-                ShoutWords shoutWord = new ShoutWords(shoutEntity, word, shoutWords.get(word));
-                em.persist(shoutWord);
-            }
-        }
+        shoutWords.keySet().stream()
+                .filter(word -> !containsWord(currentWords, word, shoutWords.get(word)))
+                .forEach(word -> em.persist(new ShoutWords(shoutEntity, word, shoutWords.get(word))));
     }
 
     private boolean containsWord(List<ShoutWords> currentWords, Word word, Integer count) {

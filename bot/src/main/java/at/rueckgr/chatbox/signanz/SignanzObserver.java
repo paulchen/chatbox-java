@@ -14,10 +14,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @ApplicationScoped
 public class SignanzObserver {
@@ -39,8 +37,8 @@ public class SignanzObserver {
         }
 
         List<String> messagesToPost = new ArrayList<String>();
-        Collection<MessageDTO> messageDTOs = mergeMessages(newMessagesEvent);
-        for (MessageDTO messageDTO : messageDTOs) {
+
+        mergeMessages(newMessagesEvent).forEach(messageDTO -> {
             for (Class<? extends Plugin> responder : responders) {
                 ResponderPlugin plugin = (ResponderPlugin) BeanProvider.getContextualReference(responder);
                 ResponderResult responderResult = plugin.processMessage(messageDTO);
@@ -55,26 +53,18 @@ public class SignanzObserver {
                     }
                 }
             }
-        }
+        });
 
-        for (String message : messagesToPost) {
-            botService.post(message);
-        }
+        messagesToPost.forEach(botService::post);
     }
 
-    private Collection<MessageDTO> mergeMessages(NewMessagesEvent newMessagesEvent) {
+    private Stream<MessageDTO> mergeMessages(NewMessagesEvent newMessagesEvent) {
         List<MessageDTO> result = new ArrayList<MessageDTO>();
 
         result.addAll(newMessagesEvent.getNewMessages());
         result.addAll(newMessagesEvent.getModifiedMessages());
 
-        // TODO refactor into separate class
-        Collections.sort(result, new Comparator<MessageDTO>() {
-            @Override
-            public int compare(MessageDTO message1, MessageDTO message2) {
-                return message1.getPrimaryId().compareTo(message2.getPrimaryId());
-            }
-        });
-        return result;
+        return result.stream()
+                .sorted((m1, m2) -> m1.getPrimaryId().compareTo(m2.getPrimaryId()));
     }
 }

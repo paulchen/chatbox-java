@@ -44,21 +44,16 @@ public class SmileyService {
         query.setParameter("shout", shoutEntity);
         List<ShoutSmileys> currentSmilies = query.getResultList();
 
-        for(ShoutSmileys smiley : currentSmilies) {
-            if(!containsSmiley(shoutSmilies, smiley)) {
-                em.remove(smiley);
-            }
-        }
+        currentSmilies.stream()
+                .filter(smiley -> !containsSmiley(shoutSmilies, smiley))
+                .forEach(em::remove);
 
         // to avoid unique-constraint violations
         em.flush();
 
-        for(Smiley smiley : shoutSmilies.keySet()) {
-            if(!containsSmiley(currentSmilies, smiley, shoutSmilies.get(smiley))) {
-                ShoutSmileys shoutSmiley = new ShoutSmileys(shoutEntity, smiley, shoutSmilies.get(smiley));
-                em.persist(shoutSmiley);
-            }
-        }
+        shoutSmilies.keySet().stream()
+                .filter(smiley -> !containsSmiley(currentSmilies, smiley, shoutSmilies.get(smiley)))
+                .forEach(smiley -> em.persist(new ShoutSmileys(shoutEntity, smiley, shoutSmilies.get(smiley))));
     }
 
     private boolean containsSmiley(List<ShoutSmileys> currentSmilies, Smiley smiley, Integer count) {

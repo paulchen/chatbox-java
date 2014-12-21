@@ -13,8 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author paulchen
@@ -99,11 +99,9 @@ public class MessageService {
     public List<MessageDTO> getLastShouts(int maxCount) {
         TypedQuery<Shout> query = em.createNamedQuery(Shout.QRY_FIND_LAST, Shout.class);
         query.setMaxResults(maxCount);
-        List<MessageDTO> result = new ArrayList<MessageDTO>();
-        for(Shout shout : query.getResultList()) {
-            result.add(shoutTransformer.entityToDTO(shout));
-        }
-        return result;
+        return query.getResultList().stream()
+                .map(shoutTransformer::entityToDTO)
+                .collect(Collectors.toList());
     }
 
     public long getTotalShouts() {
