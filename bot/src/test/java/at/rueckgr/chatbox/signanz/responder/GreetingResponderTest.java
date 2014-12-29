@@ -1,33 +1,23 @@
 package at.rueckgr.chatbox.signanz.responder;
 
-import at.rueckgr.chatbox.dto.MessageDTO;
-import at.rueckgr.chatbox.dto.UserDTO;
 import at.rueckgr.chatbox.test.ContainerTest;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import javax.inject.Inject;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class GreetingResponderTest extends ContainerTest {
     private @Inject GreetingResponder greetingResponder;
+    private @Inject ResponderTestHelper responderTestHelper;
 
-    @Test
-    public void testLoveReplies() {
-        simpleTest("signanz :inlove:", "test :inlove:");
-        simpleTest("signanz :druegg:", "test :druegg:");
-        simpleTest("signanz :knutsch:", "test :knutsch:");
-        simpleTest("signanz :hf:", "test :hf:");
-        simpleTest("signanz <3", "test <3");
+    @Test(dataProvider = "loveReplies")
+    public void testLoveReplies(String input, String output) {
+        simpleTest(input, output);
     }
 
-    @Test
-    public void testBrohoof() {
-        simpleTest("signanz /)", "test (\\");
-        simpleTest("signanz (\\", "test /)");
-        simpleTest("signanz /]", "test [\\");
-        simpleTest("signanz [\\", "test /]");
-        simpleTest("signanz (\\ ^ . ^ /)", "test (\\ ^ . ^ /)");
+    @Test(dataProvider = "brohoofReplies")
+    public void testBrohoof(String input, String output) {
+        simpleTest(input, output);
     }
 
     @Test
@@ -35,28 +25,30 @@ public class GreetingResponderTest extends ContainerTest {
         simpleTest("signanz :traurig:", "test :troest:");
     }
 
-    private void simpleTest(String input, String expectedOutput) {
-        MessageDTO messageDTO = getMessageDTO(input);
-        ResponderResult responderResult = greetingResponder.processMessage(messageDTO);
-        assertResult(responderResult, messageDTO.getMessage(), expectedOutput);
+    private void simpleTest(String input, String output) {
+        responderTestHelper.simpleTest(greetingResponder, input, output);
     }
 
-    private void assertResult(ResponderResult responderResult, String expectedMessage, String... expectedMessagesToPost) {
-        assertThat(responderResult.getMessage()).isEqualTo(expectedMessage);
-        assertThat(responderResult.getMessagesToPost()).hasSize(expectedMessagesToPost.length);
-
-        for(int i = 0; i < expectedMessagesToPost.length; i++) {
-            assertThat(responderResult.getMessagesToPost().get(i)).isEqualTo(expectedMessagesToPost[i]);
-        }
+    @DataProvider(name = "brohoofReplies")
+    public String[][] dataProviderBrohoofReplies() {
+        return new String[][] {
+            {"signanz /)", "test (\\" },
+            {"signanz (\\", "test /)" },
+            {"signanz /]", "test [\\" },
+            {"signanz [\\", "test /]" },
+            {"signanz (\\ ^ . ^ /)", "test (\\ ^ . ^ /)" },
+        };
     }
 
-    private MessageDTO getMessageDTO(String message) {
-        MessageDTO messageDTO = new MessageDTO(null, null, null, null, null, false, getTestUser());
-        messageDTO.setMessage(message);
-        return messageDTO;
+    @DataProvider(name = "loveReplies")
+    public String[][] dataProviderLoveReplies() {
+        return new String[][] {
+                {"signanz :inlove:", "test :inlove:" },
+                {"signanz :druegg:", "test :druegg:" },
+                {"signanz :knutsch:", "test :knutsch:" },
+                {"signanz :hf:", "test :hf:" },
+                {"signanz <3", "test <3" },
+        };
     }
 
-    private UserDTO getTestUser() {
-        return new UserDTO(0, "test", null);
-    }
 }

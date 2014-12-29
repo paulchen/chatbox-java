@@ -15,14 +15,22 @@ public class SchlaegereiResponder extends AbstractResponderPlugin {
     private @Inject Log log;
     private @Inject SettingsService settingsService;
 
+    private static final String[][] REPLIES = {
+            {"(?iu)schl\u00e4gerei!?", "/me schl\u00e4gt {0}" },
+            {"(?iu)schlaegerei!?", "/me schlaegt {0}" },
+
+    };
+
     @Override
     public ResponderResult processMessage(MessageDTO messageDTO) {
         String message = messageDTO.getMessage();
         String username = messageDTO.getUser().getName();
 
         List<String> messagesToPost = new ArrayList<String>();
-        if(message.trim().equalsIgnoreCase("schl\u00e4gerei")) {
-            messagesToPost.add(MessageFormat.format("/me schl\u00e4gt {0}", username));
+        for (String[] reply : REPLIES) {
+            if(message.trim().matches(reply[0])) {
+                messagesToPost.add(MessageFormat.format(reply[1], username));
+            }
         }
         return new ResponderResult(message, messagesToPost);
     }
