@@ -2,6 +2,7 @@ package at.rueckgr.chatbox.service;
 
 import at.rueckgr.chatbox.dto.OnlineUsersInfo;
 import at.rueckgr.chatbox.service.database.SettingsService;
+import at.rueckgr.chatbox.service.database.UserHelper;
 import at.rueckgr.chatbox.service.database.UserService;
 import at.rueckgr.chatbox.util.ChatboxUtil;
 import at.rueckgr.chatbox.util.ExceptionHelper;
@@ -22,6 +23,7 @@ public class UserWorker {
     private @Inject UserService userService;
     private @Inject ExceptionHelper exceptionHelper;
     private @Inject ChatboxUtil chatboxUtil;
+    private @Inject UserHelper userHelper;
 
     private final Chatbox chatbox;
 
@@ -38,6 +40,8 @@ public class UserWorker {
 
         try {
             OnlineUsersInfo onlineUsersInfo = chatbox.fetchOnlineUsers();
+
+            userHelper.checkUsers(onlineUsersInfo.getOnlineUsers().stream().distinct());
 
             userService.logOnlineUsers(onlineUsersInfo);
         }

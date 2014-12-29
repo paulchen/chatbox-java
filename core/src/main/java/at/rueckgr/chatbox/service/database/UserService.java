@@ -80,9 +80,9 @@ public class UserService {
 
         logInvisibleUsers(onlineUsersInfo.getInvisibleUsers(), date);
 
-        for(UserDTO userDTO : onlineUsersInfo.getOnlineUsers()) {
-            logOnlineUser(userDTO, date);
-        }
+        onlineUsersInfo.getOnlineUsers().stream()
+                .distinct()
+                .forEach(u -> logOnlineUser(u, date));
     }
 
     private void logOnlineUser(UserDTO userDTO, Date date) {

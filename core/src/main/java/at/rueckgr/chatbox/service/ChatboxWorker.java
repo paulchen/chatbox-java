@@ -10,6 +10,7 @@ import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
+import at.rueckgr.chatbox.service.database.UserHelper;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.util.ChatboxUtil;
 import at.rueckgr.chatbox.util.DatabaseUtil;
@@ -46,6 +47,7 @@ public class ChatboxWorker {
     private @Inject StageService stageService;
     private @Inject ChatboxUtil chatboxUtil;
     private @Inject DatabaseUtil databaseUtil;
+    private @Inject UserHelper userHelper;
 
     private final Chatbox chatbox;
 
@@ -138,6 +140,10 @@ public class ChatboxWorker {
     }
 
     private NewMessagesEvent processMessages(List<MessageDTO> messages, boolean checkInDatabase) {
+        userHelper.checkUsers(messages.stream()
+                .map(MessageDTO::getUser)
+                .distinct());
+
         log.debug(MessageFormat.format("Fetched {0} messages from chatbox", messages.size()));
 
         Set<MessageDTO> newMessages = new TreeSet<MessageDTO>();
