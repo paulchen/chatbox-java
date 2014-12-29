@@ -12,6 +12,7 @@ import at.rueckgr.chatbox.service.database.SmileyService;
 import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.unparser.MessageUnparser;
 import at.rueckgr.chatbox.util.ChatboxUtil;
+import at.rueckgr.chatbox.util.DatabaseUtil;
 import at.rueckgr.chatbox.util.ExceptionHelper;
 import at.rueckgr.chatbox.wrapper.Chatbox;
 import at.rueckgr.chatbox.wrapper.ChatboxImpl;
@@ -44,6 +45,7 @@ public class ChatboxWorker {
     private @Inject ExceptionHelper exceptionHelper;
     private @Inject StageService stageService;
     private @Inject ChatboxUtil chatboxUtil;
+    private @Inject DatabaseUtil databaseUtil;
 
     private final Chatbox chatbox;
 
@@ -77,6 +79,8 @@ public class ChatboxWorker {
 
         while (true) {
             log.debug("Fetching chatbox contents...");
+
+            databaseUtil.clearCache();
 
             // TODO make try block smaller?
             try {
