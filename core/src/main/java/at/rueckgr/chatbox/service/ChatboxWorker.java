@@ -80,7 +80,7 @@ public class ChatboxWorker {
         log.info("Starting fetcher");
 
         while (true) {
-            log.debug("Fetching chatbox contents...");
+            log.info("Fetching chatbox contents...");
 
             databaseUtil.clearCache();
 
