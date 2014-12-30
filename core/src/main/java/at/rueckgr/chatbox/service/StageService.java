@@ -4,6 +4,7 @@ import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.Stage;
 import at.rueckgr.chatbox.service.database.SettingsService;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
@@ -12,15 +13,22 @@ import java.text.MessageFormat;
 public class StageService {
     private @Inject SettingsService settingsService;
 
-    public Stage getEnvironment() {
+    private Stage environment;
+
+    @PostConstruct
+    public void init() {
         String stageName = settingsService.getSetting(Setting.ENVIRONMENT);
         for(Stage stage : Stage.values()) {
             if(stage.getSettingsValue().endsWith(stageName)) {
-                return stage;
+                environment = stage;
             }
         }
 
         throw new IllegalStateException(MessageFormat.format("Invalid environment setting in database: {0}", stageName));
+    }
+
+    public Stage getEnvironment() {
+        return environment;
     }
 
     public boolean isProduction() {
