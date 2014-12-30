@@ -93,6 +93,13 @@
 
     <profiles>
         <profile>
+            <id>test</id>
+            <properties>
+                <jsf.project_stage>Production</jsf.project_stage>
+            </properties>
+        </profile>
+
+        <profile>
             <id>prod</id>
             <properties>
                 <jsf.project_stage>Production</jsf.project_stage>
