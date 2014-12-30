@@ -24,7 +24,9 @@ public class StageService {
             }
         }
 
-        throw new IllegalStateException(MessageFormat.format("Invalid environment setting in database: {0}", stageName));
+        if(environment == null) {
+            throw new IllegalStateException(MessageFormat.format("Invalid environment setting in database: {0}", stageName));
+        }
     }
 
     public Stage getEnvironment() {
