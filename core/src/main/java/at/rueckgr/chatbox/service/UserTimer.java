@@ -59,7 +59,7 @@ public class UserTimer {
         try {
             userWorker.doWork();
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             log.error("Exception occurred while recording online users", e);
 
             mailService.sendExceptionMail(e);

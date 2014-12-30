@@ -25,7 +25,7 @@ public class MailService {
         environment = stageService.getEnvironment().getSettingsValue();
     }
 
-    public void sendExceptionMail(Exception e) {
+    public void sendExceptionMail(Throwable e) {
         String stackTrace = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
 
         Map<String, Object> objects = new HashMap<String, Object>();
