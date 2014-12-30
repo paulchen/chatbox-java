@@ -45,18 +45,18 @@ public class ChatboxTimer {
             return;
         }
 
-        running = true;
-
-        timerService.createSingleActionTimer(1000, new TimerConfig());
+        startTimer();
     }
 
     @Timeout
     public void init() {
-        log.info("Initializing message cache");
+        if(!initialized) {
+            log.info("Initializing message cache");
 
-        worker.loadExistingShouts();
+            worker.loadExistingShouts();
 
-        initialized = true;
+            initialized = true;
+        }
 
         invokeWorker();
     }
@@ -69,7 +69,12 @@ public class ChatboxTimer {
             return;
         }
 
-        invokeWorker();
+        startTimer();
+    }
+
+    private void startTimer() {
+        running = true;
+        timerService.createSingleActionTimer(1000, new TimerConfig());
     }
 
     private void invokeWorker() {
