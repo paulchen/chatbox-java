@@ -6,15 +6,18 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
+import javax.ejb.NoMoreTimeoutsException;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.Timeout;
+import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import java.util.Collection;
 
 @Startup
 @Singleton
@@ -86,6 +89,20 @@ public class UserTimer {
             return;
         }
 
-        timerService.createSingleActionTimer(timerInterval, new TimerConfig());
+        synchronized (this) {
+            Collection<Timer> timers = timerService.getTimers();
+            if(timers.isEmpty()) {
+                timerService.createSingleActionTimer(timerInterval, new TimerConfig());
+            }
+            else if(timers.size() == 1) {
+                Timer timer = timers.iterator().next();
+                try {
+                    timer.getTimeRemaining();
+                }
+                catch (NoMoreTimeoutsException e) {
+                    timerService.createSingleActionTimer(timerInterval, new TimerConfig());
+                }
+            }
+        }
     }
 }
