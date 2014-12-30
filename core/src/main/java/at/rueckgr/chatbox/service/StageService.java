@@ -19,8 +19,9 @@ public class StageService {
     public void init() {
         String stageName = settingsService.getSetting(Setting.ENVIRONMENT);
         for(Stage stage : Stage.values()) {
-            if(stage.getSettingsValue().endsWith(stageName)) {
+            if(stage.getSettingsValue().equals(stageName)) {
                 environment = stage;
+                break;
             }
         }
 
