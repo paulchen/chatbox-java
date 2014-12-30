@@ -79,6 +79,8 @@ public class ChatboxWorker {
 
         log.info("Starting fetcher");
 
+        int errorCount = 0;
+
         while (true) {
             log.info("Fetching chatbox contents...");
 
@@ -112,6 +114,9 @@ public class ChatboxWorker {
                 }
 
                 updateSettings(newMessages);
+
+                errorCount = 0;
+                continue;
             }
             catch (PollingException e) {
                 exceptionHelper.handlePollingException(e);
@@ -125,6 +130,14 @@ public class ChatboxWorker {
                 log.error("Exception while obtaining messages", e);
 
                 mailService.sendExceptionMail(e);
+            }
+
+            errorCount++;
+
+            if(errorCount > 5) { // TODO magic number
+                log.error("Too many errors while fetching chatbox contents, exiting loop now");
+
+                break;
             }
         }
     }
