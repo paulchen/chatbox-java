@@ -7,6 +7,7 @@ import org.apache.commons.mail.SimpleEmail;
 import org.apache.deltaspike.core.util.ExceptionUtils;
 import org.apache.http.StatusLine;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -17,13 +18,20 @@ public class MailService {
     private @Inject VelocityService velocityService;
     private @Inject StageService stageService;
 
+    private String environment;
+
+    @PostConstruct
+    public void init() {
+        environment = stageService.getEnvironment().getSettingsValue();
+    }
+
     public void sendExceptionMail(Exception e) {
         String stackTrace = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
 
         Map<String, Object> objects = new HashMap<String, Object>();
         objects.put("message", e.getMessage());
         objects.put("stacktrace", stackTrace);
-        objects.put("environment", stageService.getEnvironment().getSettingsValue());
+        objects.put("environment", environment);
 
         String messageText = velocityService.renderTemplate("exception", objects);
 
@@ -35,7 +43,7 @@ public class MailService {
         objects.put("expected", expected);
         objects.put("actual", actual);
         objects.put("url", url);
-        objects.put("environment", stageService.getEnvironment().getSettingsValue());
+        objects.put("environment", environment);
 
         String messageText = velocityService.renderTemplate("message_count", objects);
 
@@ -47,7 +55,7 @@ public class MailService {
         objects.put("url", url);
         objects.put("status_code", statusLine.getStatusCode());
         objects.put("reason", statusLine.getReasonPhrase());
-        objects.put("environment", stageService.getEnvironment().getSettingsValue());
+        objects.put("environment", environment);
 
         String messageText = velocityService.renderTemplate("http_request_failed", objects);
 
@@ -55,7 +63,7 @@ public class MailService {
     }
 
     private void sendMail(String messageText) {
-        // TODO hard-coded strings
+        // TODO hard-coded strings; read them from database in the @PostConstruct method
         try {
             Email email = new SimpleEmail();
             email.setHostName("localhost");

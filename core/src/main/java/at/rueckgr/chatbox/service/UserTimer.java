@@ -30,10 +30,16 @@ public class UserTimer {
     private @Resource TimerService timerService;
 
     private volatile boolean running;
+    private volatile boolean unitTest;
+    private volatile long timerInterval;
 
     @PostConstruct
     public void startup() {
         log.info("UserWorker starting up");
+
+        unitTest = stageService.isUnitTest();
+        // TODO configurable interval
+        timerInterval = 5000L;
 
         startTimer();
     }
@@ -65,12 +71,13 @@ public class UserTimer {
     }
 
     private void startTimer() {
-        if(stageService.isUnitTest()) {
+        // we must not call any service accessing the database here as this may fail in case the database server has been restarted
+        // and the connections to the database server have therefore been closed
+        if(unitTest) {
             log.info("Current environment is 'unit-test', don't start worker now");
             return;
         }
 
-        // TODO configurable interval
-        timerService.createSingleActionTimer(5000, new TimerConfig());
+        timerService.createSingleActionTimer(timerInterval, new TimerConfig());
     }
 }
