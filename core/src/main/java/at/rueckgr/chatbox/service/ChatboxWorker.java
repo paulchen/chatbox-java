@@ -134,6 +134,7 @@ public class ChatboxWorker {
 
             errorCount++;
 
+            // when the database server has been restarted, the worker fails repeatedly until it is restarted
             if(errorCount > 5) { // TODO magic number
                 log.error("Too many errors while fetching chatbox contents, exiting loop now");
 
