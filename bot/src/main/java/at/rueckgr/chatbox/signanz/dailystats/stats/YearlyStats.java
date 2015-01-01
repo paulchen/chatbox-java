@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +52,9 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public String getName() {
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
 
-        return MessageFormat.format("{0,number,#}", String.valueOf(yesterday.getYear()));
+        return statsUtils.getPaddedYear(yesterday);
     }
 
     @Override
