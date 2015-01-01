@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,8 @@ public class MonthlyStats extends AbstractStatsPlugin {
     public Map<String, Object> getParameters() {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        // TODO reset to minusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(2);
         map.put("month", yesterday.getMonthValue());
         map.put("year", yesterday.getYear());
 
@@ -42,12 +44,18 @@ public class MonthlyStats extends AbstractStatsPlugin {
 
     @Override
     public boolean isActive() {
-        return LocalDate.now().getDayOfMonth() == 1;
+        LocalDate now = LocalDate.now();
+        // TODO remove this exception for 2015-01-02
+        if(now.getYear() == 2015 && now.getMonth() == Month.JANUARY && now.getDayOfMonth() == 2) {
+            return true;
+        }
+        return now.getDayOfMonth() == 1;
     }
 
     @Override
     public String getDetailsLink() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        // TODO reset to minusDays(1);
+        LocalDate yesterday = LocalDate.now().minusDays(2);
 
         String month = statsUtils.getPaddedMonth(yesterday);
         String year = statsUtils.getPaddedYear(yesterday);
@@ -57,7 +65,8 @@ public class MonthlyStats extends AbstractStatsPlugin {
 
     @Override
     public String getName() {
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+        // TODO reset to minusDays(1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(2);
         String monthname = yesterday.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
         return MessageFormat.format("{0} {1,number,#}", monthname, yesterday.getYear());
