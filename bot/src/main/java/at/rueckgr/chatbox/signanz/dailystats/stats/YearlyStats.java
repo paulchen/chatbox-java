@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,7 @@ public class YearlyStats extends AbstractStatsPlugin {
     public Map<String, Object> getParameters() {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        // TODO reset to minusDays(1)
-        LocalDate yesterday = LocalDate.now().minusDays(2);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
         map.put("year", yesterday.getYear());
 
         return map;
@@ -40,18 +38,12 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public boolean isActive() {
-        LocalDate now = LocalDate.now();
-        // TODO remove this exception for 2015-01-02
-        if(now.getYear() == 2015 && now.getMonth() == Month.JANUARY && now.getDayOfMonth() == 2) {
-            return true;
-        }
-        return now.getDayOfYear() == 1;
+        return LocalDate.now().getDayOfYear() == 1;
     }
 
     @Override
     public String getDetailsLink() {
-        // TODO reset to minusDays(1)
-        LocalDate yesterday = LocalDate.now().minusDays(2);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
 
         String year = statsUtils.getPaddedYear(yesterday);
 
@@ -60,10 +52,7 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public String getName() {
-        // TODO reset to minusDays(1)
-        LocalDate yesterday = LocalDate.now().minusDays(2);
-
-        return statsUtils.getPaddedYear(yesterday);
+        return statsUtils.getPaddedYear(LocalDate.now().minusDays(1));
     }
 
     @Override
