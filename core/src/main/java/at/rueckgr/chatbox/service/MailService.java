@@ -29,7 +29,7 @@ public class MailService {
         String stackTrace = org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(e);
 
         Map<String, Object> objects = new HashMap<String, Object>();
-        objects.put("message", e.getMessage());
+        objects.put("message", e.getMessage() == null ? "(null)" : e.getMessage());
         objects.put("stacktrace", stackTrace);
         objects.put("environment", environment);
 
