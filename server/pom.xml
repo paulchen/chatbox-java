@@ -40,6 +40,12 @@
             <artifactId>chatbox-websockets</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>at.rueckgr.chatbox</groupId>
+            <artifactId>chatbox-test</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -103,6 +109,48 @@
                         <lib>com.h2database:h2:${h2.version}</lib>
                     </libs>
                 </configuration>
+            </plugin>
+
+            <!-- TODO move this configuration to some global place -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>${sql.maven.version}</version>
+
+                <configuration>
+                    <driver>${h2.driver.name}</driver>
+                    <url>${h2.connection.url}</url>
+                    <username>${h2.user}</username>
+                    <password>${h2.password}</password>
+                    <onError>abort</onError>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>setup-testdata</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <orderFile>ascending</orderFile>
+                            <fileset>
+                                <basedir>${basedir}/src/test/sql/</basedir>
+                                <includes>
+                                    <include>*.sql</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                    </execution>
+                </executions>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>${h2.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
 

@@ -146,6 +146,7 @@
                 </configuration>
             </plugin>
 
+            <!-- TODO move this configuration to some global place -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>sql-maven-plugin</artifactId>
