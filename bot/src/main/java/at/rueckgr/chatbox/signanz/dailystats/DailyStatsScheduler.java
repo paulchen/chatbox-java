@@ -4,6 +4,7 @@ import at.rueckgr.chatbox.Plugin;
 import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.service.MailService;
 import at.rueckgr.chatbox.service.database.SettingsService;
+import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.signanz.BotService;
 import at.rueckgr.chatbox.signanz.HttpHelper;
 import at.rueckgr.chatbox.signanz.dailystats.prefix.PrefixPlugin;
@@ -41,6 +42,7 @@ public class DailyStatsScheduler {
     private @Inject MailService mailService;
     private @Inject SettingsService settingsService;
     private @Inject HttpHelper httpHelper;
+    private @Inject TimeService timeService;
 
     @Schedule // default is midnight
     public void dailyStats() {
@@ -69,7 +71,7 @@ public class DailyStatsScheduler {
     }
 
     private boolean isMidnight() {
-        LocalTime localTime = LocalTime.now();
+        LocalTime localTime = timeService.currentTime();
 
         return localTime.getHour() == 0 && localTime.getMinute() == 0;
     }

@@ -39,7 +39,7 @@ public class MailService {
 
     public void sendExceptionMail(Throwable e) {
         if(lastExceptionMail != null) {
-            long elapsedTime = ChronoUnit.SECONDS.between(lastExceptionMail, LocalDateTime.now());
+            long elapsedTime = ChronoUnit.SECONDS.between(lastExceptionMail, timeService.currentDateTime());
             if(elapsedTime < exceptionCooldownPeriod) {
                 unsentExceptionMails++;
                 return;
@@ -59,7 +59,7 @@ public class MailService {
 
         sendMail(messageText);
 
-        lastExceptionMail = LocalDateTime.now();
+        lastExceptionMail = timeService.currentDateTime();
         unsentExceptionMails = 0;
     }
 

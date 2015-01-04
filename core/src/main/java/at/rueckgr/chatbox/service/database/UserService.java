@@ -24,6 +24,7 @@ public class UserService {
     private @Inject EntityManager em;
     private @Inject UserTransformer userTransformer;
     private @Inject UserCategoryTransformer userCategoryTransformer;
+    private @Inject TimeService timeService;
 
     public User findUser(UserDTO userDTO) {
         synchronized(this) {
@@ -76,7 +77,7 @@ public class UserService {
     }
 
     public void logOnlineUsers(OnlineUsersInfo onlineUsersInfo) {
-        Date date = new Date();
+        Date date = timeService.currentLegacyDate();
 
         logInvisibleUsers(onlineUsersInfo.getInvisibleUsers(), date);
 

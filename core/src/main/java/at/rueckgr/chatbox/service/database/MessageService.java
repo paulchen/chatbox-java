@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +55,7 @@ public class MessageService {
         newRevision.setRevision(newRevisionId);
         newRevision.setShout(shout);
         newRevision.setDate(shout.getDate());
-        newRevision.setReplaced(timeService.toDate(LocalDateTime.now().minusHours(1)));
+        newRevision.setReplaced(timeService.toDate(timeService.currentDateTime().minusHours(1)));
         newRevision.setText(shout.getMessage());
         newRevision.setUser(shout.getUser());
         newRevision.setShout(shout);

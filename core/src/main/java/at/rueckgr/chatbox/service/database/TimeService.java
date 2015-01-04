@@ -1,12 +1,19 @@
 package at.rueckgr.chatbox.service.database;
 
+import at.rueckgr.chatbox.util.TimeProvider;
+
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 @ApplicationScoped
 public class TimeService {
+    private @Inject TimeProvider timeProvider;
+
     public Date toDate(LocalDateTime localDateTime) {
         if(localDateTime == null) {
             return null;
@@ -24,6 +31,22 @@ public class TimeService {
     }
 
     public long getEpochSeconds() {
-        return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000;
+        return currentDateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()/1000;
+    }
+
+    public Date currentLegacyDate() {
+        return toDate(currentDateTime());
+    }
+
+    public LocalDate currentDate() {
+        return timeProvider.currentDate();
+    }
+
+    public LocalTime currentTime() {
+        return timeProvider.currentTime();
+    }
+
+    public LocalDateTime currentDateTime() {
+        return timeProvider.currentDateTime();
     }
 }

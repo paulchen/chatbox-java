@@ -1,5 +1,6 @@
 package at.rueckgr.chatbox.signanz.dailystats.stats;
 
+import at.rueckgr.chatbox.service.database.TimeService;
 import at.rueckgr.chatbox.signanz.dailystats.StatsUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,6 +13,7 @@ import java.util.Map;
 @ApplicationScoped
 public class DailyStats extends AbstractStatsPlugin {
     private @Inject StatsUtils statsUtils;
+    private @Inject TimeService timeService;
 
     @Override
     public String getQuery() {
@@ -26,7 +28,7 @@ public class DailyStats extends AbstractStatsPlugin {
     public Map<String, Object> getParameters() {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = timeService.currentDate().minusDays(1);
         map.put("day", yesterday.getDayOfMonth());
         map.put("month", yesterday.getMonthValue());
         map.put("year", yesterday.getYear());
@@ -41,7 +43,7 @@ public class DailyStats extends AbstractStatsPlugin {
 
     @Override
     public String getDetailsLink() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = timeService.currentDate().minusDays(1);
 
         String day = statsUtils.getPaddedDay(yesterday);
         String month = statsUtils.getPaddedMonth(yesterday);

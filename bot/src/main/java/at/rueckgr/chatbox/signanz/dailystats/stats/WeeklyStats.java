@@ -7,8 +7,6 @@ import at.rueckgr.chatbox.signanz.dailystats.StatsUtils;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -33,15 +31,15 @@ public class WeeklyStats extends AbstractStatsPlugin {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // TODO timezone fuckup
-        map.put("start", timeService.toDate(LocalDateTime.now().minusWeeks(1).truncatedTo(ChronoUnit.DAYS).minusHours(1)));
-        map.put("end", timeService.toDate(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minusHours(1)));
+        map.put("start", timeService.toDate(timeService.currentDateTime().minusWeeks(1).truncatedTo(ChronoUnit.DAYS).minusHours(1)));
+        map.put("end", timeService.toDate(timeService.currentDateTime().truncatedTo(ChronoUnit.DAYS).minusHours(1)));
 
         return map;
     }
 
     @Override
     public boolean isActive() {
-        return LocalDate.now().getDayOfWeek().equals(DayOfWeek.MONDAY);
+        return timeService.currentDate().getDayOfWeek().equals(DayOfWeek.MONDAY);
     }
 
     @Override

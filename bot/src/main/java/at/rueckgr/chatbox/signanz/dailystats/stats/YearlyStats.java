@@ -30,7 +30,7 @@ public class YearlyStats extends AbstractStatsPlugin {
     public Map<String, Object> getParameters() {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = timeService.currentDate().minusDays(1);
         map.put("year", yesterday.getYear());
 
         return map;
@@ -38,12 +38,12 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public boolean isActive() {
-        return LocalDate.now().getDayOfYear() == 1;
+        return timeService.currentDate().getDayOfYear() == 1;
     }
 
     @Override
     public String getDetailsLink() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate yesterday = timeService.currentDate().minusDays(1);
 
         String year = statsUtils.getPaddedYear(yesterday);
 
@@ -52,7 +52,7 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public String getName() {
-        return statsUtils.getPaddedYear(LocalDate.now().minusDays(1));
+        return statsUtils.getPaddedYear(timeService.currentDate().minusDays(1));
     }
 
     @Override
