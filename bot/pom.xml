@@ -41,4 +41,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- TODO move this configuration to some global place -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <excludedGroups>broken</excludedGroups>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

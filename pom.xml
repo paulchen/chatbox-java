@@ -44,6 +44,7 @@
         <cobertura.plugin.version>2.6</cobertura.plugin.version>
         <jgrapht.version>0.9.0</jgrapht.version>
         <assertj.version>1.7.0</assertj.version>
+        <velocity.tools.version>2.0</velocity.tools.version>
 
         <h2.path>/tmp/chatbox</h2.path>
         <h2.port>9090</h2.port>
@@ -344,6 +345,12 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-tools</artifactId>
+                <version>${velocity.tools.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

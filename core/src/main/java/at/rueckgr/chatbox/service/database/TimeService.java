@@ -8,10 +8,18 @@ import java.util.Date;
 @ApplicationScoped
 public class TimeService {
     public Date toDate(LocalDateTime localDateTime) {
+        if(localDateTime == null) {
+            return null;
+        }
+
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     public LocalDateTime fromDate(Date date) {
+        if(date == null) {
+            return null;
+        }
+
         return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 

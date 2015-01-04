@@ -9,7 +9,10 @@ Message:
 
 $message
 
+#if ($unsentExceptionMails > 0)
+Suppressed messages since last mail at $dateTool.format('yyyy-MM-dd HH:mm:ss', $lastExceptionMail): $unsentExceptionMails
 
+#end
 Stacktrace:
 
 $stacktrace
