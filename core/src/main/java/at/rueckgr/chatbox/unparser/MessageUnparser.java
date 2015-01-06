@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.unparser;
 import at.rueckgr.chatbox.Plugin;
 import at.rueckgr.chatbox.unparser.plugins.UnparserPlugin;
 import at.rueckgr.chatbox.util.DependencyHelper;
+import at.rueckgr.chatbox.util.ExceptionSafeExecutorService;
 import at.rueckgr.chatbox.util.UnparserUtil;
 import org.apache.commons.logging.Log;
 import org.apache.deltaspike.core.api.provider.BeanProvider;
@@ -24,6 +25,7 @@ public class MessageUnparser {
     private @Inject Log log;
     private @Inject UnparserUtil unparserUtil;
     private @Inject DependencyHelper dependencyHelper;
+    private @Inject ExceptionSafeExecutorService executor;
 
     @PostConstruct
     public void init() {
@@ -34,8 +36,10 @@ public class MessageUnparser {
         String message = rawMessage;
 
         for(Class<? extends Plugin> clazz : unparsers) {
+            final String finalMessage = message;
+
             UnparserPlugin unparserPlugin = (UnparserPlugin) BeanProvider.getContextualReference(clazz);
-            message = unparserPlugin.unparse(message);
+            message = executor.execute(() -> unparserPlugin.unparse(finalMessage), message);
         }
 
         if(message.contains("<")) {
