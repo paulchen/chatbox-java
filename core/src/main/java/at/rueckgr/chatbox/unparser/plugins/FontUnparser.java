@@ -12,9 +12,9 @@ import java.util.regex.Pattern;
 public class FontUnparser extends AbstractUnparserPlugin {
     @Getter
     private enum FontPattern {
-        COLOR("<font color=\"([^\"]+)\">", "color", "[color={0}]", "[/color]"),
-        SIZE("<font size=\"([^\"]+)\">", "size", "[size={0}]", "[/size]"),
-        FACE("<font face=\"([^\"]+)\">", "face", "[font={0}]", "[/font]");
+        COLOR("<font color=\"?([^\"]+)\"?>", "color", "[color={0}]", "[/color]"),
+        SIZE("<font size=\"?([^\"]+)\"?>", "size", "[size={0}]", "[/size]"),
+        FACE("<font face=\"?([^\"]+)\"?>", "face", "[font={0}]", "[/font]");
 
         private String pattern;
         private String discriminator;
