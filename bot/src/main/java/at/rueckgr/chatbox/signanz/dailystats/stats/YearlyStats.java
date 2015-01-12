@@ -2,7 +2,7 @@ package at.rueckgr.chatbox.signanz.dailystats.stats;
 
 import at.rueckgr.chatbox.Plugin;
 import at.rueckgr.chatbox.service.database.TimeService;
-import at.rueckgr.chatbox.signanz.dailystats.StatsUtils;
+import at.rueckgr.chatbox.signanz.dailystats.util.StatsUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,7 +19,7 @@ public class YearlyStats extends AbstractStatsPlugin {
 
     @Override
     public String getQuery() {
-        return "SELECT new at.rueckgr.chatbox.signanz.dailystats.StatsResult(u, COUNT(u)) " +
+        return "SELECT new at.rueckgr.chatbox.signanz.dailystats.util.StatsResult(u, COUNT(u)) " +
                 "FROM User u, Shout s " +
                 "WHERE s.user = u AND s.deleted = 0 AND s.year = :year " +
                 "GROUP BY u " +

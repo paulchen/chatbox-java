@@ -1,4 +1,4 @@
-package at.rueckgr.chatbox.signanz.dailystats;
+package at.rueckgr.chatbox.signanz.dailystats.util;
 
 import org.apache.commons.lang3.StringUtils;
 
