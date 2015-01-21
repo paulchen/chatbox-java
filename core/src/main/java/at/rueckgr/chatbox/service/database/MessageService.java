@@ -10,7 +10,6 @@ import org.apache.deltaspike.jpa.api.transaction.Transactional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,13 +34,13 @@ public class MessageService {
 
         TypedQuery<ShoutRevision> query = em.createNamedQuery(ShoutRevision.QRY_FIND_LATEST, ShoutRevision.class);
         query.setParameter("id", shout.getPrimaryId());
+        query.setMaxResults(1);
+        List<ShoutRevision> result = query.getResultList();
 
-        try {
-            return query.getSingleResult();
-        }
-        catch (NoResultException e) {
+        if(result.isEmpty()) {
             return null;
         }
+        return result.get(0);
     }
 
     private void createShoutRevision(Shout shout) {
