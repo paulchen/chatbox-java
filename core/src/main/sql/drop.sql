@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS archive_pages_to_refetch CASCADE;
 DROP TABLE IF EXISTS invisible_users CASCADE;
 DROP TABLE IF EXISTS online_users CASCADE;
 DROP TABLE IF EXISTS queries CASCADE;
@@ -13,6 +14,7 @@ DROP TABLE IF EXISTS user_categories CASCADE;
 DROP TABLE IF EXISTS user_credentials CASCADE;
 DROP TABLE IF EXISTS words CASCADE;
 
+DROP SEQUENCE IF EXISTS archive_pages_to_refetch_id_seq;
 DROP SEQUENCE IF EXISTS invisible_users_id_seq;
 DROP SEQUENCE IF EXISTS online_users_id_seq;
 DROP SEQUENCE IF EXISTS queries_id_seq1;
