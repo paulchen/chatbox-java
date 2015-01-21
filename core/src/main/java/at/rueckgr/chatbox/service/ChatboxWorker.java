@@ -3,9 +3,11 @@ package at.rueckgr.chatbox.service;
 import at.rueckgr.chatbox.Setting;
 import at.rueckgr.chatbox.database.transformers.ShoutTransformer;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
+import at.rueckgr.chatbox.dto.ArchivePagesToRefreshDTO;
 import at.rueckgr.chatbox.dto.MessageDTO;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import at.rueckgr.chatbox.dto.events.NewMessagesEvent;
+import at.rueckgr.chatbox.service.database.ArchivePagesToRefetchService;
 import at.rueckgr.chatbox.service.database.MessageService;
 import at.rueckgr.chatbox.service.database.SettingsService;
 import at.rueckgr.chatbox.service.database.SmileyService;
@@ -48,6 +50,7 @@ public class ChatboxWorker {
     private @Inject ChatboxUtil chatboxUtil;
     private @Inject DatabaseUtil databaseUtil;
     private @Inject UserHelper userHelper;
+    private @Inject ArchivePagesToRefetchService archivePagesToRefetchService;
 
     private final Chatbox chatbox;
 
@@ -82,6 +85,8 @@ public class ChatboxWorker {
         int errorCount = 0;
 
         while (true) {
+            checkPagesToRefetch();
+
             log.info("Fetching chatbox contents...");
 
             databaseUtil.clearCache();
@@ -102,7 +107,7 @@ public class ChatboxWorker {
                 if(!stageService.isDevelopment() && result.getNewMessages().size() == result.getTotalMessagesCount()) {
                     int archivePage = 2;
                     while (true) {
-                        log.debug(MessageFormat.format("Fetching chatbox archive page {0}", archivePage));
+                        log.info(MessageFormat.format("Fetching chatbox archive page {0}", archivePage));
 
                         result = processMessages(chatbox.fetchArchive(archivePage), true);
                         // TODO notify clients?
@@ -141,6 +146,31 @@ public class ChatboxWorker {
                 break;
             }
         }
+    }
+
+    private void checkPagesToRefetch() {
+        List<ArchivePagesToRefreshDTO> pagesToRefetch = archivePagesToRefetchService.getPagesToRefetch();
+
+        pagesToRefetch.stream().forEach((dto) -> {
+            log.info(MessageFormat.format("Fetching chatbox archive page {0}", dto.getPage()));
+
+            // TODO duplicate code
+            try {
+                processMessages(chatbox.fetchArchive(dto.getPage()), true);
+
+                archivePagesToRefetchService.markAsDone(dto);
+            }
+            catch (WrongMessageCountException e) {
+                log.error("Exception while obtaining messages", e);
+
+                mailService.sendUnexpectedMessageCountMail(e.getExpected(), e.getActual(), e.getUrl());
+            }
+            catch (Exception e) {
+                log.error("Exception while obtaining messages", e);
+
+                mailService.sendExceptionMail(e);
+            }
+        });
     }
 
     private void updateSettings(boolean newMessages) {
