@@ -46,7 +46,7 @@ public class GreetingResponderTest extends ContainerTest {
                 {"signanz :inlove:", "test :inlove:" },
                 {"signanz :druegg:", "test :druegg:" },
                 {"signanz :knutsch:", "test :knutsch:" },
-                {"signanz :hf:", "test :hf:" },
+                {"signanz :^101:", "test :^101:" },
                 {"signanz <3", "test <3" },
         };
     }

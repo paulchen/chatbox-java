@@ -36,7 +36,7 @@ public class GreetingResponder extends AbstractResponderPlugin {
     public void init() {
         String username = settingsService.getSetting(Setting.FORUM_USERNAME);
 
-        lovePattern = MessageFormat.format("\\s*{0}\\s*:(inlove|druegg|hf|knutsch):\\s*", Pattern.quote(username));
+        lovePattern = MessageFormat.format("\\s*{0}\\s*:(inlove|druegg|\\^101|knutsch):\\s*", Pattern.quote(username));
         brohoofPattern = MessageFormat.format("\\s*{0}\\s*([/\\\\\\(\\)\\[\\]\\.\\^<3 ]+)\\s*", Pattern.quote(username));
         troestPattern = MessageFormat.format("\\s*{0}\\s*:(traurig):\\s*", Pattern.quote(username));
     }
