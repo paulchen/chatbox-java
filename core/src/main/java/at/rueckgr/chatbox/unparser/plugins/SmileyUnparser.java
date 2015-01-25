@@ -56,7 +56,7 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
             return new TreeSet<String>();
         }
 
-        chatboxWorker.importSmilies();
+        chatboxWorker.importSmilies(false);
 
         return findSmiley(filename, false);
     }

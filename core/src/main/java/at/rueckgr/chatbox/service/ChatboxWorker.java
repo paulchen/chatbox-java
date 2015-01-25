@@ -85,7 +85,7 @@ public class ChatboxWorker {
 
         int errorCount = 0;
 
-        importSmilies();
+        importSmilies(true);
 
         while (true) {
             checkPagesToRefetch();
@@ -238,17 +238,19 @@ public class ChatboxWorker {
     }
 
     // TODO move to SmileyService?
-    public void importSmilies() {
+    public void importSmilies(boolean force) {
         init();
 
         long epochSeconds = timeService.getEpochSeconds();
-        String setting = settingsService.getSetting(Setting.LAST_SMILEY_IMPORT);
-        if(setting != null) {
-            long lastImportTimestamp = Long.parseLong(setting);
+        if(!force) {
+            String setting = settingsService.getSetting(Setting.LAST_SMILEY_IMPORT);
+            if (setting != null) {
+                long lastImportTimestamp = Long.parseLong(setting);
 
-            // TODO magic number
-            if(epochSeconds-lastImportTimestamp < 3600) {
-                return;
+                // TODO magic number
+                if (epochSeconds - lastImportTimestamp < 3600) {
+                    return;
+                }
             }
         }
 
