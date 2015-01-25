@@ -34,8 +34,8 @@ public class SmileyCode {
     public static final String FIND_BY_SMILEY = "SmileyCode.findBySmiley";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smiley_codes_id_seq1")
-    @SequenceGenerator(name = "smiley_codes_id_seq1", sequenceName = "smiley_codes_id_seq1")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "smiley_codes_id_seq")
+    @SequenceGenerator(name = "smiley_codes_id_seq", sequenceName = "smiley_codes_id_seq")
     @Column(name = "id", nullable = false)
     private Integer id;
 

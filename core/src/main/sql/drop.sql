@@ -23,7 +23,7 @@ DROP SEQUENCE IF EXISTS requests_id_seq1;
 DROP SEQUENCE IF EXISTS shout_revisions_id_seq;
 DROP SEQUENCE IF EXISTS shout_smilies_id_seq;
 DROP SEQUENCE IF EXISTS shout_words_id_seq;
-DROP SEQUENCE IF EXISTS smiley_codes_id_seq1;
+DROP SEQUENCE IF EXISTS smiley_codes_id_seq;
 DROP SEQUENCE IF EXISTS smilies_id_seq1;
 DROP SEQUENCE IF EXISTS user_categories_id_seq1;
 DROP SEQUENCE IF EXISTS words_id_seq1;
