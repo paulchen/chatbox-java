@@ -85,6 +85,8 @@ public class ChatboxWorker {
 
         int errorCount = 0;
 
+        importSmilies();
+
         while (true) {
             checkPagesToRefetch();
 
@@ -235,6 +237,7 @@ public class ChatboxWorker {
         return new NewMessagesEvent(newMessages, modifiedMessages, messages.size());
     }
 
+    // TODO move to SmileyService?
     public void importSmilies() {
         init();
 
