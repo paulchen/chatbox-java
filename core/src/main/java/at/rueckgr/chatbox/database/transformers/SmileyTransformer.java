@@ -30,7 +30,6 @@ public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
 
     @Override
     public SmileyDTO updateDTO(SmileyDTO smileyDTO, Smiley smileyEntity) {
-        smileyDTO.setCode(smileyEntity.getCode());
         smileyDTO.setFilename(smileyEntity.getFilename());
         smileyDTO.setMeaning(smileyEntity.getMeaning());
 
@@ -39,7 +38,6 @@ public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
 
     @Override
     public Smiley updateEntity(Smiley smileyEntity, SmileyDTO smileyDTO) {
-        smileyEntity.setCode(smileyDTO.getCode());
         smileyEntity.setFilename(smileyDTO.getFilename());
         smileyEntity.setMeaning(smileyDTO.getMeaning());
 

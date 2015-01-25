@@ -35,6 +35,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -432,10 +433,10 @@ public class ChatboxImpl implements Chatbox {
     }
 
     @Override
-    public List<SmileyDTO> fetchSmilies() throws ChatboxWrapperException {
+    public Collection<SmileyDTO> fetchSmilies() throws ChatboxWrapperException {
         final String data = fetchURL(SMILIES_URL, responseString -> !responseString.isEmpty());
 
-        List<SmileyDTO> result = new ArrayList<SmileyDTO>();
+        Map<String, SmileyDTO> result = new HashMap<String, SmileyDTO>();
 
         Pattern pattern = Pattern.compile(SMILIES_PATTERN);
         Matcher matcher = pattern.matcher(data);
@@ -444,11 +445,15 @@ public class ChatboxImpl implements Chatbox {
             String filename = matcher.group(2);
             String meaning = matcher.group(3);
 
-            SmileyDTO smileyDTO = new SmileyDTO(filename, code, meaning);
-            result.add(smileyDTO);
+            SmileyDTO smileyDTO = result.get(filename);
+            if(smileyDTO == null) {
+                smileyDTO = new SmileyDTO(filename, meaning);
+            }
+            smileyDTO.getCodes().add(code);
+            result.put(filename, smileyDTO);
         }
 
-        return result;
+        return result.values();
     }
 
     @Override

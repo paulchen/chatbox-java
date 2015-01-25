@@ -43,9 +43,6 @@ public class Smiley implements ChatboxEntity {
     @Column(name = "filename", nullable = false, length = 100)
     private String filename;
 
-    @Column(name = "code", unique = true, length = 100)
-    private String code;
-
     @Lob
     @Column(name = "meaning")
     private String meaning;

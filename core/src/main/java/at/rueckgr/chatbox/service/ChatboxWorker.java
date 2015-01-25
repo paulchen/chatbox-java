@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -250,7 +251,7 @@ public class ChatboxWorker {
 
         log.info("Fetching smiley list");
 
-        List<SmileyDTO> smilies;
+        Collection<SmileyDTO> smilies;
         try {
             smilies = chatbox.fetchSmilies();
         }

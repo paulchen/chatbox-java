@@ -3,6 +3,7 @@ package at.rueckgr.chatbox.service.database;
 import at.rueckgr.chatbox.database.model.Shout;
 import at.rueckgr.chatbox.database.model.ShoutSmileys;
 import at.rueckgr.chatbox.database.model.Smiley;
+import at.rueckgr.chatbox.database.model.SmileyCode;
 import at.rueckgr.chatbox.database.transformers.SmileyTransformer;
 import at.rueckgr.chatbox.dto.SmileyDTO;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
@@ -15,8 +16,11 @@ import javax.persistence.TypedQuery;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Transactional
@@ -28,14 +32,32 @@ public class SmileyService {
         TypedQuery<Smiley> query = em.createNamedQuery(Smiley.QRY_FIND_BY_FILENAME, Smiley.class);
         query.setParameter("filename", smileyDTO.getFilename());
 
+        Smiley smiley;
         try {
-            Smiley smiley = query.getSingleResult();
+            smiley = query.getSingleResult();
             smileyTransformer.updateEntity(smiley, smileyDTO);
         }
         catch (NoResultException e) {
-            Smiley smiley = smileyTransformer.dtoToEntity(smileyDTO);
+            smiley = smileyTransformer.dtoToEntity(smileyDTO);
             em.persist(smiley);
         }
+
+        updateSmileyCodes(smiley, smileyDTO);
+    }
+
+    private void updateSmileyCodes(Smiley smiley, SmileyDTO smileyDTO) {
+        List<SmileyCode> currentSmileyCodes = getSmileyCodes(smiley);
+        currentSmileyCodes.stream()
+                .filter(smileyCode -> !smileyDTO.getCodes().contains(smileyCode.getCode()))
+                .forEach(em::remove);
+
+        // to avoid unique-constraint violations
+        em.flush();
+
+        List<String> currentSmileyCodeStrings = currentSmileyCodes.stream().map(SmileyCode::getCode).collect(Collectors.toList());
+        smileyDTO.getCodes().stream()
+                        .filter(smileyCode -> !currentSmileyCodeStrings.contains(smileyCode))
+                        .forEach(smileyCode -> em.persist(new SmileyCode(smiley, smileyCode)));
     }
 
     public void updateSmilies(Shout shoutEntity) {
@@ -115,5 +137,15 @@ public class SmileyService {
         catch (NoResultException e) {
             return null;
         }
+    }
+
+    public SortedSet<String> findSmileyCodes(Smiley smiley) {
+        return getSmileyCodes(smiley).stream().map(SmileyCode::getCode).collect(Collectors.toCollection(TreeSet::new));
+    }
+
+    private List<SmileyCode> getSmileyCodes(Smiley smiley) {
+        TypedQuery<SmileyCode> query = em.createNamedQuery(SmileyCode.FIND_BY_SMILEY, SmileyCode.class);
+        query.setParameter("smiley", smiley);
+        return query.getResultList();
     }
 }

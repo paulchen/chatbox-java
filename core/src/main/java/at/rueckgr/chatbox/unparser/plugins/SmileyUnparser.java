@@ -3,12 +3,13 @@ package at.rueckgr.chatbox.unparser.plugins;
 import at.rueckgr.chatbox.database.model.Smiley;
 import at.rueckgr.chatbox.service.ChatboxWorker;
 import at.rueckgr.chatbox.service.database.SmileyService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.deltaspike.jpa.api.transaction.Transactional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.text.MessageFormat;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 
 @ApplicationScoped
@@ -27,18 +28,23 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
     @Override
     protected String getReplacement(Matcher matcher) {
         String filename = matcher.group(1);
-        return findSmiley(filename);
+        SortedSet<String> smileyCodes = findSmiley(filename);
+        if(smileyCodes.isEmpty()) {
+            return "";
+        }
+        return smileyCodes.first();
     }
 
-    private String findSmiley(String filename) {
+    private SortedSet<String> findSmiley(String filename) {
         return findSmiley(filename, true);
     }
 
-    private String findSmiley(String filename, boolean recursive) {
+    private SortedSet<String> findSmiley(String filename, boolean recursive) {
         Smiley smiley = smileyService.findByFilename(filename);
         if(smiley != null) {
-            if (!StringUtils.isBlank(smiley.getCode())) {
-                return smiley.getCode();
+            SortedSet<String> smileyCodes = smileyService.findSmileyCodes(smiley);
+            if(!smileyCodes.isEmpty()) {
+                return smileyCodes;
             }
         }
         else {
@@ -47,7 +53,7 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
 
         // TODO BUG: first smiley is not properly replaced if it has just been imported from the database
         if(!recursive) {
-            return "";
+            return new TreeSet<String>();
         }
 
         chatboxWorker.importSmilies();
