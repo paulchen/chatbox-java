@@ -36,22 +36,22 @@ public class MessageCache {
 
     private boolean isModified(MessageDTO message1, MessageDTO message2) {
         if(!message1.getId().equals(message2.getId())) {
-            return false;
+            return true;
         }
         if(!message1.getEpoch().equals(message2.getEpoch())) {
-            return false;
+            return true;
         }
         if(!message1.getDate().equals(message2.getDate())) {
-            return false;
+            return true;
         }
         if(!message1.getRawMessage().equals(message2.getRawMessage())) {
-            return false;
+            return true;
         }
         if(message1.getUser().getId() != message2.getUser().getId()) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public MessageStatus update(MessageDTO message) {
