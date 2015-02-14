@@ -27,11 +27,31 @@ public class MessageCache {
         if(!this.messages.containsKey(message.getPrimaryId())) {
             return MessageStatus.NEW;
         }
-        if(this.messages.get(message.getPrimaryId()).equalsRaw(message)) {
-            return MessageStatus.UNMODIFIED;
+        if (isModified(this.messages.get(message.getPrimaryId()), message)) {
+            return MessageStatus.MODIFIED;
         }
 
-        return MessageStatus.MODIFIED;
+        return MessageStatus.UNMODIFIED;
+    }
+
+    private boolean isModified(MessageDTO message1, MessageDTO message2) {
+        if(!message1.getId().equals(message2.getId())) {
+            return false;
+        }
+        if(!message1.getEpoch().equals(message2.getEpoch())) {
+            return false;
+        }
+        if(!message1.getDate().equals(message2.getDate())) {
+            return false;
+        }
+        if(!message1.getRawMessage().equals(message2.getRawMessage())) {
+            return false;
+        }
+        if(message1.getUser().getId() != message2.getUser().getId()) {
+            return false;
+        }
+
+        return true;
     }
 
     public MessageStatus update(MessageDTO message) {

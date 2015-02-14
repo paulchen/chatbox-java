@@ -51,19 +51,4 @@ public class MessageDTO implements ChatboxDTO, Comparable<MessageDTO> {
     public int compareTo(MessageDTO that) {
         return primaryId.compareTo(that.getPrimaryId());
     }
-
-    public boolean equalsRaw(MessageDTO that) {
-        if(!this.equals(that)) {
-            return false;
-        }
-        if (this == that) {
-            return true;
-        }
-
-        if (rawMessage != null ? !rawMessage.equals(that.rawMessage) : that.rawMessage != null) {
-            return false;
-        }
-
-        return true;
-    }
 }
