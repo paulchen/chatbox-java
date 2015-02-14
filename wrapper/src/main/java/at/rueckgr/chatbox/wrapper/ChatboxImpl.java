@@ -278,23 +278,35 @@ public class ChatboxImpl implements Chatbox {
         }
     }
 
-    private MessageDTO createMessageDTO(int id, LocalDateTime date, int memberId,
-                                        String memberNick, String nickColor, String message) {
+    private MessageDTO createMessageDTO(int id, LocalDateTime date, int memberId, String memberNick, String nickColor, String message) {
         if (!this.users.containsKey(memberId)) {
             this.users.put(memberId, createUserDTO(memberId, memberNick, nickColor));
+        }
+        else {
+            updateUserDTO(this.users.get(memberId), memberNick, nickColor);
         }
 
         // TODO magic number
         return new MessageDTO(id, id, 1, message, date, false, this.users.get(memberId));
     }
 
-    private UserDTO createUserDTO(int memberId, String memberNick,
-                                  String nickColor) {
+    private UserDTO createUserDTO(int memberId, String memberNick, String nickColor) {
+        checkUserCategory(nickColor);
+
+        return new UserDTO(memberId, memberNick, this.userCategories.get(nickColor));
+    }
+
+    private void checkUserCategory(String nickColor) {
         if (!this.userCategories.containsKey(nickColor)) {
             this.userCategories.put(nickColor, new UserCategoryDTO(nickColor, nickColor));
         }
+    }
 
-        return new UserDTO(memberId, memberNick, this.userCategories.get(nickColor));
+    private void updateUserDTO(UserDTO userDTO, String memberNick, String nickColor) {
+        checkUserCategory(nickColor);
+
+        userDTO.setName(memberNick);
+        userDTO.setUserCategory(this.userCategories.get(nickColor));
     }
 
     public List<MessageDTO> fetchArchive(int page) throws ChatboxWrapperException {
