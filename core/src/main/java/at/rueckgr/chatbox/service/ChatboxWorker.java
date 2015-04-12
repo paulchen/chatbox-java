@@ -124,7 +124,7 @@ public class ChatboxWorker {
                 updateSettings(newMessages);
 
                 errorCount = 0;
-                continue;
+                break;
             }
             catch (PollingException e) {
                 exceptionHelper.handlePollingException(e);

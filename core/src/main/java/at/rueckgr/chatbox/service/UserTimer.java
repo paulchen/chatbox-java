@@ -45,10 +45,10 @@ public class UserTimer {
         // TODO configurable interval
         timerInterval = 5000L;
 
-        startTimer();
+//        startTimer();
     }
 
-    @Schedule(hour = "*", minute = "*")
+//    @Schedule(hour = "*", minute = "*")
     public void checkTimerRunning() {
         log.info("Ensuring that timer in UserTimer is running...");
 

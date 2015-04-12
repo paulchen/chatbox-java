@@ -61,7 +61,8 @@ public class ChatboxTimer {
         invokeWorker();
     }
 
-    @Schedule(hour = "*", minute = "*")
+    @Schedule(dayOfWeek = "Sun", hour = "5", minute = "0")
+//    @Schedule(hour = "*", minute = "*")
     public void ensureWorkerRunning() {
         log.info("Routine check if worker is running");
 
