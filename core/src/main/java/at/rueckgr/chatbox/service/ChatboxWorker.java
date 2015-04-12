@@ -209,8 +209,8 @@ public class ChatboxWorker {
                     break;
 
                 case MODIFIED:
-                    messageService.updateMessage(message);
-                    modifiedMessages.add(message);
+//                    messageService.updateMessage(message);
+//                    modifiedMessages.add(message);
                     break;
 
                 case UNMODIFIED:
