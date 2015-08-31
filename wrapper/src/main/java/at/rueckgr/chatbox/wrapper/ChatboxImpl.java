@@ -264,7 +264,7 @@ public class ChatboxImpl implements Chatbox {
         }
 
         // TODO magic number
-        checkMessageCount(30, ret.size(), false, CURRENT_URL);
+        // checkMessageCount(30, ret.size(), false, CURRENT_URL);
 
         return ret;
     }
@@ -379,7 +379,7 @@ public class ChatboxImpl implements Chatbox {
             lastPos = pos2;
         }
 
-        checkMessageCount(25, ret.size(), true, url);
+        // checkMessageCount(25, ret.size(), true, url);
 
         return ret;
     }
