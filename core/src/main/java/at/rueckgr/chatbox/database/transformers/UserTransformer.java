@@ -14,7 +14,7 @@ public class UserTransformer implements Transformer<User, UserDTO> {
 
     @Override
     public UserDTO entityToDTO(User userEntity) {
-        if(userEntity == null) {
+        if (userEntity == null) {
             return null;
         }
 
@@ -23,7 +23,7 @@ public class UserTransformer implements Transformer<User, UserDTO> {
 
     @Override
     public User dtoToEntity(UserDTO userDTO) {
-        if(userDTO == null) {
+        if (userDTO == null) {
             return null;
         }
 

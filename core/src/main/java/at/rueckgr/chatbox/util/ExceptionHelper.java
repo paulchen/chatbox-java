@@ -10,7 +10,7 @@ public class ExceptionHelper {
     private @Inject Log log;
 
     public void handlePollingException(PollingException e) {
-        if(e.getCause() != null) {
+        if (e.getCause() != null) {
             log.error(MessageFormat.format("Exception while obtaining messages: {0}", e.getCause().getMessage()));
         }
         else {

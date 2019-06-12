@@ -32,7 +32,7 @@ public class SignanzObserver {
     }
 
     public void newMessages(@Observes NewMessagesEvent newMessagesEvent) {
-        if(!botService.isActive()) {
+        if (!botService.isActive()) {
             return;
         }
 
@@ -43,12 +43,12 @@ public class SignanzObserver {
                 ResponderPlugin plugin = (ResponderPlugin) BeanProvider.getContextualReference(responder);
                 ResponderResult responderResult = plugin.processMessage(messageDTO);
 
-                if(responderResult != null) {
-                    if(responderResult.getMessage() != null) {
+                if (responderResult != null) {
+                    if (responderResult.getMessage() != null) {
                         messageDTO.setMessage(responderResult.getMessage());
                     }
 
-                    if(responderResult.getMessagesToPost() != null) {
+                    if (responderResult.getMessagesToPost() != null) {
                         messagesToPost.addAll(responderResult.getMessagesToPost());
                     }
                 }

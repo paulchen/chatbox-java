@@ -28,7 +28,7 @@ public class MessageService {
     private @Inject TimeService timeService;
 
     private ShoutRevision findLatestShoutRevision(Shout shout) {
-        if(shout.getId() == null) {
+        if (shout.getId() == null) {
             return null;
         }
 
@@ -37,7 +37,7 @@ public class MessageService {
         query.setMaxResults(1);
         List<ShoutRevision> result = query.getResultList();
 
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         }
         return result.get(0);
@@ -46,7 +46,7 @@ public class MessageService {
     private void createShoutRevision(Shout shout) {
         int newRevisionId = 1;
         ShoutRevision shoutRevision = findLatestShoutRevision(shout);
-        if(shoutRevision != null) {
+        if (shoutRevision != null) {
             newRevisionId = shoutRevision.getRevision()+1;
         }
 
@@ -84,11 +84,11 @@ public class MessageService {
 
     public MessageCache.MessageStatus getDatabaseStatus(MessageDTO message) {
         Shout shoutEntity = em.find(Shout.class, message.getPrimaryId());
-        if(shoutEntity == null) {
+        if (shoutEntity == null) {
             return MessageCache.MessageStatus.NEW;
         }
         MessageDTO databaseMessageDTO = shoutTransformer.entityToDTO(shoutEntity);
-        if(databaseMessageDTO.equals(message)) {
+        if (databaseMessageDTO.equals(message)) {
             return MessageCache.MessageStatus.UNMODIFIED;
         }
         return MessageCache.MessageStatus.MODIFIED;

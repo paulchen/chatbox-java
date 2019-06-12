@@ -12,7 +12,7 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
 
     @Override
     public UserCategoryDTO entityToDTO(UserCategory userCategoryEntity) {
-        if(userCategoryEntity == null) {
+        if (userCategoryEntity == null) {
             return null;
         }
 
@@ -21,7 +21,7 @@ public class UserCategoryTransformer implements Transformer<UserCategory, UserCa
 
     @Override
     public UserCategory dtoToEntity(UserCategoryDTO userCategoryDTO) {
-        if(userCategoryDTO == null) {
+        if (userCategoryDTO == null) {
             return null;
         }
 

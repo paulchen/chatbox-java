@@ -29,7 +29,7 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
     protected String getReplacement(Matcher matcher) {
         String filename = matcher.group(1);
         SortedSet<String> smileyCodes = findSmiley(filename);
-        if(smileyCodes.isEmpty()) {
+        if (smileyCodes.isEmpty()) {
             return "";
         }
         return smileyCodes.first();
@@ -41,9 +41,9 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
 
     private SortedSet<String> findSmiley(String filename, boolean recursive) {
         Smiley smiley = smileyService.findByFilename(filename);
-        if(smiley != null) {
+        if (smiley != null) {
             SortedSet<String> smileyCodes = smileyService.findSmileyCodes(smiley);
-            if(!smileyCodes.isEmpty()) {
+            if (!smileyCodes.isEmpty()) {
                 return smileyCodes;
             }
         }
@@ -52,7 +52,7 @@ public class SmileyUnparser extends AbstractSearchReplaceUnparser {
         }
 
         // TODO BUG: first smiley is not properly replaced if it has just been imported from the database
-        if(!recursive) {
+        if (!recursive) {
             return new TreeSet<String>();
         }
 

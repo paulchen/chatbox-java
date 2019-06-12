@@ -16,8 +16,8 @@ public class SettingsService {
 
     public String getSetting(Setting setting) {
         Settings settings = em.find(Settings.class, setting.getDatabaseName());
-        if(settings == null) {
-            if(setting.isRequired()) {
+        if (settings == null) {
+            if (setting.isRequired()) {
                 throw new RuntimeException(MessageFormat.format("Database setting not found: {0}", setting.getDatabaseName()));
             }
 
@@ -30,7 +30,7 @@ public class SettingsService {
         String key = setting.getDatabaseName();
 
         Settings settings = em.find(Settings.class, key);
-        if(settings != null) {
+        if (settings != null) {
             settings.setValue(value);
         }
         else {

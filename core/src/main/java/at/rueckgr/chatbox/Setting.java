@@ -27,7 +27,7 @@ public enum Setting {
     private final String databaseName;
     private final boolean required;
 
-    private Setting(String databaseName, boolean required) {
+    Setting(String databaseName, boolean required) {
         this.databaseName = databaseName;
         this.required = required;
     }

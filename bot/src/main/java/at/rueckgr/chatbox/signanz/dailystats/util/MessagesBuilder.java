@@ -25,7 +25,7 @@ public class MessagesBuilder {
             T prefixClass = (T) BeanProvider.getContextualReference(clazz);
 
             R result = exceptionSafeExecutorService.execute(() -> messageBuilder.buildMessage(prefixClass), null);
-            if(result != null) {
+            if (result != null) {
                 results.add(result);
             }
         }

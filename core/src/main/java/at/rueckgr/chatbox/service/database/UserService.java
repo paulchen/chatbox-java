@@ -46,12 +46,12 @@ public class UserService {
     private UserCategory findUserCategory(UserCategoryDTO userCategory) {
         UserCategory userCategoryEntity = findCategoryByName(userCategory.getName());
         boolean newEntity = false;
-        if(userCategoryEntity == null) {
+        if (userCategoryEntity == null) {
             userCategoryEntity = new UserCategory();
             newEntity = true;
         }
         userCategoryTransformer.updateEntity(userCategoryEntity, userCategory);
-        if(newEntity) {
+        if (newEntity) {
             em.persist(userCategoryEntity);
         }
         return userCategoryEntity;

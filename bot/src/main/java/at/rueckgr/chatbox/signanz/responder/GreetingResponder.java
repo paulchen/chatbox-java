@@ -57,7 +57,7 @@ public class GreetingResponder extends AbstractResponderPlugin {
     private void checkLovePattern(List<String> messagesToPost, String message, String username) {
         Pattern pattern = Pattern.compile(lovePattern);
         Matcher matcher = pattern.matcher(message);
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             messagesToPost.add(MessageFormat.format("{0} :{1}:", username, matcher.group(1)));
         }
     }
@@ -65,10 +65,10 @@ public class GreetingResponder extends AbstractResponderPlugin {
     private void checkBrohoofPattern(List<String> messagesToPost, String message, String username) {
         Pattern pattern = Pattern.compile(brohoofPattern);
         Matcher matcher = pattern.matcher(message);
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             String match = matcher.group(1);
             for (String[] brohoofReply : BROHOOF_REPLIES) {
-                if(brohoofReply[0].equals(match)) {
+                if (brohoofReply[0].equals(match)) {
                     messagesToPost.add(MessageFormat.format("{0} {1}", username, brohoofReply[1]));
                     break;
                 }
@@ -79,7 +79,7 @@ public class GreetingResponder extends AbstractResponderPlugin {
     private void checkTroestPattern(List<String> messagesToPost, String message, String username) {
         Pattern pattern = Pattern.compile(troestPattern);
         Matcher matcher = pattern.matcher(message);
-        if(matcher.matches()) {
+        if (matcher.matches()) {
             messagesToPost.add(MessageFormat.format("{0} :troest:", username, matcher.group(1)));
         }
     }

@@ -15,7 +15,7 @@ public class TimeService {
     private @Inject TimeProvider timeProvider;
 
     public Date toDate(LocalDateTime localDateTime) {
-        if(localDateTime == null) {
+        if (localDateTime == null) {
             return null;
         }
 
@@ -23,7 +23,7 @@ public class TimeService {
     }
 
     public LocalDateTime fromDate(Date date) {
-        if(date == null) {
+        if (date == null) {
             return null;
         }
 

@@ -55,7 +55,7 @@ public class DependencyHelper {
         List<Pair<Class<? extends Plugin>, Class<? extends Plugin>>> edgesToAdd = new ArrayList<Pair<Class<? extends Plugin>, Class<? extends Plugin>>>();
 
         for (Class<? extends Plugin> clazz : classes) {
-            if(clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
+            if (clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers())) {
                 continue;
             }
 
@@ -77,18 +77,18 @@ public class DependencyHelper {
 
         // ensure that there are no cycles
         CycleDetector<Class<? extends Plugin>, DefaultEdge> cycleDetector = new CycleDetector<>(graph);
-        if(cycleDetector.detectCycles()) {
+        if (cycleDetector.detectCycles()) {
             throw new RuntimeException("The dependencies between the UnparserPlugins contain at least one cycle");
         }
 
         // determine a topological ordering
         TopologicalOrderIterator<Class<? extends Plugin>, DefaultEdge> iterator = new TopologicalOrderIterator<Class<? extends Plugin>, DefaultEdge>(graph);
         List<Class<? extends Plugin>> result = new ArrayList<Class<? extends Plugin>>();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Class<? extends Plugin> next = iterator.next();
 
             // exclude the artificial plugin from the result list
-            if(!next.equals(FirstPlugin.class)) {
+            if (!next.equals(FirstPlugin.class)) {
                 result.add(next);
             }
         }

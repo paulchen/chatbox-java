@@ -14,7 +14,7 @@ public abstract class AbstractSearchReplaceUnparser extends AbstractUnparserPlug
         Matcher matcher = pattern.matcher(input);
         StringBuffer stringBuffer = new StringBuffer(input.length());
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             matcher.appendReplacement(stringBuffer, Matcher.quoteReplacement(getReplacement(matcher)));
         }
         matcher.appendTail(stringBuffer);

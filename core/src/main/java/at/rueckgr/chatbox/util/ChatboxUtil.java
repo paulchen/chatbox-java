@@ -13,7 +13,7 @@ public class ChatboxUtil {
     private @Inject SettingsService settingsService;
 
     public void init(Chatbox chatbox) {
-        if(!chatbox.hasSession()) {
+        if (!chatbox.hasSession()) {
             String username = settingsService.getSetting(Setting.FORUM_USERNAME);
             String password = settingsService.getSetting(Setting.FORUM_PASSWORD);
 

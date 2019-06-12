@@ -73,8 +73,6 @@
     <module name="SuppressWarningsFilter"/>
     <module name="TreeWalker">
 
-        <property name="cacheFile" value="${checkstyle.cache.file}"/>
-
         <module name="SuppressWarningsHolder" />
 
         <!-- Checks for Javadoc comments.                     -->
@@ -182,11 +180,6 @@
         <module name="InnerAssignment"/>
         <!--module name="MagicNumber"/-->
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows">
-            <property name="allowUnchecked" value="true"/>
-            <property name="allowSubclasses" value="true"/>
-            <property name="suppressLoadErrors" value="true" />
-        </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <!-- Checks for class design                         -->

@@ -12,7 +12,7 @@ public final class DefaultTimeProvider implements TimeProvider {
     }
 
     public static DefaultTimeProvider getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new DefaultTimeProvider();
         }
 

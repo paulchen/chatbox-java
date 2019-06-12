@@ -33,10 +33,10 @@ public class DailyStatsScheduler {
 
     @Schedule // default is midnight
     public void dailyStats() {
-        if(!botService.isActive()) {
+        if (!botService.isActive()) {
             return;
         }
-        if(!isMidnight()) {
+        if (!isMidnight()) {
             // I don't know why this is necessary; @Schedule seems to fire on deployment?!
             return;
         }
@@ -72,7 +72,7 @@ public class DailyStatsScheduler {
     private void addUrls(List<String> messages, List<StatsBuilderResult> builderResults) {
         for (StatsBuilderResult builderResult : builderResults) {
             String url = builderResult.getUrl();
-            if(url != null) {
+            if (url != null) {
                 messages.add(url);
             }
         }

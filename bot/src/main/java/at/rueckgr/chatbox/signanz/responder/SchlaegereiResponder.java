@@ -28,7 +28,7 @@ public class SchlaegereiResponder extends AbstractResponderPlugin {
 
         List<String> messagesToPost = new ArrayList<String>();
         for (String[] reply : REPLIES) {
-            if(message.trim().matches(reply[0])) {
+            if (message.trim().matches(reply[0])) {
                 messagesToPost.add(MessageFormat.format(reply[1], username));
             }
         }

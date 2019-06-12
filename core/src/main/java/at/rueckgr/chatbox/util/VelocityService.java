@@ -34,7 +34,7 @@ public class VelocityService {
     public String renderTemplate(String filename, Map<String, Object> objects) {
         VelocityContext context = new VelocityContext();
 
-        if(objects != null) {
+        if (objects != null) {
             for (String key : objects.keySet()) {
                 context.put(key, objects.get(key));
             }

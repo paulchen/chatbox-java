@@ -73,7 +73,7 @@ public class HttpHelper {
                 // ignore
             }
 
-            if(response != null) {
+            if (response != null) {
                 try {
                     response.close();
                 }

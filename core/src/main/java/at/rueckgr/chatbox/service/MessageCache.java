@@ -24,7 +24,7 @@ public class MessageCache {
     private Map<Integer, MessageDTO> messages = Collections.synchronizedMap(new TreeMap<Integer, MessageDTO>());
 
     private MessageStatus contains(MessageDTO message) {
-        if(!this.messages.containsKey(message.getPrimaryId())) {
+        if (!this.messages.containsKey(message.getPrimaryId())) {
             return MessageStatus.NEW;
         }
         if (isModified(this.messages.get(message.getPrimaryId()), message)) {
@@ -35,19 +35,19 @@ public class MessageCache {
     }
 
     private boolean isModified(MessageDTO message1, MessageDTO message2) {
-        if(!message1.getId().equals(message2.getId())) {
+        if (!message1.getId().equals(message2.getId())) {
             return true;
         }
-        if(!message1.getEpoch().equals(message2.getEpoch())) {
+        if (!message1.getEpoch().equals(message2.getEpoch())) {
             return true;
         }
-        if(!message1.getDate().equals(message2.getDate())) {
+        if (!message1.getDate().equals(message2.getDate())) {
             return true;
         }
-        if(!message1.getRawMessage().equals(message2.getRawMessage())) {
+        if (!message1.getRawMessage().equals(message2.getRawMessage())) {
             return true;
         }
-        if(message1.getUser().getId() != message2.getUser().getId()) {
+        if (message1.getUser().getId() != message2.getUser().getId()) {
             return true;
         }
 
@@ -57,7 +57,7 @@ public class MessageCache {
     public MessageStatus update(MessageDTO message) {
         MessageStatus messageStatus = this.contains(message);
 
-        if(messageStatus != MessageStatus.UNMODIFIED) {
+        if (messageStatus != MessageStatus.UNMODIFIED) {
             this.messages.put(message.getPrimaryId(), message);
         }
 
@@ -79,7 +79,7 @@ public class MessageCache {
     public int getMaxShoutId() {
         Integer maxId = null;
         for (Integer id : messages.keySet()) {
-            if(maxId == null || maxId < id) {
+            if (maxId == null || maxId < id) {
                 maxId = id;
             }
         }

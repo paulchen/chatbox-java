@@ -12,7 +12,7 @@ public class PrefixMessagesBuilder {
 
     public List<? extends BuilderResult> buildMessages() {
         return messagesBuilder.buildMessages(PrefixPlugin.class, plugin -> {
-            if(plugin.isActive()) {
+            if (plugin.isActive()) {
                 return new BuilderResult(plugin.getMessage());
             }
             return null;

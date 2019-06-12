@@ -18,14 +18,14 @@ public class StageService {
     @PostConstruct
     public void init() {
         String stageName = settingsService.getSetting(Setting.ENVIRONMENT);
-        for(Stage stage : Stage.values()) {
-            if(stage.getSettingsValue().equals(stageName)) {
+        for (Stage stage : Stage.values()) {
+            if (stage.getSettingsValue().equals(stageName)) {
                 environment = stage;
                 break;
             }
         }
 
-        if(environment == null) {
+        if (environment == null) {
             throw new IllegalStateException(MessageFormat.format("Invalid environment setting in database: {0}", stageName));
         }
     }

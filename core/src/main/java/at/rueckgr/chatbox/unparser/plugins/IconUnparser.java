@@ -24,7 +24,7 @@ public class IconUnparser extends AbstractSearchReplaceUnparser {
         String url1 = StringEscapeUtils.unescapeHtml4(matcher.group(1));
         String url2 = StringEscapeUtils.unescapeHtml4(matcher.group(2));
 
-        if(StringUtils.equals(url1, url2)) {
+        if (StringUtils.equals(url1, url2)) {
             return MessageFormat.format(REPLACEMENT, url1);
         }
         else {

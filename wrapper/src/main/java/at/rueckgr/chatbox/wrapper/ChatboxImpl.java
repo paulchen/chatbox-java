@@ -401,7 +401,7 @@ public class ChatboxImpl implements Chatbox {
             result = executePostRequest(message);
         }
 
-        if(!result.isEmpty()) {
+        if (!result.isEmpty()) {
             throw new PostException("Could not post message to chatbox");
         }
     }
@@ -454,13 +454,13 @@ public class ChatboxImpl implements Chatbox {
 
         Pattern pattern = Pattern.compile(SMILIES_PATTERN);
         Matcher matcher = pattern.matcher(data);
-        while(matcher.find()) {
+        while (matcher.find()) {
             String code = matcher.group(1);
             String filename = matcher.group(2);
             String meaning = matcher.group(3);
 
             SmileyDTO smileyDTO = result.get(filename);
-            if(smileyDTO == null) {
+            if (smileyDTO == null) {
                 smileyDTO = new SmileyDTO(filename, meaning);
             }
             smileyDTO.getCodes().add(code);
@@ -480,10 +480,10 @@ public class ChatboxImpl implements Chatbox {
         Pattern visibleUsersPattern = Pattern.compile(VISIBLE_USERS_PATTERN);
         Matcher visibleUsersMatcher = visibleUsersPattern.matcher(data);
         List<UserDTO> visibleUsers = new ArrayList<UserDTO>();
-        while(visibleUsersMatcher.find()) {
+        while (visibleUsersMatcher.find()) {
             String userIdString = visibleUsersMatcher.group(1);
             String userColor = visibleUsersMatcher.group(3);
-            if(userColor == null) {
+            if (userColor == null) {
                 userColor = "-";
             }
             String username = visibleUsersMatcher.group(4);
@@ -496,7 +496,7 @@ public class ChatboxImpl implements Chatbox {
         Pattern invisibleUsersPattern = Pattern.compile(INVISIBLE_USERS_PATTERN);
         Matcher invisibleUsersMatcher = invisibleUsersPattern.matcher(data);
         int invisibleUsers = 0;
-        while(invisibleUsersMatcher.find()) {
+        while (invisibleUsersMatcher.find()) {
             invisibleUsers++;
         }
 
@@ -507,7 +507,7 @@ public class ChatboxImpl implements Chatbox {
     }
 
     private CloseableHttpClient getClient() {
-        if(this.client == null) {
+        if (this.client == null) {
             this.client = HttpClients.custom().setDefaultCookieStore(this.session.getCookieStore()).build();
         }
         return this.client;

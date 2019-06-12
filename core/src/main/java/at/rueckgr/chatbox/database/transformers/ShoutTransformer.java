@@ -16,7 +16,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
 
     @Override
     public MessageDTO entityToDTO(Shout shoutEntity) {
-        if(shoutEntity == null) {
+        if (shoutEntity == null) {
             return null;
         }
 
@@ -25,7 +25,7 @@ public class ShoutTransformer implements Transformer<Shout, MessageDTO> {
 
     @Override
     public Shout dtoToEntity(MessageDTO messageDTO) {
-        if(messageDTO == null) {
+        if (messageDTO == null) {
             return null;
         }
 

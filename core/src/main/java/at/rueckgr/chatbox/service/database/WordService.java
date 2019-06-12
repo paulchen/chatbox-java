@@ -40,7 +40,7 @@ public class WordService {
 
     private boolean containsWord(List<ShoutWords> currentWords, Word word, Integer count) {
         for (ShoutWords currentWord : currentWords) {
-            if(currentWord.getWord().equals(word) && currentWord.getCount() == count) {
+            if (currentWord.getWord().equals(word) && currentWord.getCount() == count) {
                 return true;
             }
         }
@@ -50,7 +50,7 @@ public class WordService {
 
     private boolean containsWord(Map<Word, Integer> shoutWords, ShoutWords word) {
         for (Word word1 : shoutWords.keySet()) {
-            if(word1.equals(word.getWord()) && shoutWords.get(word1) == word.getCount()) {
+            if (word1.equals(word.getWord()) && shoutWords.get(word1) == word.getCount()) {
                 return true;
             }
         }
@@ -64,18 +64,18 @@ public class WordService {
         String[] words = message.toLowerCase().split("[\\s]+");
 
         Map<String, Integer> wordList = new HashMap<String, Integer>();
-        for(String foundWord : words) {
-            if(foundWord.matches("^[a-z]+$")) {
+        for (String foundWord : words) {
+            if (foundWord.matches("^[a-z]+$")) {
                 int count = wordList.containsKey(foundWord) ? wordList.get(foundWord) + 1 : 1;
                 wordList.put(foundWord, count);
             }
         }
 
         Map<Word, Integer> ret = new HashMap<Word, Integer>(wordList.size());
-        for(Map.Entry<String, Integer> wordEntry : wordList.entrySet()) {
+        for (Map.Entry<String, Integer> wordEntry : wordList.entrySet()) {
 
             String key = wordEntry.getKey();
-            if(key.length() > 100) { // TODO magic number
+            if (key.length() > 100) { // TODO magic number
                 key = key.substring(0, 100);
             }
             Word word = findByWord(key);

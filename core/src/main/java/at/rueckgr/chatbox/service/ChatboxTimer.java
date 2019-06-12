@@ -40,7 +40,7 @@ public class ChatboxTimer {
         log.info("ChatboxTimer starting up");
         log.info(MessageFormat.format("Environment: {0}", settingsService.getSetting(Setting.ENVIRONMENT)));
 
-        if(stageService.isUnitTest()) {
+        if (stageService.isUnitTest()) {
             unitTesting();
             return;
         }
@@ -50,7 +50,7 @@ public class ChatboxTimer {
 
     @Timeout
     public void init() {
-        if(!initialized) {
+        if (!initialized) {
             log.info("Initializing message cache");
 
             worker.loadExistingShouts();
@@ -81,7 +81,7 @@ public class ChatboxTimer {
     private void invokeWorker() {
         log.info("Worker not running, (re)starting");
 
-        if(stageService.isUnitTest()) {
+        if (stageService.isUnitTest()) {
             unitTesting();
             return;
         }

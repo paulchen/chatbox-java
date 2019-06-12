@@ -33,7 +33,7 @@ public class ArchivePagesToRefetchService {
         Validate.notNull(archivePagesToRefreshDTO.getId());
 
         ArchivePagesToRefetch archivePagesToRefetch = em.find(ArchivePagesToRefetch.class, archivePagesToRefreshDTO.getId());
-        if(archivePagesToRefetch == null) {
+        if (archivePagesToRefetch == null) {
             throw new RuntimeException(MessageFormat.format("Database tuple with id {0} not found!", archivePagesToRefreshDTO.getId()));
         }
 

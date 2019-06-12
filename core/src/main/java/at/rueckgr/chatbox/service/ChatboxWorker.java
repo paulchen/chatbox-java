@@ -107,14 +107,14 @@ public class ChatboxWorker {
                     newMessagesEvent.fire(result);
                 }
 
-                if(!stageService.isDevelopment() && result.getNewMessages().size() == result.getTotalMessagesCount()) {
+                if (!stageService.isDevelopment() && result.getNewMessages().size() == result.getTotalMessagesCount()) {
                     int archivePage = 2;
                     while (true) {
                         log.info(MessageFormat.format("Fetching chatbox archive page {0}", archivePage));
 
                         result = processMessages(chatbox.fetchArchive(archivePage), true);
                         // TODO notify clients?
-                        if(result.getNewMessages().isEmpty()) {
+                        if (result.getNewMessages().isEmpty()) {
                             break;
                         }
                         archivePage++;
@@ -143,7 +143,7 @@ public class ChatboxWorker {
             errorCount++;
 
             // when the database server has been restarted, the worker fails repeatedly until it is restarted
-            if(errorCount > 5) { // TODO magic number
+            if (errorCount > 5) { // TODO magic number
                 log.error("Too many errors while fetching chatbox contents, exiting loop now");
 
                 break;
@@ -179,7 +179,7 @@ public class ChatboxWorker {
     private void updateSettings(boolean newMessages) {
         settingsService.saveSetting(Setting.LAST_UPDATE, String.valueOf(timeService.getEpochSeconds()));
 
-        if(newMessages) {
+        if (newMessages) {
             settingsService.saveSetting(Setting.MAX_SHOUT_ID, String.valueOf(messageCache.getMaxShoutId()));
             settingsService.saveSetting(Setting.TOTAL_SHOUTS, String.valueOf(messageService.getTotalShouts()));
             settingsService.saveSetting(Setting.VISIBLE_SHOUTS, String.valueOf(messageService.getVisibleShouts()));
@@ -199,7 +199,7 @@ public class ChatboxWorker {
             message.setMessage(messageUnparser.unparse(message.getRawMessage()));
 
             MessageCache.MessageStatus status = this.messageCache.update(message);
-            if(checkInDatabase && status == MessageCache.MessageStatus.NEW) {
+            if (checkInDatabase && status == MessageCache.MessageStatus.NEW) {
                 status = messageService.getDatabaseStatus(message);
             }
             switch(status) {
@@ -222,11 +222,11 @@ public class ChatboxWorker {
         }
 
         if (newMessages.size() > 0 || modifiedMessages.size() > 0) {
-            if(newMessages.size() > 0) {
+            if (newMessages.size() > 0) {
                 log.info(MessageFormat.format("{0} new message(s)", newMessages.size()));
             }
 
-            if(modifiedMessages.size() > 0) {
+            if (modifiedMessages.size() > 0) {
                 log.info(MessageFormat.format("{0} modified message(s)", modifiedMessages.size()));
             }
         }
@@ -242,7 +242,7 @@ public class ChatboxWorker {
         init();
 
         long epochSeconds = timeService.getEpochSeconds();
-        if(!force) {
+        if (!force) {
             String setting = settingsService.getSetting(Setting.LAST_SMILEY_IMPORT);
             if (setting != null) {
                 long lastImportTimestamp = Long.parseLong(setting);

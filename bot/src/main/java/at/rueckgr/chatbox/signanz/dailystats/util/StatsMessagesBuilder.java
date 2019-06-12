@@ -43,23 +43,23 @@ public class StatsMessagesBuilder {
         StringBuilder topSpammers = new StringBuilder();
         int maxRank = getMaxRank();
 
-        for(int rank = 1; rank <= result.size(); rank++) {
+        for (int rank = 1; rank <= result.size(); rank++) {
             int currentRank = rank;
             total += result.get(rank-1).getShouts();
-            if(rank <= maxRank) {
+            if (rank <= maxRank) {
                 List<String> usernames = new ArrayList<String>();
                 usernames.add(formatUsername(result.get(rank-1)));
-                while(rank<result.size() && result.get(rank-1).getShouts() == result.get(rank).getShouts()) {
+                while (rank<result.size() && result.get(rank-1).getShouts() == result.get(rank).getShouts()) {
                     usernames.add(formatUsername(result.get(rank)));
                     total += result.get(rank).getShouts();
                     rank++;
                 }
 
-                if(topSpammers.length() > 0) {
+                if (topSpammers.length() > 0) {
                     topSpammers.append(", ");
                 }
                 topSpammers.append(currentRank).append(". ").append(StringUtils.join(usernames, "/")).append(" (");
-                if(usernames.size() > 1) {
+                if (usernames.size() > 1) {
                     topSpammers.append("each ");
                 }
                 topSpammers.append(result.get(rank-1).getShouts()).append(")");
@@ -68,7 +68,7 @@ public class StatsMessagesBuilder {
 
         String message;
         String url = null;
-        if(detailsLink != null) {
+        if (detailsLink != null) {
             url = MessageFormat.format("{0}?{1}", getBaseUrl(), detailsLink);
             message = MessageFormat.format("Messages in {0}: {1,number,#}; top spammers: {2}; [url={3}]more details[/url]", name, total, topSpammers.toString(), url);
         }
@@ -92,7 +92,7 @@ public class StatsMessagesBuilder {
         }
 
         String ret = username;
-        if(!color.equals("-")) {
+        if (!color.equals("-")) {
             ret = MessageFormat.format("[b][color={0}]{1}[/color][/b]", color, ret);
         }
 

@@ -12,7 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
     @Override
     public SmileyDTO entityToDTO(Smiley smileyEntity) {
-        if(smileyEntity == null) {
+        if (smileyEntity == null) {
             return null;
         }
 
@@ -21,7 +21,7 @@ public class SmileyTransformer implements Transformer<Smiley, SmileyDTO> {
 
     @Override
     public Smiley dtoToEntity(SmileyDTO smileyDTO) {
-        if(smileyDTO == null) {
+        if (smileyDTO == null) {
             return null;
         }
 

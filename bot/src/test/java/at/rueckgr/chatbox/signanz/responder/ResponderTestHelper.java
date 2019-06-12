@@ -38,7 +38,7 @@ public class ResponderTestHelper {
         assertThat(responderResult.getMessage()).isEqualTo(expectedMessage);
         assertThat(responderResult.getMessagesToPost()).hasSize(expectedMessagesToPost.length);
 
-        for(int i = 0; i < expectedMessagesToPost.length; i++) {
+        for (int i = 0; i < expectedMessagesToPost.length; i++) {
             assertThat(responderResult.getMessagesToPost().get(i)).isEqualTo(expectedMessagesToPost[i]);
         }
     }

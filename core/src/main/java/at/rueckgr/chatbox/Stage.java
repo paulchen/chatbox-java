@@ -11,7 +11,7 @@ public enum Stage {
     @Getter
     private String settingsValue;
 
-    private Stage(String settingsValue) {
+    Stage(String settingsValue) {
         this.settingsValue = settingsValue;
     }
 }

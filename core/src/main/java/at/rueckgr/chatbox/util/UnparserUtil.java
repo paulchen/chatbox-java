@@ -23,7 +23,7 @@ public class UnparserUtil {
         final String pattern = "<br />";
 
         match = match.trim();
-        while(match.endsWith(pattern)) {
+        while (match.endsWith(pattern)) {
             match = match.substring(0, match.length()-pattern.length());
             match = match.trim();
         }

@@ -80,7 +80,7 @@ public class SmileyService {
 
     private boolean containsSmiley(List<ShoutSmileys> currentSmilies, Smiley smiley, Integer count) {
         for (ShoutSmileys currentSmily : currentSmilies) {
-            if(currentSmily.getSmiley().equals(smiley) && currentSmily.getCount() == count) {
+            if (currentSmily.getSmiley().equals(smiley) && currentSmily.getCount() == count) {
                 return true;
             }
         }
@@ -90,7 +90,7 @@ public class SmileyService {
 
     private boolean containsSmiley(Map<Smiley, Integer> shoutSmilies, ShoutSmileys smiley) {
         for (Smiley smiley1 : shoutSmilies.keySet()) {
-            if(smiley1.equals(smiley.getSmiley()) && shoutSmilies.get(smiley1) == smiley.getCount()) {
+            if (smiley1.equals(smiley.getSmiley()) && shoutSmilies.get(smiley1) == smiley.getCount()) {
                 return true;
             }
         }
@@ -120,7 +120,7 @@ public class SmileyService {
 
     private Smiley findByFilenameAndCreate(String smileyFilename) {
         Smiley smiley = findByFilename(smileyFilename);
-        if(smiley != null) {
+        if (smiley != null) {
             return smiley;
         }
         smiley = new Smiley(smileyFilename);

@@ -35,14 +35,14 @@ public class MessageUnparser {
     public String unparse(String rawMessage) {
         String message = rawMessage;
 
-        for(Class<? extends Plugin> clazz : unparsers) {
+        for (Class<? extends Plugin> clazz : unparsers) {
             final String finalMessage = message;
 
             UnparserPlugin unparserPlugin = (UnparserPlugin) BeanProvider.getContextualReference(clazz);
             message = executor.execute(() -> unparserPlugin.unparse(finalMessage), message);
         }
 
-        if(message.contains("<")) {
+        if (message.contains("<")) {
             log.info(MessageFormat.format("Message contains HTML code after unparsing; message in DB: {0}; unparsed message: {1}", rawMessage, message));
 
             // remove all remaining HTML

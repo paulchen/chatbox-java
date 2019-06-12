@@ -56,11 +56,11 @@ public class UserTimer {
 
     @Timeout
     public void run() {
-        if(running) {
+        if (running) {
             return;
         }
 
-        if(!chatboxTimer.isInitialized()) {
+        if (!chatboxTimer.isInitialized()) {
             startTimer();
             return;
         }
@@ -83,17 +83,17 @@ public class UserTimer {
     private void startTimer() {
         // we must not call any service accessing the database here as this may fail in case the database server has been restarted
         // and the connections to the database server have therefore been closed
-        if(unitTest) {
+        if (unitTest) {
             log.info("Current environment is 'unit-test', don't start worker now");
             return;
         }
 
         synchronized (this) {
             Collection<Timer> timers = timerService.getTimers();
-            if(timers.isEmpty()) {
+            if (timers.isEmpty()) {
                 timerService.createSingleActionTimer(timerInterval, new TimerConfig());
             }
-            else if(timers.size() == 1) {
+            else if (timers.size() == 1) {
                 Timer timer = timers.iterator().next();
                 try {
                     timer.getTimeRemaining();

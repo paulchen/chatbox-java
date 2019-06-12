@@ -29,9 +29,9 @@ public class Main implements Serializable {
         System.out.println("Startup complete. This client keeps running until you type 'quit'.");
 
         Scanner scanner = new Scanner(System.in);
-        while(scanner.hasNextLine()) {
+        while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            if(input.equalsIgnoreCase("quit")) {
+            if (input.equalsIgnoreCase("quit")) {
                 break;
             }
         }

@@ -21,7 +21,7 @@ public class FontUnparser extends AbstractUnparserPlugin {
         private String startTag;
         private String endTag;
 
-        private FontPattern(String pattern, String discriminator, String startTag, String endTag) {
+        FontPattern(String pattern, String discriminator, String startTag, String endTag) {
             this.pattern = pattern;
             this.discriminator = discriminator;
             this.startTag = startTag;
@@ -50,17 +50,17 @@ public class FontUnparser extends AbstractUnparserPlugin {
         Matcher matcher = pattern.matcher(input);
         StringBuffer stringBuffer = new StringBuffer(input.length());
 
-        while(matcher.find()) {
+        while (matcher.find()) {
             String match = matcher.group(0);
             FontPattern tag = null;
             for (FontPattern fontPattern : FontPattern.values()) {
-                if(match.contains(fontPattern.getDiscriminator())) {
+                if (match.contains(fontPattern.getDiscriminator())) {
                     tag = fontPattern;
                     break;
                 }
             }
-            if(tag == null) {
-                if(!match.matches(END_TAG_PATTERN)) {
+            if (tag == null) {
+                if (!match.matches(END_TAG_PATTERN)) {
                     throw new RuntimeException();
                 }
                 tag = tags.pop();
@@ -82,14 +82,14 @@ public class FontUnparser extends AbstractUnparserPlugin {
 
     private String findLastNonEmptyGroup(Matcher matcher) {
         String ret = null;
-        for(int i = 1; i <= matcher.groupCount(); i++) {
+        for (int i = 1; i <= matcher.groupCount(); i++) {
             String group = matcher.group(i);
-            if(group != null) {
+            if (group != null) {
                 ret = group;
             }
         }
 
-        if(ret == null) {
+        if (ret == null) {
             throw new RuntimeException();
         }
         return ret;
